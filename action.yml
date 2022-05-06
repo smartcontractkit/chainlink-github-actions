@@ -1,9 +1,9 @@
-name: Run E2E
-description: Base runner for e2e based test runs
+name: chainlink-testing-framework-test-runner
+description: Common runner for chainlink-testing-framework based tests
 inputs:
   test_command_to_run:
     required: true
-    description: The make command to call
+    description: The command to run the tests
   test_download_vendor_packages_command:
     required: false
     description: The command to download the go modules
