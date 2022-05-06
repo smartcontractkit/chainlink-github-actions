@@ -68,27 +68,23 @@ The check name for publishing the reports
 
 Whether to have cgo enabled
 
-### Outputs
-
-The variables in provided .tool-versions file as variables in the form of <library_name>_version, example: golang_version
-
 ### Example usage
 
-uses: smartcontractkit/tool-versions-to-env@v1.0.7
-with:
-    test_command_to_run: make test smoke
-    test_download_vendor_packages_command: make download
-    test_download_ginkgo_command: make install
-    cl_repo: 795953128386.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/chainlink
-    cl_image_tag: custom.${{ github.sha }}
-    build_guantlet_command: make build_gauntlet
-    download_artifacts_path: contracts/target/deploy
-    publish_report_paths: "./tests-smoke-report.xml"
-    publish_check_name: Smoke Test Results
-    QA_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    QA_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    QA_AWS_REGION: ${{ secrets.AWS_REGION }}
-    QA_AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-    QA_KUBECONFIG: ${{ secrets.KUBECONFIG }}
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    CGO_ENABLED: 0
+    uses: smartcontractkit/ctf-ci-e2e-action@v1.0.0
+    with:
+        test_command_to_run: make test smoke
+        test_download_vendor_packages_command: make download
+        test_download_ginkgo_command: make install
+        cl_repo: 795953128386.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/chainlink
+        cl_image_tag: custom.${{ github.sha }}
+        build_guantlet_command: make build_gauntlet
+        download_artifacts_path: contracts/target/deploy
+        publish_report_paths: "./tests-smoke-report.xml"
+        publish_check_name: Smoke Test Results
+        QA_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        QA_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        QA_AWS_REGION: ${{ secrets.AWS_REGION }}
+        QA_AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+        QA_KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CGO_ENABLED: 0
