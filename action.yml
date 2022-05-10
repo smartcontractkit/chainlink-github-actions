@@ -24,9 +24,9 @@ inputs:
     required: false
     description: How to build gauntlet if necessary
     default: 'false'
-  download_artifacts_path:
+  download_contract_artifacts_path:
     required: false
-    description: Path to any artifacts needed for the test
+    description: Path where the contract artifacts need to be placed
     default: 'none'
   publish_report_paths:
     required: false
@@ -101,11 +101,11 @@ runs:
       shell: bash
       run: ${{ inputs.test_download_ginkgo_command }}
     - name: Download Artifacts
-      if: inputs.download_artifacts_path != 'none'
+      if: inputs.download_contract_artifacts_path != 'none'
       uses: actions/download-artifact@v3
       with:
         name: artifacts
-        path: ${{ inputs.download_artifacts_path }}
+        path: ${{ inputs.download_contract_artifacts_path }}
     - name: Generate gauntlet executable
       if: inputs.build_guantlet_command != 'false'
       shell: bash

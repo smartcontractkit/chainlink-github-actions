@@ -28,9 +28,9 @@ The chainlink image to use
 
 How to build gauntlet if necessary
 
-### `download_artifacts_path`
+### `download_contract_artifacts_path`
 
-Path to any artifacts needed for the test
+Path where the contract artifacts need to be placed
 
 ### `publish_report_paths`
 
