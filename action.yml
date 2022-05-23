@@ -1,6 +1,10 @@
 name: chainlink-testing-framework-test-runner
 description: Common runner for chainlink-testing-framework based tests
 inputs:
+  artifacts_location:
+    required: false
+    description: Location of where error logs are written
+    default: ./tests/e2e/logs
   test_command_to_run:
     required: true
     description: The command to run the tests
@@ -137,4 +141,4 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: test-logs
-        path: ./tests/e2e/logs
+        path: ${{ inputs.artifacts_location }}
