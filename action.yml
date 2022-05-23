@@ -126,7 +126,7 @@ runs:
         export PATH
         ${{ inputs.test_command_to_run }}
     - name: Publish Test Results
-      uses: mikepenz/action-junit-report@v2
+      uses: mikepenz/action-junit-report@v3
       if: always()
       with:
         report_paths: ${{ inputs.publish_report_paths }}
