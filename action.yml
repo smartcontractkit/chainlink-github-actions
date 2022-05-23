@@ -65,7 +65,7 @@ runs:
     - uses: smartcontractkit/tool-versions-to-env-action@v1.0.7
       id: tool-versions
     - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: ${{ steps.tool-versions.outputs.golang_version }}
     - name: Configure AWS Credentials
