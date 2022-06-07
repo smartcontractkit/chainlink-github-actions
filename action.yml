@@ -40,12 +40,6 @@ inputs:
     required: false
     description: The check name for publishing the reports
     default: Smoke Test Results
-  QA_AWS_ACCESS_KEY_ID:
-    required: true
-    description: The AWS access key id to use
-  QA_AWS_SECRET_KEY:
-    required: true
-    description: The AWS secret key to use
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -75,8 +69,6 @@ runs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ inputs.QA_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ inputs.QA_AWS_SECRET_KEY }}
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: 3600
