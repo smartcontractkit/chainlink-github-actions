@@ -125,7 +125,7 @@ runs:
       if: always()
       with:
         report_paths: ${{ inputs.publish_report_paths }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.GITHUB_TOKEN }}
         check_name: ${{ inputs.publish_check_name }}
     - name: Publish Artifacts
       if: failure()
