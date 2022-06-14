@@ -49,9 +49,6 @@ inputs:
   QA_KUBECONFIG:
     required: true
     description: The kubernetes configuration to use
-  GITHUB_TOKEN:
-    required: true
-    description: The github token for github repo privileges
   CGO_ENABLED:
     required: false
     description: Whether to have cgo enabled
@@ -128,7 +125,7 @@ runs:
       if: always()
       with:
         report_paths: ${{ inputs.publish_report_paths }}
-        github_token: ${{ inputs.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         check_name: ${{ inputs.publish_check_name }}
     - name: Publish Artifacts
       if: failure()
