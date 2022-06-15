@@ -40,6 +40,10 @@ inputs:
     required: false
     description: The check name for publishing the reports
     default: Smoke Test Results
+  token:
+    required: false
+    description: The GITHUB_TOKEN for the workflow
+    default: ${{ github.token }}
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -125,8 +129,9 @@ runs:
       if: always()
       with:
         files: ${{ inputs.publish_report_paths }}
-        # token: ${{ inputs.token }}
+        token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
+        comment_mode: create new
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
