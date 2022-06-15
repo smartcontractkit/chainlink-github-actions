@@ -129,7 +129,7 @@ runs:
       if: always()
       with:
         files: ${{ inputs.publish_report_paths }}
-        token: ${{ inputs.token }}
+        github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
         comment_mode: create new
     - name: Publish Artifacts
