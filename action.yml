@@ -124,11 +124,11 @@ runs:
         export PATH
         ${{ inputs.test_command_to_run }}
     - name: Publish Test Results
-      uses: mikepenz/action-junit-report@v3
+      uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        report_paths: ${{ inputs.publish_report_paths }}
-        token: ${{ inputs.token }}
+        files: ${{ inputs.publish_report_paths }}
+        # token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
     - name: Publish Artifacts
       if: failure()
