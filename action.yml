@@ -114,6 +114,13 @@ runs:
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
+    - uses: azure/setup-helm@v1
+      with:
+        version: 'v3.9.0'
+      id: install
+    - name: Add QA charts repo
+      shell: bash
+      run: helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
     - name: Run Tests
       shell: bash
       env:
