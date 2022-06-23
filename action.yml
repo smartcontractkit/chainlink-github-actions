@@ -114,7 +114,7 @@ runs:
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
-    - uses: azure/setup-helm@v1
+    - uses: azure/setup-helm@v2.1
       with:
         version: 'v3.9.0'
       id: install
