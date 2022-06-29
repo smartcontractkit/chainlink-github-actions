@@ -138,7 +138,7 @@ runs:
         files: ${{ inputs.publish_report_paths }}
         github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
-        comment_mode: create new
+        comment_mode: always
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
