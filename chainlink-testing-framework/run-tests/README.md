@@ -75,7 +75,7 @@ Whether to have cgo enabled
         test_command_to_run: make test smoke
         test_download_vendor_packages_command: make download
         test_download_ginkgo_command: make install
-        cl_repo: 795953128386.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/chainlink
+        cl_repo: ${{ secrets.QA_AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/chainlink
         cl_image_tag: custom.${{ github.sha }}
         build_guantlet_command: make build_gauntlet
         download_artifacts_path: contracts/target/deploy
