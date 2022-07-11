@@ -40,13 +40,17 @@ The path of the output report
 
 The check name for publishing the reports
 
-### `QA_AWS_ACCESS_KEY_ID`
+### `CGO_ENABLED`
 
-**Required** The AWS access key id to use
+Whether to have cgo enabled
 
-### `QA_AWS_SECRET_KEY`
+### `token`
 
-**Required** The AWS secret key to use
+**Required** The github token for github repo priveledges
+
+### `artifacts_location`
+
+Location of where error logs are written
 
 ### `QA_AWS_REGION`
 
@@ -58,15 +62,7 @@ The check name for publishing the reports
 
 ### `QA_KUBECONFIG`
 
-**Required** The kubernetes configuation to use
-
-### `GITHUB_TOKEN`
-
-**Required** The github token for github repo priveledges
-
-### `CGO_ENABLED`
-
-Whether to have cgo enabled
+**Required** The kubernetes configuration to use
 
 ### Example usage
 
@@ -81,10 +77,8 @@ Whether to have cgo enabled
         download_artifacts_path: contracts/target/deploy
         publish_report_paths: "./tests-smoke-report.xml"
         publish_check_name: Smoke Test Results
-        QA_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        QA_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        CGO_ENABLED: 0
         QA_AWS_REGION: ${{ secrets.AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CGO_ENABLED: 0
