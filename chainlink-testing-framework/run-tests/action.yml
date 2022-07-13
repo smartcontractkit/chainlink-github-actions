@@ -44,6 +44,10 @@ inputs:
     required: false
     description: The GITHUB_TOKEN for the workflow
     default: ${{ github.token }}
+  publish_test_results_comment_mode:
+    required: false
+    description: comment_mode value for EnricoMi/publish-unit-test-result-action@v1
+    default: always
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -121,6 +125,9 @@ runs:
     - name: Add QA charts repo
       shell: bash
       run: helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
+    - name: Add Bitnami charts repo
+      shell: bash
+      run: helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Run Tests
       shell: bash
       env:
@@ -138,7 +145,7 @@ runs:
         files: ${{ inputs.publish_report_paths }}
         github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
-        comment_mode: always
+        comment_mode: ${{ inputs.publish_test_results_comment_mode }}
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
