@@ -27,11 +27,11 @@ inputs:
   build_gauntlet_command:
     required: false
     description: How to build gauntlet if necessary
-    default: 'false'
+    default: "false"
   download_contract_artifacts_path:
     required: false
     description: Path where the contract artifacts need to be placed
-    default: 'none'
+    default: "none"
   publish_report_paths:
     required: false
     description: The path of the output report
@@ -65,7 +65,6 @@ inputs:
     required: false
     description: Whether to have cgo enabled
     default: "0"
-
 
 runs:
   using: composite
@@ -124,7 +123,7 @@ runs:
       run: ${{ inputs.build_gauntlet_command }}
     - uses: azure/setup-helm@v3
       with:
-        version: 'v3.9.0'
+        version: "v3.9.0"
       id: install
     - name: Add QA charts repo
       shell: bash
@@ -150,7 +149,7 @@ runs:
         github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
         comment_mode: ${{ inputs.publish_test_results_comment_mode }}
-        commit: ${{ inputs.publish_test_results_commit }}
+        # commit: ${{ inputs.publish_test_results_commit }}
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
