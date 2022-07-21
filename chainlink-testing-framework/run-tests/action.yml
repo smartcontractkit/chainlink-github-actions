@@ -27,11 +27,11 @@ inputs:
   build_gauntlet_command:
     required: false
     description: How to build gauntlet if necessary
-    default: 'false'
+    default: "false"
   download_contract_artifacts_path:
     required: false
     description: Path where the contract artifacts need to be placed
-    default: 'none'
+    default: "none"
   publish_report_paths:
     required: false
     description: The path of the output report
@@ -51,7 +51,6 @@ inputs:
   publish_test_results_commit:
     required: false
     description: Commit SHA to which test results are published. Only needed if the value of GITHUB_SHA does not work for you.
-    default: ${{ github.sha }}
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -65,7 +64,6 @@ inputs:
     required: false
     description: Whether to have cgo enabled
     default: "0"
-
 
 runs:
   using: composite
@@ -124,7 +122,7 @@ runs:
       run: ${{ inputs.build_gauntlet_command }}
     - uses: azure/setup-helm@v3
       with:
-        version: 'v3.9.0'
+        version: "v3.9.0"
       id: install
     - name: Add QA charts repo
       shell: bash
