@@ -48,10 +48,6 @@ inputs:
     required: false
     description: comment_mode value for EnricoMi/publish-unit-test-result-action@v1
     default: always
-  publish_test_results_commit:
-    required: false
-    description: Commit SHA to which test results are published. Only needed if the value of GITHUB_SHA does not work for you.
-    default: ${{ github.sha }}
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -149,7 +145,6 @@ runs:
         github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
         comment_mode: ${{ inputs.publish_test_results_comment_mode }}
-        # commit: ${{ inputs.publish_test_results_commit }}
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
