@@ -68,48 +68,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: smartcontractkit/tool-versions-to-env-action@v1.0.7
-      id: tool-versions
-    - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
-      uses: actions/setup-go@v3
+    - name: Setup environment
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@262922ac2eb083231b8992c92e66a54f6e166799
       with:
-        go-version: ${{ steps.tool-versions.outputs.golang_version }}
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: ${{ inputs.QA_AWS_REGION }}
-        role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
-        role-duration-seconds: 3600
-    - name: Set Kubernetes Context
-      uses: azure/k8s-set-context@v2
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ inputs.QA_KUBECONFIG }}
-    - name: Tool Versions
-      shell: bash
-      run: |
-        aws --version
-        aws sts get-caller-identity
-        kubectl version --short
-    - name: Cache Vendor Packages
-      uses: actions/cache@v3
-      id: cache-packages
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-    - name: Download Go Vendor Packages
-      if: steps.cache-packages.outputs.cache-hit != 'true'
-      shell: bash
-      run: ${{ inputs.test_download_vendor_packages_command }}
-    - name: Install Ginkgo CLI
-      if: steps.cache-packages.outputs.cache-hit != 'true'
-      shell: bash
-      run: ${{ inputs.test_download_ginkgo_command }}
+        test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
+        test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
+        QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
+        QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
+        QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
     - name: Download Artifacts
       if: inputs.download_contract_artifacts_path != 'none'
       uses: actions/download-artifact@v3
@@ -120,16 +86,6 @@ runs:
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
-    - uses: azure/setup-helm@v3
-      with:
-        version: "v3.9.0"
-      id: install
-    - name: Add QA charts repo
-      shell: bash
-      run: helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
-    - name: Add Bitnami charts repo
-      shell: bash
-      run: helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Run Tests
       shell: bash
       env:
