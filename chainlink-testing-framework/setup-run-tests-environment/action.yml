@@ -1,0 +1,75 @@
+name: setup-run-tests-environment
+description: Common test env setup
+inputs:
+  test_download_vendor_packages_command:
+    required: false
+    description: The command to download the go modules
+    default: make download
+  test_download_ginkgo_command:
+    required: false
+    description: The command to download Ginkgo
+    default: make install
+  QA_AWS_REGION:
+    required: true
+    description: The AWS region to use
+  QA_AWS_ROLE_TO_ASSUME:
+    required: true
+    description: The AWS role to assume
+  QA_KUBECONFIG:
+    required: true
+    description: The kubernetes configuration to use
+
+runs:
+  using: composite
+  steps:
+    - uses: smartcontractkit/tool-versions-to-env-action@v1.0.7
+      id: tool-versions
+    - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ steps.tool-versions.outputs.golang_version }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.QA_AWS_REGION }}
+        role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
+        role-duration-seconds: 3600
+    - name: Set Kubernetes Context
+      uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ inputs.QA_KUBECONFIG }}
+    - name: Tool Versions
+      shell: bash
+      run: |
+        aws --version
+        aws sts get-caller-identity
+        kubectl version --short
+    - name: Cache Vendor Packages
+      uses: actions/cache@v3
+      id: cache-packages
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    - name: Download Go Vendor Packages
+      if: steps.cache-packages.outputs.cache-hit != 'true'
+      shell: bash
+      run: ${{ inputs.test_download_vendor_packages_command }}
+    - name: Install Ginkgo CLI
+      if: steps.cache-packages.outputs.cache-hit != 'true'
+      shell: bash
+      run: ${{ inputs.test_download_ginkgo_command }}
+    - uses: azure/setup-helm@v3
+      with:
+        version: v${{ steps.tool-versions.outputs.helm_version }}
+    - name: Add QA charts repo
+      shell: bash
+      run: helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
+    - name: Add Bitnami charts repo
+      shell: bash
+      run: helm repo add bitnami https://charts.bitnami.com/bitnami
