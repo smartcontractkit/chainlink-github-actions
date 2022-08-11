@@ -1,0 +1,23 @@
+name: chainlink-testing-framework-cleanup
+description: Common runner for cleaning up a namespace
+inputs:
+  triggered_by:
+    required: true
+    description: The triggered-by label for the k8s namespace
+    default: ci
+
+runs:
+  using: composite
+  steps:
+    - name: cleanup k8s cluster namespace
+      shell: bash
+      run: |
+        echo "looking for namespace"
+        NAMESPACE=$(kubectl get ns -l=triggered-by=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }} -o jsonpath='{.items[].metadata.name}' || echo "none")
+        if [ "none" != "$NAMESPACE" ]; then
+          echo "deleting namespace: ${NAMESPACE}"
+          kubectl delete ns "${NAMESPACE}"
+          echo "completed cleanup"
+        else
+          echo "no namespace found to cleanup"
+        fi
