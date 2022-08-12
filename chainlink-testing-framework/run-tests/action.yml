@@ -51,6 +51,10 @@ inputs:
   publish_test_results_commit:
     required: false
     description: Commit SHA to which test results are published. Only needed if the value of GITHUB_SHA does not work for you.
+  triggered_by:
+    required: true
+    description: The triggered-by label for the k8s namespace, required for cleanup
+    default: ci
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -95,6 +99,7 @@ runs:
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
+        export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         ${{ inputs.test_command_to_run }}
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
@@ -111,3 +116,8 @@ runs:
       with:
         name: test-logs
         path: ${{ inputs.artifacts_location }}
+    - name: cleanup
+      if: always()
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@main
+      with:
+        triggered_by: ${{ inputs.triggered_by }}
