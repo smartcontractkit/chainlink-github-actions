@@ -73,7 +73,7 @@ runs:
   using: composite
   steps:
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@652e0acb4bbd0a57c635c28e5acbbe199bb01cfe # v2.0.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@4fe61ba8596b351786af5eac1088d8c461334deb # v2.0.7
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
@@ -118,6 +118,6 @@ runs:
         path: ${{ inputs.artifacts_location }}
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@main
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@4fe61ba8596b351786af5eac1088d8c461334deb # v2.0.7
       with:
         triggered_by: ${{ inputs.triggered_by }}
