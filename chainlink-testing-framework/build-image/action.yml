@@ -67,9 +67,7 @@ runs:
     - name: Replace StarkNet deps manual flow
       if: ${{ inputs.dep_starknet_sha }}
       shell: bash
-      env:
-        GOPRIVATE: ${{ inputs.GOPRIVATE }}
-      run: go get github.com/smartcontractkit/chainlink-starknet@${{ inputs.dep_starknet_sha }}
+      run: go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }}
     - name: Replace Atlas deps manual flow
       if: ${{ inputs.dep_atlas_sha }}
       shell: bash
