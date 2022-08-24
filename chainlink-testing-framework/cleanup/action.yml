@@ -19,6 +19,6 @@ runs:
         for ((i=0;i<${COUNT};i++)); do
           name=$(echo "${ITEMS}" | jq -r ".[${i}].metadata.name")
           echo "deleting namespace: ${name}"
-          kubectl delete ns "${name}"
+          kubectl delete ns "${name}" || echo "namespace no longer exists"
         done
         echo "completed cleanup"
