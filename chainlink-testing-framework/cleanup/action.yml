@@ -9,15 +9,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: cleanup k8s cluster namespace
+    - name: cleanup k8s cluster namespaces
       shell: bash
       run: |
-        echo "looking for namespace"
-        NAMESPACE=$(kubectl get ns -l=triggered-by=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }} -o jsonpath='{.items[].metadata.name}' || echo "none")
-        if [ "none" != "$NAMESPACE" ]; then
-          echo "deleting namespace: ${NAMESPACE}"
-          kubectl delete ns "${NAMESPACE}"
-          echo "completed cleanup"
-        else
-          echo "no namespace found to cleanup"
-        fi
+        echo "looking for namespaces"
+        ITEMS=$(kubectl get ns -l=triggered-by=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }} -o jsonpath='{.items}')
+        COUNT=$(echo "${ITEMS}" | jq '. | length')
+        echo "found ${COUNT} namespaces to cleanup"
+        for ((i=0;i<${COUNT};i++)); do
+          name=$(echo "${ITEMS}" | jq -r ".[${i}].metadata.name")
+          echo "deleting namespace: ${name}"
+          kubectl delete ns "${name}" || echo "namespace no longer exists"
+        done
+        echo "completed cleanup"
