@@ -9,7 +9,21 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: check kubectl
+      id: kubectlcheck
+      shell: bash
+      run: |
+        VERSION=$(kubectl get ns || echo "failed")
+        echo "${VERSION}"
+        FAIL="${VERSION: -6}"
+        echo "${FAIL}"
+        if [ "${FAIL}" = "failed" ]; then
+          echo "::set-output name=pass::false"
+        else
+          echo "::set-output name=pass::true"
+        fi
     - name: cleanup k8s cluster namespaces
+      if: steps.kubectlcheck.outputs.pass == 'true'
       shell: bash
       run: |
         echo "looking for namespaces"
