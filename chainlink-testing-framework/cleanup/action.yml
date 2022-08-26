@@ -13,12 +13,12 @@ runs:
       id: kubectlcheck
       shell: bash
       run: |
-        VERSION=$(kubectl get ns || echo "failed")
-        echo "${VERSION}"
+        VERSION=$(kubectl get ns -l=triggered-by=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }} || echo "failed")
         FAIL="${VERSION: -6}"
         echo "${FAIL}"
         if [ "${FAIL}" = "failed" ]; then
           echo "::set-output name=pass::false"
+          echo "The k8s environment was not setup, so there are no environments to cleanup"
         else
           echo "::set-output name=pass::true"
         fi
