@@ -10,6 +10,7 @@ jobs:
   tester:
     name: Start and poll the test
     runs-on: ubuntu-latest
+    environment: integration
     permissions:
       actions: write
     steps:
