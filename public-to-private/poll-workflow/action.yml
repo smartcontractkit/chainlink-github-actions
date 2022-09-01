@@ -33,14 +33,14 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.token }}
-    - ${{ inputs.owner }}
-    - ${{ inputs.repository }}
-    - ${{ inputs.ref }}
-    - ${{ inputs.workflow_file }}
-    - ${{ inputs.timeout }}
-    - ${{ inputs.retry_interval }}
+  env:
+    TOKEN: ${{ inputs.token }}
+    OWNER: ${{ inputs.owner }}
+    REPOSITORY: ${{ inputs.repository }}
+    REF: ${{ inputs.ref }}
+    WORKFLOW_FILE: ${{ inputs.workflow_file }}
+    TIMEOUT: ${{ inputs.timeout }}
+    RETRY_INTERVAL: ${{ inputs.retry_interval }}
   # using: composite
   # steps:
   #   - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
