@@ -19,14 +19,14 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: ${{ github.sha }}
+          ref: public_to_private
           workflow_file: testtopoll.yml
       - uses: ./public-to-private/poll-workflow
         id: poll
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: ${{ github.sha }}
+          ref: public_to_private
           workflow_file: testtopoll.yml
       - name: get outputs
         run: |
