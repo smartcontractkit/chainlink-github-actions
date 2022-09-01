@@ -18,16 +18,16 @@ jobs:
       - uses: ./public-to-private/start-workflow
         with:
           token: ${{ github.token }}
-          repository: chainlink-github-actions
-          ref: public_to_private
-          workflow_file: testtopoll.yml
+          repository: chainlink
+          ref: qa_test_workflow_run
+          workflow_file: integration-tests.yml
       - uses: ./public-to-private/poll-workflow
         id: poll
         with:
           token: ${{ github.token }}
-          repository: chainlink-github-actions
-          ref: public_to_private
-          workflow_file: testtopoll.yml
+          repository: chainlink
+          ref: qa_test_workflow_run
+          workflow_file: integration-tests.yml
       - name: get outputs
         run: |
           echo "status = ${{ steps.poll.outputs.status }}"
