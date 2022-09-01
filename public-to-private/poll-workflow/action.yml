@@ -1,0 +1,45 @@
+name: Poll Workflow
+description: Helper to poll a workflow for its completion and results
+inputs:
+  token:
+    required: true
+    description: The github token with permissions to access the repository with the workflow you want to poll
+  owner:
+    required: false
+    description: The repository owner
+    default: smartcontractkit
+  repository:
+    required: true
+    description: The repository name
+  branch:
+    required: true
+    description: The repository branch or sha to use as the ref for the workflows
+  workflow_file:
+    required: true
+    description: The workflow filename
+  timeout:
+    required: false
+    description: The total time to wait for the workflow to finish, as a go time.Duration string
+    default: 5m
+  retry_interval:
+    required: false
+    description: The amount of time to wait between polls of the service, as a go time.Duration string
+    default: 15s
+outputs:
+  status:
+    description: The status of the workflow
+  conclusion:
+    description: The result of the workflow
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+# name: My Action
+# inputs:
+#   secrets:
+#     fruit: Name of fruit to mask
+#     required: true
+
+# runs:
+#   using: docker
+#   image: Dockerfile
