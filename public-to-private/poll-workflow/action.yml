@@ -33,6 +33,19 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-
-  # args:
-    # - ${{ inputs.who-to-greet }}
+  args:
+    - ${{ inputs.token }}
+    - ${{ inputs.owner }}
+    - ${{ inputs.repository }}
+    - ${{ inputs.ref }}
+    - ${{ inputs.workflow_file }}
+    - ${{ inputs.timeout }}
+    - ${{ inputs.retry_interval }}
+  # using: composite
+  # steps:
+  #   - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
+  #     uses: actions/setup-go@v3
+  #     with:
+  #       go-version: ${{ steps.tool-versions.outputs.golang_version }}
+  #   - name: Run
+  #     run: go run ./main.go
