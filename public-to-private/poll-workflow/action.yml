@@ -41,11 +41,3 @@ runs:
     WORKFLOW_FILE: ${{ inputs.workflow_file }}
     TIMEOUT: ${{ inputs.timeout }}
     RETRY_INTERVAL: ${{ inputs.retry_interval }}
-  # using: composite
-  # steps:
-  #   - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
-  #     uses: actions/setup-go@v3
-  #     with:
-  #       go-version: ${{ steps.tool-versions.outputs.golang_version }}
-  #   - name: Run
-  #     run: go run ./main.go

@@ -4,7 +4,3 @@ COPY . .
 ENV GO111MODULE=on
 RUN go build -o /bin/action
 ENTRYPOINT ["/bin/action"]
-
-# FROM scratch
-# COPY --from=builder --chown=65534:0 /bin/action /action
-# ENTRYPOINT ["/action"]

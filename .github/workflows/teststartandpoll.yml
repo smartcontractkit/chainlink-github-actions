@@ -11,21 +11,19 @@ jobs:
     name: Start and poll the test
     runs-on: ubuntu-latest
     environment: integration
-    permissions:
-      actions: write
     steps:
       - name: Checkout the repo
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
       - uses: ./public-to-private/start-workflow
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.TMP_TEST_TOKEN }}
           repository: chainlink
           ref: qa_test_workflow_run
           workflow_file: integration-tests.yml
       - uses: ./public-to-private/poll-workflow
         id: poll
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.TMP_TEST_TOKEN }}
           repository: chainlink
           ref: qa_test_workflow_run
           workflow_file: integration-tests.yml
