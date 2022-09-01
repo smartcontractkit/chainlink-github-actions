@@ -1,33 +1,65 @@
 name: Start Workflow
 description: Helper to kick off private workflow from public repo
 inputs:
+  owner:
+    required: false
+    description: The repository owner
+    default: smartcontractkit
   repository:
     required: true
     description: The repository to Run
   ref:
     required: true
     description: The repository branch or sha to run the workflow in
-  workflow:
+  workflow_file:
     required: true
-    description: The workflow in the repository to run
-  workflow_to_report_to:
-    required: true
-    description: The workflow to send the report back to
+    description: The workflow file in the repository to run
   token:
     required: true
     description: The GITHUB_TOKEN with access to run workflows on private/internal repos
   inputs:
     required: false
-    description: "Inputs for the workflow as json, for examples see: https://cli.github.com/manual/gh_workflow_run"
+    description: "Inputs for the workflow as json, for examples see: https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event"
     default: "{}"
 runs:
   using: composite
   steps:
-    - name: trigger
+    - name: Start Workflow
       shell: bash
       run: |
-        echo "Making call to private repo to start workflow"
-        GITHUB_TOKEN=${{ inputs.token }}
-        export GITHUB_TOKEN
-        SENDING_BRANCH=$(echo ${GITHUB_REF#refs/heads/})
-        echo "${{ inputs.inputs }}" | gh workflow run ${{ inputs.workflow }} -R ${{ inputs.repository }} --ref ${{ inputs.ref }} -f sending_repository=${{ github.repository }} -f sending_branch=${SENDING_BRANCH} -f reporting_workflow=${{ inputs.workflow_to_report_to }} --json
+        echo "Starting workflow"
+        curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ inputs.token }}" \
+          https://api.github.com/repos/${{ inputs.owner }}/${{ inputs.repository }}/actions/workflows/${{ inputs.workflow_file }}/dispatches \
+          -d '{"ref":"${{ inputs.ref }}","inputs":${{ inputs.inputs }}}'
+    - name: Wait for workflow to start
+      shell: bash
+      run: |
+        echo "Wait for workflow to start"
+        STARTED=0
+        COUNT=0
+        while [ "${STARTED}" == "0" ]; do
+            COUNT=$((COUNT+1))
+            echo "Attempt ${COUNT}"
+            sleep 5
+            RUNS=$(curl \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${{ inputs.token }}" \
+                https://api.github.com/repos/${{ inputs.owner }}/${{ inputs.repository }}/actions/runs?branch=${{ inputs.ref }} \
+                | \
+                jq '.workflow_runs[0]')
+
+            STATUS=$(echo ${RUNS} | jq -r '.status')
+            echo "current status of most recent job ${STATUS}"
+            if [ "${STATUS}" != "completed" ]; then
+                # Stop the loop
+                STARTED=1
+                break
+            fi
+            if [ "${COUNT}" == "5" ]; then
+                echo "Failed to find a started workflow"
+                exit 1
+            fi
+        done

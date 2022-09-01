@@ -1,0 +1,32 @@
+name: public to private test
+on:
+  push:
+
+concurrency:
+  group: public-to-private-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tester:
+    name: Start and poll the test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - uses: ./public-to-private/start-workflow
+        with:
+          token: ${{ github.token }}
+          repository: chainlink-github-actions
+          ref: ${{ github.ref }}
+          workflow_file: testtopoll
+      - uses: ./public-to-private/poll-workflow
+        id: poll
+        with:
+          token: ${{ github.token }}
+          repository: chainlink-github-actions
+          ref: ${{ github.ref }}
+          workflow_file: testtopoll
+      - name: get outputs
+        run: |
+          echo "status = ${{ steps.poll.outputs.status }}"
+          echo "conclusion = ${{ steps.poll.outputs.conclusion }}"

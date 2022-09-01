@@ -19,7 +19,7 @@ type Inputs struct {
 	GithubToken   string        `envconfig:"token" required:"true"`
 	Owner         string        `envconfig:"owner" default:"smartcontractkit"`
 	Repository    string        `envconfig:"repository" required:"true"`
-	Branch        string        `envconfig:"branch" required:"true"`
+	Branch        string        `envconfig:"ref" required:"true"`
 	WorkflowFile  string        `envconfig:"workflow_file" required:"true"`
 	Timeout       time.Duration `envconfig:"timeout" default:"5m"`
 	RetryInterval time.Duration `envconfig:"retry_interval" default:"15s"`

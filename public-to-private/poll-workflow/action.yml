@@ -11,7 +11,7 @@ inputs:
   repository:
     required: true
     description: The repository name
-  branch:
+  ref:
     required: true
     description: The repository branch or sha to use as the ref for the workflows
   workflow_file:
@@ -34,12 +34,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
 
-# name: My Action
-# inputs:
-#   secrets:
-#     fruit: Name of fruit to mask
-#     required: true
-
-# runs:
-#   using: docker
-#   image: Dockerfile
+  # args:
+    # - ${{ inputs.who-to-greet }}

@@ -1,0 +1,15 @@
+name: public to private test that gets polled
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: public-to-private-test-to-poll-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  topoll:
+    name: Just sleep for 2 minutes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sleep
+        run: sleep 120
