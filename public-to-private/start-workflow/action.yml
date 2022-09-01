@@ -28,12 +28,13 @@ runs:
       shell: bash
       run: |
         echo "Starting workflow"
-        curl \
+        STATUS=$(curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ inputs.token }}" \
           https://api.github.com/repos/${{ inputs.owner }}/${{ inputs.repository }}/actions/workflows/${{ inputs.workflow_file }}/dispatches \
-          -d '{"ref":"${{ inputs.ref }}","inputs":${{ inputs.inputs }}}'
+          -d '{"ref":"${{ inputs.ref }}","inputs":${{ inputs.inputs }}}')
+        echo "${STATUS}"
     - name: Wait for workflow to start
       shell: bash
       run: |
