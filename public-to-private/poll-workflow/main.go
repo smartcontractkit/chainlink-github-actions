@@ -25,6 +25,7 @@ type Inputs struct {
 	RetryInterval time.Duration `envconfig:"retry_interval" default:"15s"`
 }
 
+// getInputs Loads inputs from the environment
 func getInputs() *Inputs {
 	var inputs Inputs
 	if err := envconfig.Process("", &inputs); err != nil {
@@ -39,6 +40,7 @@ type Outputs struct {
 	Conclusion string
 }
 
+// setOutputs Sets the outputs in the format that a docker action can parse
 func (o *Outputs) setOutputs() {
 	ao := *o
 	val := reflect.ValueOf(ao)
@@ -58,6 +60,7 @@ type Common struct {
 	workflowID int64
 }
 
+// connectToGithub Sets up the github client and connects
 func (c *Common) connectToGithub(inputs *Inputs) {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: inputs.GithubToken},
@@ -66,6 +69,7 @@ func (c *Common) connectToGithub(inputs *Inputs) {
 	c.client = github.NewClient(tc)
 }
 
+// getMostRecentWorkflowRunId Check the list of current workflows and get the most recent one that is not complete
 func (c *Common) getMostRecentWorkflowRunId(inputs *Inputs) {
 	opts := &github.ListWorkflowRunsOptions{
 		Branch: inputs.Branch,
@@ -134,6 +138,7 @@ func (c *Common) getMostRecentWorkflowRunId(inputs *Inputs) {
 	c.workflowID = *workflow.ID
 }
 
+// getWorkflowRun Gets the workflow run with updated status
 func (c *Common) getWorkflowRun(inputs *Inputs) *github.WorkflowRun {
 	wfr, resp, err := c.client.Actions.GetWorkflowRunByID(c.ctx, inputs.Owner, inputs.Repository, c.workflowID)
 	if err != nil {
@@ -148,6 +153,7 @@ func (c *Common) getWorkflowRun(inputs *Inputs) *github.WorkflowRun {
 	return wfr
 }
 
+// pollWorkflow Poll the workflow until the status is complete or we hit the timeout
 func (c *Common) pollWorkflow(inputs *Inputs) *Outputs {
 	stop := false
 	var status string

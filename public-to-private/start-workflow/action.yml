@@ -4,6 +4,9 @@ inputs:
   repository:
     required: true
     description: The repository to Run
+  ref:
+    required: true
+    description: The repository branch or sha to run the workflow in
   workflow:
     required: true
     description: The workflow in the repository to run
@@ -27,4 +30,4 @@ runs:
         GITHUB_TOKEN=${{ inputs.token }}
         export GITHUB_TOKEN
         SENDING_BRANCH=$(echo ${GITHUB_REF#refs/heads/})
-        echo "${{ inputs.inputs }}" | gh workflow run ${{ inputs.workflow }} -R ${{ inputs.repository }} -f sending_repository=${{ github.repository }} -f sending_branch=${SENDING_BRANCH} -f reporting_workflow=${{ inputs.workflow_to_report_to }} --json
+        echo "${{ inputs.inputs }}" | gh workflow run ${{ inputs.workflow }} -R ${{ inputs.repository }} --ref ${{ inputs.ref }} -f sending_repository=${{ github.repository }} -f sending_branch=${SENDING_BRANCH} -f reporting_workflow=${{ inputs.workflow_to_report_to }} --json
