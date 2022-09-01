@@ -27,6 +27,7 @@ jobs:
           repository: chainlink
           ref: qa_test_workflow_run
           workflow_file: integration-tests.yml
+          timeout: 30m
       - name: get outputs
         run: |
           echo "status = ${{ steps.poll.outputs.status }}"
