@@ -1,5 +1,5 @@
-name: Poll Workflow
-description: Helper to poll a workflow for its completion and results
+name: Run Private Workflow
+description: Helper to run a private workflow and wait for it to finish
 inputs:
   token:
     required: true
@@ -17,6 +17,10 @@ inputs:
   workflow_file:
     required: true
     description: The workflow filename
+  inputs:
+    required: false
+    description: "Inputs for the workflow as json, for examples see: https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event"
+    default: "{}"
   timeout:
     required: false
     description: The total time to wait for the workflow to finish, as a go time.Duration string
@@ -30,6 +34,8 @@ outputs:
     description: The status of the workflow
   conclusion:
     description: The result of the workflow
+  workflowID:
+    description: The id of the workflow, can be used to pull further results or logs if needed
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -39,5 +45,6 @@ runs:
     REPOSITORY: ${{ inputs.repository }}
     REF: ${{ inputs.ref }}
     WORKFLOW_FILE: ${{ inputs.workflow_file }}
+    INPUTS: ${{ inputs.inputs }}
     TIMEOUT: ${{ inputs.timeout }}
     RETRY_INTERVAL: ${{ inputs.retry_interval }}
