@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/sethvargo/go-githubactions"
 )
 
 type Inputs struct {
@@ -19,21 +18,15 @@ type Inputs struct {
 	Inputs        string        `envconfig:"inputs" default:"{}"`
 }
 
-func (i *Inputs) InputsToMap(action *githubactions.Action) map[string]interface{} {
+func (i *Inputs) InputsToMap() (map[string]interface{}, error) {
 	inputsMap := make(map[string]interface{})
 	err := json.Unmarshal([]byte(i.Inputs), &inputsMap)
-	if err != nil {
-		action.Fatalf("could not unmarshall inputs json: %v", err)
-	}
-	return inputsMap
+	return inputsMap, err
 }
 
 // getInputs Loads inputs from the environment
-func GetInputs(action *githubactions.Action) *Inputs {
+func GetInputs() (*Inputs, error) {
 	var inputs Inputs
-	if err := envconfig.Process("", &inputs); err != nil {
-		action.Fatalf("could not load inputs from environment: %v", err)
-	}
-
-	return &inputs
+	err := envconfig.Process("", &inputs)
+	return &inputs, err
 }

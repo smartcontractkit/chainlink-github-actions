@@ -14,34 +14,38 @@ import (
 
 const COMPLETED_STATUS = "completed"
 
-var workflowStartedAt time.Time
-
 // ConnectToGithub Sets up the github client and connects
-func ConnectToGithub(inputs *action.Inputs) *github.Client {
+func ConnectToGithub(githubToken string) *github.Client {
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: inputs.GithubToken},
+		&oauth2.Token{AccessToken: githubToken},
 	)
 	tc := oauth2.NewClient(context.Background(), ts)
 	return github.NewClient(tc)
 }
 
-func StartWorkflow(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs) {
+func StartWorkflow(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs) error {
 	githubAction.Infof("Starting workflow %s", inputs.WorkflowFile)
+	inputsMap, err := inputs.InputsToMap()
+	if err != nil {
+		return err
+	}
 	event := &github.CreateWorkflowDispatchEventRequest{
 		Ref:    inputs.Branch,
-		Inputs: inputs.inputsToMap(githubAction),
+		Inputs: inputsMap,
 	}
 	resp, err := client.Actions.CreateWorkflowDispatchEventByFileName(context.Background(), inputs.Owner, inputs.Repository, inputs.WorkflowFile, *event)
 
 	if err != nil {
-		githubAction.Fatalf("Failed to make call to start workflow: %v", err)
+		return err
 	}
 	if resp.StatusCode != 204 {
-		githubAction.Fatalf("Failed to start the workflow: %v", err)
+		return fmt.Errorf("Failed to start the workflow, status code: %d", resp.StatusCode)
 	}
+
+	return nil
 }
 
-func GetListOfWorkflowRuns(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs) (*github.WorkflowRuns, error) {
+func GetListOfWorkflowRuns(client *github.Client, inputs *action.Inputs, workflowStartedAt time.Time) (*github.WorkflowRuns, error) {
 	opts := &github.ListWorkflowRunsOptions{
 		Branch:  inputs.Branch,
 		Event:   "workflow_dispatch",
@@ -49,17 +53,14 @@ func GetListOfWorkflowRuns(client *github.Client, githubAction *githubactions.Ac
 	}
 	runs, resp, err := client.Actions.ListWorkflowRunsByFileName(context.Background(), inputs.Owner, inputs.Repository, inputs.WorkflowFile, opts)
 	if err != nil {
-		githubAction.Infof("failed to get the workflow: %v", err)
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
 		err = fmt.Errorf("failed to get the workflow, status code %d", resp.StatusCode)
-		githubAction.Infof("%v", err)
 		return nil, err
 	}
 	if runs.GetTotalCount() < 1 {
 		err = fmt.Errorf("failed fo find any workflow runs")
-		githubAction.Infof("%v", err)
 		return nil, err
 	}
 	return runs, nil
@@ -69,7 +70,8 @@ func GetLatestWorkflowRunFromList(runs *github.WorkflowRuns, githubAction *githu
 	var currentWorkflow *github.WorkflowRun
 	var timestamp *github.Timestamp
 	for i, wf := range runs.WorkflowRuns {
-		githubAction.Infof("workflow at index %d had completion status of %s at %s with id %d", i, *wf.Status, wf.CreatedAt.Time.String(), *wf.ID)
+		fmt.Printf("workflow at index %d had completion status of %s at %s with id %d", i, *wf.Status, wf.CreatedAt.Time.String(), *wf.ID)
+		// githubAction.Infof("workflow at index %d had completion status of %s at %s with id %d", i, *wf.Status, wf.CreatedAt.Time.String(), *wf.ID)
 		if timestamp == nil {
 			timestamp = wf.CreatedAt
 		}
@@ -95,7 +97,7 @@ func GetLatestWorkflowRunFromList(runs *github.WorkflowRuns, githubAction *githu
 }
 
 // GetMostRecentWorkflowRunId Check the list of current workflows and get the most recent one that is not complete
-func GetMostRecentWorkflowRunId(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs) int64 {
+func GetMostRecentWorkflowRunId(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs, workflowStartedAt time.Time) (int64, error) {
 	maxRetrys := 5
 	var err error
 	var workflow *github.WorkflowRun
@@ -109,7 +111,7 @@ func GetMostRecentWorkflowRunId(client *github.Client, githubAction *githubactio
 		}
 
 		// get the list
-		runs, err = GetListOfWorkflowRuns(client, inputs)
+		runs, err = GetListOfWorkflowRuns(client, inputs, workflowStartedAt)
 		if err != nil || runs == nil {
 			continue
 		}
@@ -126,34 +128,34 @@ func GetMostRecentWorkflowRunId(client *github.Client, githubAction *githubactio
 
 	// fail if we ended the retry loop in error
 	if err != nil || workflow == nil {
-		githubAction.Fatalf("did not find any active workflows: %v", err)
+		err = fmt.Errorf("did not find any active workflows: %v", err)
+		return 0, err
 	}
 
 	githubAction.Infof("Successfully found a workflow in progress: %d", *workflow.ID)
-	return *workflow.ID
+	return *workflow.ID, nil
 }
 
 // GetWorkflowRun Gets the workflow run with updated status
-func GetWorkflowRun(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs, workflowID int64) *github.WorkflowRun {
+func GetWorkflowRun(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs, workflowID int64) (*github.WorkflowRun, error) {
 	wfr, resp, err := client.Actions.GetWorkflowRunByID(context.Background(), inputs.Owner, inputs.Repository, workflowID)
 	if err != nil {
-		githubAction.Infof("Failed to get the workflow run: %v", err)
-		return nil
+		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		githubAction.Infof("Failed to get the workflow, found status code: %d", resp.StatusCode)
-		return nil
+		return nil, fmt.Errorf("Failed to get the workflow, found status code: %d", resp.StatusCode)
 	}
-	return wfr
+	return wfr, nil
 }
 
 // PollWorkflow Poll the workflow until the status is complete or we hit the timeout
-func PollWorkflow(githubAction githubactions.Action, inputs *action.Inputs, workflowID int64) *action.Outputs {
+func PollWorkflow(client *github.Client, githubAction *githubactions.Action, inputs *action.Inputs, workflowID int64) *action.Outputs {
 	githubAction.Infof("Beginning to poll for the workflows status every %v until it is complete or we timeout after %v", inputs.RetryInterval, inputs.Timeout)
 	pollStart := time.Now()
 	stop := false
 	var status string
 	var latestWorkflow *github.WorkflowRun
+	var err error
 	testContext, testCancel := context.WithTimeout(context.Background(), inputs.Timeout)
 	defer testCancel()
 	ticker := time.NewTicker(inputs.RetryInterval)
@@ -161,12 +163,16 @@ func PollWorkflow(githubAction githubactions.Action, inputs *action.Inputs, work
 		select {
 		case <-ticker.C:
 			// check the latest status, if it is completed then we stop
-			latestWorkflow = GetWorkflowRun(inputs, workflowID)
-			status = *latestWorkflow.Status
-			t := time.Now()
-			diff := t.Sub(pollStart)
-			githubAction.Infof("current workflow run status is \"%v\" after %v", status, diff)
-			stop = status == COMPLETED_STATUS
+			latestWorkflow, err = GetWorkflowRun(client, githubAction, inputs, workflowID)
+			if err != nil {
+				githubAction.Infof("failed to get the workflow run %v", err)
+			} else {
+				status = *latestWorkflow.Status
+				t := time.Now()
+				diff := t.Sub(pollStart)
+				githubAction.Infof("current workflow run status is \"%v\" after %v", status, diff)
+				stop = status == COMPLETED_STATUS
+			}
 		case <-testContext.Done():
 			// timed out
 			stop = true
@@ -180,10 +186,6 @@ func PollWorkflow(githubAction githubactions.Action, inputs *action.Inputs, work
 		}
 	}
 
-	if status != COMPLETED_STATUS {
-		githubAction.Fatalf("workflow did not reach completed status, id: %d", workflowID)
-	}
-
 	return &action.Outputs{
 		Status:     status,
 		Conclusion: *latestWorkflow.Conclusion,
@@ -193,25 +195,39 @@ func PollWorkflow(githubAction githubactions.Action, inputs *action.Inputs, work
 
 func main() {
 
+	fmt.Printf("Testing testing testing")
+
 	// get a new action object to use, avoid using the global so we can more easily test
-	githubAction := githubactions.New()
+	// githubAction := githubactions.New()
 
-	// get the inputs from the action
-	inputs := action.GetInputs(githubAction)
+	// // get the inputs from the action
+	// inputs, err := action.GetInputs()
+	// if err != nil {
+	// 	githubAction.Fatalf("Failed to parse the inputs from the environment %v", err)
+	// }
 
-	// setup the connection to github
-	client := ConnectToGithub(inputs)
+	// // setup the connection to github
+	// client := ConnectToGithub(inputs.GithubToken)
 
-	// start the workflow
-	workflowStartedAt = time.Now()
-	StartWorkflow(client, githubAction, inputs)
+	// // start the workflow
+	// workflowStartedAt := time.Now()
+	// err = StartWorkflow(client, githubAction, inputs)
+	// if err != nil {
+	// 	githubAction.Fatalf("Failed to start the workflow %v", err)
+	// }
 
-	// get the workflow we want to poll
-	workflowID := GetMostRecentWorkflowRunId(client, githubAction, inputs)
+	// // get the workflow we want to poll
+	// workflowID, err := GetMostRecentWorkflowRunId(client, githubAction, inputs, workflowStartedAt)
+	// if err != nil {
+	// 	githubAction.Fatalf("did not find any active workflows: %v", err)
+	// }
 
-	// poll the workflow until it is finished
-	outputs := PollWorkflow(githubAction, inputs, workflowID)
+	// // poll the workflow until it is finished
+	// outputs := PollWorkflow(client, githubAction, inputs, workflowID)
+	// if outputs.Status != COMPLETED_STATUS {
+	// 	githubAction.Fatalf("workflow did not reach completed status, id: %d", workflowID)
+	// }
 
-	// send the outputs back out to the action
-	outputs.SetOutputs(githubAction)
+	// // send the outputs back out to the action
+	// outputs.SetOutputs(githubAction)
 }
