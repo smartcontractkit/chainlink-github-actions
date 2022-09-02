@@ -34,7 +34,7 @@ outputs:
     description: The status of the workflow
   conclusion:
     description: The result of the workflow
-  workflowID:
+  workflowid:
     description: The id of the workflow, can be used to pull further results or logs if needed
 runs:
   using: 'docker'

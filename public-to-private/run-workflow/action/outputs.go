@@ -23,7 +23,7 @@ func (o *Outputs) SetOutputs(githubAction *githubactions.Action) {
 	for i := 0; i < val.NumField(); i++ {
 		k := strings.ToLower(typeOfS.Field(i).Name)
 		v := fmt.Sprintf("%v", val.Field(i).Interface())
-		githubAction.Infof("Setting output: %s = %s", k, v)
+		fmt.Printf("Setting output: %s = %s\n", k, v)
 		githubAction.SetOutput(k, v)
 	}
 }
