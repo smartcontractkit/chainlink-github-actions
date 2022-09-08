@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/smartcontractkit/chainlink-github-actions/public-to-private/run-workflow/action"
@@ -47,15 +46,11 @@ func StartWorkflow(client *github.Client, inputs *action.Inputs) error {
 }
 
 func GetListOfWorkflowRuns(client *github.Client, inputs *action.Inputs, workflowStartedAt time.Time) (*github.WorkflowRuns, error) {
-	actor, ok := os.LookupEnv("ACTOR")
-	if !ok {
-		return nil, fmt.Errorf("ACTOR was not present in the environment variables")
-	}
 	opts := &github.ListWorkflowRunsOptions{
 		Branch:  inputs.Branch,
 		Event:   "workflow_dispatch",
 		Created: fmt.Sprintf(">=%s", workflowStartedAt.Format(time.RFC3339)),
-		Actor:   actor,
+		Actor:   "github-actions[bot]",
 	}
 	runs, resp, err := client.Actions.ListWorkflowRunsByFileName(context.Background(), inputs.Owner, inputs.Repository, inputs.WorkflowFile, opts)
 	if err != nil {

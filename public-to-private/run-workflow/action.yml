@@ -48,4 +48,3 @@ runs:
     INPUTS: ${{ inputs.inputs }}
     TIMEOUT: ${{ inputs.timeout }}
     RETRY_INTERVAL: ${{ inputs.retry_interval }}
-    ACTOR: ${{ github.actor }}
