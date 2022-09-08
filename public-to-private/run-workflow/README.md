@@ -23,8 +23,12 @@
               echo "status = ${{ steps.poll.outputs.status }}"
               echo "conclusion = ${{ steps.poll.outputs.conclusion }}"
               echo "workflow_id = ${{ steps.poll_pass.outputs.workflow_id }}"
+              # fail if the workflow did not return success
+              if [ "${{ steps.poll_pass.outputs.conclusion }}" != "success" ]; then
+                exit 1
+              fi
 ```
 
 Requires a token that has action:write as well as the ability to read workflows for the type of repository you try to use. 
 
-If you need to do more with the results of the pipline you can go to that repos actions and past the workflow_id to see the results. You can also use the workflow_id with the github api to get whatever it is you need so long as the provided github token has permissions to do so.
+This action provides the final status, conclusion, and workflow_id of the started workflow. It does not fail if the external workflow failed, it will provide the information in outputs instead so you can do what you need with them, whether that be to fail the workflow or gather logs, or whatever you need to do based on the results.
