@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/smartcontractkit/chainlink-github-actions/public-to-private/run-workflow/action"
+	"github.com/smartcontractkit/chainlink-github-actions/public-to-private/run-workflow/helpers"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,4 +38,9 @@ func TestInputsToMap(t *testing.T) {
 	m, _ := i.InputsToMap()
 	assert.NotNil(t, m)
 	assert.Equal(t, "b", m["a"], "failed to convert the inputs to a map %v", m)
+}
+
+func TestInputsMatchAction(t *testing.T) {
+	input := &action.Inputs{}
+	helpers.TestInputsOrOutputsMatchAction(t, "../action.yml", *input, "inputs")
 }

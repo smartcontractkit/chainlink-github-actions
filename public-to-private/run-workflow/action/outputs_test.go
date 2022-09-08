@@ -6,6 +6,7 @@ import (
 
 	"github.com/sethvargo/go-githubactions"
 	"github.com/smartcontractkit/chainlink-github-actions/public-to-private/run-workflow/action"
+	"github.com/smartcontractkit/chainlink-github-actions/public-to-private/run-workflow/helpers"
 	"github.com/stretchr/testify/assert"
 	"github.com/zenizh/go-capturer"
 )
@@ -23,5 +24,10 @@ func TestSetOutputs(t *testing.T) {
 	})
 	assert.Contains(t, out, "Setting output: status = s")
 	assert.Contains(t, out, "Setting output: conclusion = c")
-	assert.Contains(t, out, "Setting output: workflowid = 123")
+	assert.Contains(t, out, "Setting output: workflow_id = 123")
+}
+
+func TestOutputsMatchAction(t *testing.T) {
+	output := &action.Outputs{}
+	helpers.TestInputsOrOutputsMatchAction(t, "../action.yml", *output, "outputs")
 }

@@ -23,4 +23,5 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/zenizh/go-capturer v0.0.0-20211219060012-52ea6c8fed04
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
+	gopkg.in/yaml.v2 v2.4.0
 )
