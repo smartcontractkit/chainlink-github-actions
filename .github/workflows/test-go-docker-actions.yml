@@ -1,0 +1,25 @@
+name: test golang based docker actions
+on:
+  pull_request:
+
+concurrency:
+  group: go-docker-actions-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-to-private:
+    name: Unit test public-to-private
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - uses: smartcontractkit/tool-versions-to-env-action@v1.0.7
+        id: tool-versions
+      - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ steps.tool-versions.outputs.golang_version }}
+      - name: run unit tests
+        run: |
+          cd ./public-to-private/run-workflow
+          go test ./...
