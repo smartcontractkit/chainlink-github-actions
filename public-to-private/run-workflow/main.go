@@ -138,7 +138,7 @@ func GetMostRecentWorkflowRunId(client *github.Client, inputs *action.Inputs, wo
 
 // GetWorkflowRun Gets the workflow run with updated status
 func GetWorkflowRun(client *github.Client, inputs *action.Inputs, workflowID int64) (*github.WorkflowRun, error) {
-	wfr, resp, err := client.Actions.GetWorkflowRunByID(context.Background(), inputs.Owner, inputs.Repository, workflowID)
+	wfr, resp, err := client.Actions.GetWorkflowRunAttempt(context.Background(), inputs.Owner, inputs.Repository, workflowID, 1, nil)
 	if err != nil {
 		return nil, err
 	}
