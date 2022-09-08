@@ -11,7 +11,7 @@ jobs:
   tester:
     name: Start and poll the test
     runs-on: ubuntu-latest
-    if: ${{ github.event_name }} != 'workflow_dispatch' 
+    if: github.event_name != 'workflow_dispatch' 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
@@ -34,7 +34,7 @@ jobs:
   sleeper:
     name: Just sleep for 1 minute to make the test poll for a bit
     runs-on: ubuntu-latest
-    if: ${{ github.event_name }} == 'workflow_dispatch' 
+    if: github.event_name == 'workflow_dispatch' 
     steps:
       - name: Sleep
         run: sleep 60
