@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: public_to_private
+          ref: ${{ github.sha }}
           workflow_file: public-to-private-test.yml
           timeout: 10m
       - name: get outputs
@@ -28,7 +28,7 @@ jobs:
           echo "status = ${{ steps.poll.outputs.status }}"
           echo "conclusion = ${{ steps.poll.outputs.conclusion }}"
           echo "workflow_id = ${{ steps.poll.outputs.workflow_id }}"
-          if [ "${{ steps.poll.outputs.status }}" != "success" ]; then
+          if [ "${{ steps.poll.outputs.conclusion }}" != "success" ]; then
             exit 1
           fi
   sleeper:
