@@ -17,7 +17,7 @@ jobs:
       - uses: ./public-to-private/run-workflow
         id: poll
         with:
-          token: ${{ secrets.TMP_TEST_TOKEN }}
+          token: ${{ github.token }}
           repository: chainlink-github-actions
           ref: public_to_private
           workflow_file: testtopoll.yml
