@@ -29,6 +29,10 @@
               fi
 ```
 
-Requires a token that has action:write as well as the ability to read workflows for the type of repository you try to use. 
+Requires a token that has action:write as well as the ability to read workflows for the type of repository you try to use.
 
 This action provides the final status, conclusion, and workflow_id of the started workflow. It does not fail if the external workflow failed, it will provide the information in outputs instead so you can do what you need with them, whether that be to fail the workflow or gather logs, or whatever you need to do based on the results.
+
+## Workflow reruns
+
+If you need to rerun the private workflow, do so with the workflow running this action and not the workflow this action starts otherwise you will not get an updated result.
