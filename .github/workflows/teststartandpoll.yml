@@ -1,6 +1,6 @@
 name: public to private test
 on:
-  push:
+  pull_request:
 
 concurrency:
   group: public-to-private-test-${{ github.ref }}
@@ -18,10 +18,10 @@ jobs:
         id: poll
         with:
           token: ${{ secrets.TMP_TEST_TOKEN }}
-          repository: chainlink
-          ref: qa_test_workflow_run
-          workflow_file: integration-tests.yml
-          timeout: 30m
+          repository: chainlink-github-actions
+          ref: public_to_private
+          workflow_file: testtopoll.yml
+          timeout: 10m
       - name: get outputs
         run: |
           echo "status = ${{ steps.poll.outputs.status }}"
