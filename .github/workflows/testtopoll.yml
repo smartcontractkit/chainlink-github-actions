@@ -1,6 +1,7 @@
 name: public to private test that gets polled
 on:
   workflow_dispatch:
+  pull_request:
 
 concurrency:
   group: public-to-private-test-to-poll-${{ github.ref }}
