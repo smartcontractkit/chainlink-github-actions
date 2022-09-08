@@ -2,6 +2,11 @@ name: public to private test
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      should_fail:
+        description: To fail or not
+        required: false
+        default: "false"
 
 concurrency:
   group: public-to-private-test-${{ github.ref }}
@@ -22,7 +27,7 @@ jobs:
           repository: chainlink-github-actions
           ref: ${{ github.sha }}
           workflow_file: public-to-private-test.yml
-          timeout: 10m
+          timeout: 5m
       - name: get outputs
         run: |
           echo "status = ${{ steps.poll.outputs.status }}"
@@ -31,10 +36,36 @@ jobs:
           if [ "${{ steps.poll.outputs.conclusion }}" != "success" ]; then
             exit 1
           fi
-  sleeper:
+      - uses: ./public-to-private/run-workflow
+        id: poll
+        with:
+          token: ${{ github.token }}
+          repository: chainlink-github-actions
+          ref: ${GITHUB_REF##*/}
+          workflow_file: public-to-private-test.yml
+          timeout: 5m
+          inputs: "{\"should_fail\":\"true\"}"
+      - name: get outputs
+        run: |
+          echo "status = ${{ steps.poll.outputs.status }}"
+          echo "conclusion = ${{ steps.poll.outputs.conclusion }}"
+          echo "workflow_id = ${{ steps.poll.outputs.workflow_id }}"
+          if [ "${{ steps.poll.outputs.conclusion }}" != "failure" ]; then
+            exit 1
+          fi
+  sleeperpass:
     name: Just sleep for 1 minute to make the test poll for a bit
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' 
+    if: github.event_name == 'workflow_dispatch' && inputs.should_fail == 'false'
     steps:
       - name: Sleep
-        run: sleep 60
+        run: sleep 30
+  sleeperfail:
+    name: Just sleep for 1 minute to make the test poll for a bit
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.should_fail == 'true'
+    steps:
+      - name: Sleep
+        run: |
+          sleep 30
+          exit 1
