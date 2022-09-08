@@ -20,18 +20,15 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
-      - name: Get Branch
+      - name: Get branch name
         id: branch
-        run: |
-          BRANCH_NAME=${GITHUB_REF##*/}
-          echo "Branch name is: ${BRANCH_NAME}"
-          echo "::set-output name=BRANCH_NAME::${BRANCH_NAME}"
+        uses: tj-actions/branch-names@v6
       - uses: ./public-to-private/run-workflow
         id: poll_pass
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: ${{ steps.branch.outputs.BRANCH_NAME }}
+          ref: ${{ steps.branch.outputs.current_branch }}
           workflow_file: public-to-private-test.yml
           timeout: 5m
       - name: get outputs
@@ -47,7 +44,7 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: ${{ steps.branch.outputs.BRANCH_NAME }}
+          ref: ${{ steps.branch.outputs.current_branch }}
           workflow_file: public-to-private-test.yml
           timeout: 5m
           inputs: "{\"should_fail\":\"true\"}"
