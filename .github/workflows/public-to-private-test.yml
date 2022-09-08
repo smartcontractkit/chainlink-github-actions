@@ -21,23 +21,23 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
       - uses: ./public-to-private/run-workflow
-        id: poll
+        id: poll_pass
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
-          ref: ${{ github.sha }}
+          ref: ${GITHUB_REF##*/}
           workflow_file: public-to-private-test.yml
           timeout: 5m
       - name: get outputs
         run: |
-          echo "status = ${{ steps.poll.outputs.status }}"
-          echo "conclusion = ${{ steps.poll.outputs.conclusion }}"
-          echo "workflow_id = ${{ steps.poll.outputs.workflow_id }}"
-          if [ "${{ steps.poll.outputs.conclusion }}" != "success" ]; then
+          echo "status = ${{ steps.poll_pass.outputs.status }}"
+          echo "conclusion = ${{ steps.poll_pass.outputs.conclusion }}"
+          echo "workflow_id = ${{ steps.poll_pass.outputs.workflow_id }}"
+          if [ "${{ steps.poll_pass.outputs.conclusion }}" != "success" ]; then
             exit 1
           fi
       - uses: ./public-to-private/run-workflow
-        id: poll
+        id: poll_fail
         with:
           token: ${{ github.token }}
           repository: chainlink-github-actions
@@ -47,21 +47,21 @@ jobs:
           inputs: "{\"should_fail\":\"true\"}"
       - name: get outputs
         run: |
-          echo "status = ${{ steps.poll.outputs.status }}"
-          echo "conclusion = ${{ steps.poll.outputs.conclusion }}"
-          echo "workflow_id = ${{ steps.poll.outputs.workflow_id }}"
-          if [ "${{ steps.poll.outputs.conclusion }}" != "failure" ]; then
+          echo "status = ${{ steps.poll_fail.outputs.status }}"
+          echo "conclusion = ${{ steps.poll_fail.outputs.conclusion }}"
+          echo "workflow_id = ${{ steps.poll_fail.outputs.workflow_id }}"
+          if [ "${{ steps.poll_fail.outputs.conclusion }}" != "failure" ]; then
             exit 1
           fi
   sleeperpass:
-    name: Just sleep for 1 minute to make the test poll for a bit
+    name: Just sleep for a bit and pass to make the test poll
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && inputs.should_fail == 'false'
     steps:
       - name: Sleep
         run: sleep 30
   sleeperfail:
-    name: Just sleep for 1 minute to make the test poll for a bit
+    name: Just sleep for a bit and fail to make the test poll
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && inputs.should_fail == 'true'
     steps:
