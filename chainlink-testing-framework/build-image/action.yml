@@ -1,6 +1,8 @@
 name: Build Image For Testing
 description: Common docker image builder for building chainlink test images
 inputs:
+  install_operator_ui:
+    description: Install operator UI assets before attempting to build the chainlink image.
   cl_repo:
     required: true
     description: The chainlink repository to use
@@ -49,7 +51,7 @@ runs:
       env:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       with:
-        go-version-file: 'go.mod'
+        go-version-file: "go.mod"
     - name: Replace GHA URL
       shell: bash
       env:
@@ -79,6 +81,10 @@ runs:
       env:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       run: go mod tidy
+    - name: Install operator-ui
+      if: inputs.install_operator_ui
+      shell: bash
+      run: make operator-ui
     - name: Env vars
       shell: bash
       run: env
