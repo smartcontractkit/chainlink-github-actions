@@ -73,7 +73,7 @@ runs:
   using: composite
   steps:
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@d02e09ae912c5a89a48d1b7cf36f2f35d8f98c7b # v2.0.14
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@84f1ccf5b7459c2b8f75bd47ba96c7ffdad2e47d # v2.0.16
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
