@@ -35,7 +35,7 @@ runs:
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: 3600
     - name: Set Kubernetes Context
-      uses: azure/k8s-set-context@v2
+      uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
         kubeconfig: ${{ inputs.QA_KUBECONFIG }}
@@ -44,7 +44,9 @@ runs:
       run: |
         aws --version
         aws sts get-caller-identity
+        echo "trying kubectl call"
         kubectl version --short
+        echo "finished kubectl call"
     - name: Cache Vendor Packages
       uses: actions/cache@v3
       id: cache-packages
