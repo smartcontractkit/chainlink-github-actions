@@ -26,6 +26,9 @@ inputs:
   dep_atlas_sha:
     required: false
     description: atlas commit or branch
+  dep_relay_sha:
+    required: false
+    description: relay commit or branch
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -58,24 +61,28 @@ runs:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
         QA_PRIVATE_GHA_PULL: ${{ inputs.QA_PRIVATE_GHA_PULL }}
       run: git config --global url.https://${{ inputs.QA_PRIVATE_GHA_PULL }}@github.com/.insteadOf https://github.com/
-    - name: Replace Solana deps manual flow
+    - name: Replace Solana deps
       if: ${{ inputs.dep_solana_sha }}
       shell: bash
       run: go get github.com/smartcontractkit/chainlink-solana@${{ inputs.dep_solana_sha }}
-    - name: Replace Terra deps manual flow
+    - name: Replace Terra deps
       if: ${{ inputs.dep_terra_sha }}
       shell: bash
       run: go get github.com/smartcontractkit/chainlink-terra@${{ inputs.dep_terra_sha }}
-    - name: Replace StarkNet deps manual flow
+    - name: Replace StarkNet deps
       if: ${{ inputs.dep_starknet_sha }}
       shell: bash
       run: go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }}
-    - name: Replace Atlas deps manual flow
+    - name: Replace Atlas deps
       if: ${{ inputs.dep_atlas_sha }}
       shell: bash
       env:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       run: go get github.com/smartcontractkit/atlas@${{ inputs.dep_atlas_sha }}
+    - name: Replace chainlink-relay deps
+      if: ${{ inputs.dep_relay_sha }}
+      shell: bash
+      run: go get github.com/smartcontractkit/chainlink-relay@${{ inputs.dep_relay_sha }}
     - name: Tidy
       shell: bash
       env:
