@@ -86,7 +86,7 @@ runs:
     - name: Install operator-ui
       shell: bash
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}
       run: make operator-ui
     - name: Env vars
       shell: bash
