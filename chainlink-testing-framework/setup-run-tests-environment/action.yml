@@ -9,6 +9,10 @@ inputs:
     required: false
     description: The command to download Ginkgo
     default: make install
+  go_mod_path:
+    required: false
+    description: The go.mod file path
+    default: "go.mod"
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -24,10 +28,11 @@ runs:
   steps:
     - uses: smartcontractkit/tool-versions-to-env-action@v1.0.7
       id: tool-versions
-    - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
+    - name: Setup Go
       uses: actions/setup-go@v3
       with:
-        go-version: ${{ steps.tool-versions.outputs.golang_version }}
+        go-version-file: ${{ inputs.go_mod_path }}
+        check-latest: true
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -35,7 +40,7 @@ runs:
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: 3600
     - name: Set Kubernetes Context
-      uses: azure/k8s-set-context@v2
+      uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
         kubeconfig: ${{ inputs.QA_KUBECONFIG }}
