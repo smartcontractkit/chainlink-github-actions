@@ -45,7 +45,7 @@ runs:
   using: composite
   steps:
     - name: Checkout Chainlink repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: ${{ inputs.cl_repo }}
         ref: ${{ inputs.cl_ref }}
@@ -54,6 +54,7 @@ runs:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       with:
         go-version-file: "go.mod"
+        check-latest: true
     - name: Replace GHA URL
       shell: bash
       env:

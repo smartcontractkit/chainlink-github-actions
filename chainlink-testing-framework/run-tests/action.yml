@@ -55,6 +55,9 @@ inputs:
     required: true
     description: The triggered-by label for the k8s namespace, required for cleanup
     default: ci
+  go_mod_path:
+    required: false
+    description: The go.mod file path
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -73,10 +76,11 @@ runs:
   using: composite
   steps:
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@d02e09ae912c5a89a48d1b7cf36f2f35d8f98c7b # v2.0.14
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.0.18
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
+        go_mod_path: ${{ inputs.go_mod_path }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
@@ -118,6 +122,6 @@ runs:
         path: ${{ inputs.artifacts_location }}
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@d02e09ae912c5a89a48d1b7cf36f2f35d8f98c7b # v2.0.14
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.18
       with:
         triggered_by: ${{ inputs.triggered_by }}
