@@ -71,6 +71,10 @@ inputs:
     required: false
     description: Whether to have cgo enabled
     default: "0"
+  should_cleanup:
+    required: false
+    description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
+    default: "true"
 
 runs:
   using: composite
@@ -125,3 +129,4 @@ runs:
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.18
       with:
         triggered_by: ${{ inputs.triggered_by }}
+        should_cleanup: ${{ inputs.should_cleanup }}
