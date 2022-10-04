@@ -126,7 +126,7 @@ runs:
         path: ${{ inputs.artifacts_location }}
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.18
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.19
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}
