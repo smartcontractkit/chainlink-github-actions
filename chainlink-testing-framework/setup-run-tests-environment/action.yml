@@ -66,9 +66,12 @@ runs:
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
     - name: Install Ginkgo CLI
-      if: steps.cache-packages.outputs.cache-hit != 'true'
       shell: bash
-      run: ${{ inputs.test_download_ginkgo_command }}
+      run: |
+        CHECK=$(which ginkgo)
+        if [ -z ${CHECK} ]; then
+            ${{ inputs.test_download_ginkgo_command }}
+        fi
     - uses: azure/setup-helm@v3
       with:
         version: v${{ steps.tool-versions.outputs.helm_version }}
