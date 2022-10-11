@@ -26,10 +26,10 @@ runs:
         FAIL="${VERSION: -6}"
         echo "${FAIL}"
         if [ "${FAIL}" = "failed" ]; then
-          echo "::set-output name=pass::false"
+          echo "pass=false" >>$GITHUB_OUTPUT
           echo "The k8s environment was not setup, so there are no environments to cleanup"
         else
-          echo "::set-output name=pass::true"
+          echo "pass=true" >>$GITHUB_OUTPUT
         fi
     - name: cleanup k8s cluster namespaces
       if: steps.kubectlcheck.outputs.pass == 'true' && inputs.should_cleanup == 'true'
@@ -51,4 +51,4 @@ runs:
       shell: bash
       run: |
         echo "Skipped cleanup"
-        echo "::set-output name=did_skip::true"
+        echo "did_skip=true" >>$GITHUB_OUTPUT

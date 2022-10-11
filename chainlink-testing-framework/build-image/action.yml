@@ -108,10 +108,10 @@ runs:
       run: |
         if [ "${{ inputs.push_tag }}" != "" ]; then
           # tag exists so we can push
-          echo "::set-output name=push::true"
+          echo "push=true" >>$GITHUB_OUTPUT
         else
           # tag is empty, don't push
-          echo "::set-output name=push::false"
+          echo "push=false" >>$GITHUB_OUTPUT
         fi
     - name: Configure AWS Credentials
       if: steps.push.outputs.push == 'true'
