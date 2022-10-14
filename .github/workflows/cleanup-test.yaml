@@ -6,31 +6,31 @@ jobs:
     name: Can Cleanup and Cancel Cleanup
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Code
-        uses: actions/checkout@v3
-      - name: cleanup with cancel
-        if: always()
-        id: did_skip
-        uses: ./chainlink-testing-framework/cleanup
-        with:
-          triggered_by: "blank"
-          should_cleanup: "false"
-      - name: Verify the cleanup did not run
+      - name: old should not download
         run: |
-          if [ "${{ steps.did_skip.outputs.did_skip_clean }}" != "true" ]; then
-            echo "Failed to skip the cleanup"
-            exit 1
+          CHECK=$(which cat || true)
+          echo "check = '${CHECK}'"
+          if [[ -z "${CHECK}" ]]; then
+            echo "should download"
           fi
-      - name: cleanup without cancel
-        if: always()
-        id: did_not_skip
-        uses: ./chainlink-testing-framework/cleanup
-        with:
-          triggered_by: "blank"
-          should_cleanup: "true"
-      - name: Verify the cleanup did run
+      - name: new should not download
         run: |
-          if [ "${{ steps.did_not_skip.outputs.did_skip_clean }}" != "false" ]; then
-            echo "Failed to run the cleanup"
-            exit 1
+          CHECK=$(which cat || echo "not found")
+          echo "check = '${CHECK}'"
+          if [[ "${CHECK}" == *"not found" ]]; then
+            echo "should download"
+          fi
+      - name: old should download
+        run: |
+          CHECK=$(which catadfadsf || true)
+          echo "check = '${CHECK}'"
+          if [[ -z "${CHECK}" ]]; then
+            echo "should download"
+          fi
+      - name: new should download
+        run: |
+          CHECK=$(which catadfadsf || echo "not found")
+          echo "check = '${CHECK}'"
+          if [[ "${CHECK}" == *"not found" ]]; then
+            echo "should download"
           fi
