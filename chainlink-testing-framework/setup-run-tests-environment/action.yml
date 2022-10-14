@@ -68,8 +68,8 @@ runs:
     - name: Install Ginkgo CLI
       shell: bash
       run: |
-        CHECK=$(which ginkgo)
-        if [ -z ${CHECK} ]; then
+        CHECK=$(which ginkgo || true)
+        if [[ -z "${CHECK}" ]]; then
             ${{ inputs.test_download_ginkgo_command }}
         fi
     - uses: azure/setup-helm@v3
