@@ -88,6 +88,6 @@ runs:
         go version
         ginkgo version
         aws --version
-        kubectl version --short
-        helm version --short
+        kubectl version
+        helm version
         helm repo list
