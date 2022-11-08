@@ -26,30 +26,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: smartcontractkit/tool-versions-to-env-action@v1.0.8
-      id: tool-versions
+
+    # Go setup and caching
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: ${{ inputs.QA_AWS_REGION }}
-        role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
-        role-duration-seconds: 3600
-    - name: Set Kubernetes Context
-      uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ inputs.QA_KUBECONFIG }}
-    - name: Tool Versions
-      shell: bash
-      run: |
-        aws --version
-        aws sts get-caller-identity
-        kubectl version --short
     - name: Cache Vendor Packages
       uses: actions/cache@v3
       id: cache-packages
@@ -72,12 +55,39 @@ runs:
         if [[ -z "${CHECK}" ]]; then
             ${{ inputs.test_download_ginkgo_command }}
         fi
+
+    # Setup AWS cred and K8s context
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.QA_AWS_REGION }}
+        role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
+        role-duration-seconds: 3600
+    - name: Set Kubernetes Context
+      uses: azure/k8s-set-context@v3
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ inputs.QA_KUBECONFIG }}
+
+    # Helm Setup
+    - uses: smartcontractkit/tool-versions-to-env-action@v1.0.8
+      id: tool-versions
     - uses: azure/setup-helm@v3
       with:
         version: v${{ steps.tool-versions.outputs.helm_version }}
-    - name: Add QA charts repo
+    - name: Add required helm charts including chainlink-qa
       shell: bash
-      run: helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
-    - name: Add Bitnami charts repo
+      run: |
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
+
+    # Display tool versions
+    - name: Tool Versions
       shell: bash
-      run: helm repo add bitnami https://charts.bitnami.com/bitnami
+      run: |
+        go version
+        ginkgo version
+        aws --version
+        kubectl version
+        helm version
+        helm repo list

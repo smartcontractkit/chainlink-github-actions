@@ -58,6 +58,9 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
+  dep_chainlink_integration_tests:
+    required: false
+    description: chainlink/integration-tests commit or branch
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -69,8 +72,8 @@ inputs:
     description: The kubernetes configuration to use
   CGO_ENABLED:
     required: false
-    description: Whether to have cgo enabled
-    default: "0"
+    description: Whether to have cgo enabled, defaults to enabled
+    default: "1"
   should_cleanup:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
@@ -79,8 +82,9 @@ inputs:
 runs:
   using: composite
   steps:
+    # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.0.24
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.0.25
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
@@ -88,16 +92,36 @@ runs:
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
+    - name: Replace chainlink/integration-tests deps
+      if: ${{ inputs.dep_chainlink_integration_tests }}
+      shell: bash
+      run: |
+        # find test go root by using the go_mod_path and change to that directory
+        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
+        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
+            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
+            cd "${TEST_LIB_PATH}"
+        fi
+
+        # update the integration-tests lib to the branch or commit
+        go get github.com/smartcontractkit/chainlink/integration-tests@${{ inputs.dep_chainlink_integration_tests }}
+        go mod tidy
+
+    # Download any external artifacts
     - name: Download Artifacts
       if: inputs.download_contract_artifacts_path != 'none'
       uses: actions/download-artifact@v3
       with:
         name: artifacts
         path: ${{ inputs.download_contract_artifacts_path }}
+
+    # Generate any excutables needed to run tests
     - name: Generate gauntlet executable
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
+
+    # Run the tests
     - name: Run Tests
       shell: bash
       env:
@@ -109,11 +133,13 @@ runs:
         export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         ${{ inputs.test_command_to_run }}
+
+    # Reporting and cleanup
     - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
+      uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
-        files: ${{ inputs.publish_report_paths }}
+        junit_files: ${{ inputs.publish_report_paths }}
         github_token: ${{ inputs.token }}
         check_name: ${{ inputs.publish_check_name }}
         comment_mode: ${{ inputs.publish_test_results_comment_mode }}
@@ -126,7 +152,7 @@ runs:
         path: ${{ inputs.artifacts_location }}
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.22
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.25
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}
