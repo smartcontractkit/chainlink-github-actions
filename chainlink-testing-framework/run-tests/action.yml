@@ -137,7 +137,7 @@ runs:
     # Reporting and cleanup
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
+      if: failure()
       with:
         junit_files: ${{ inputs.publish_report_paths }}
         github_token: ${{ inputs.token }}
