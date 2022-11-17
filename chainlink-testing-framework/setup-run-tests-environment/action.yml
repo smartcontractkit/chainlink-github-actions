@@ -8,7 +8,6 @@ inputs:
   test_download_ginkgo_command:
     required: false
     description: The command to download Ginkgo
-    default: make install
   go_mod_path:
     required: false
     description: The go.mod file path
@@ -51,6 +50,10 @@ runs:
     - name: Install Ginkgo CLI
       shell: bash
       run: |
+        if [[ -z "${{ inputs.test_download_ginkgo_command }}" ]]; then
+          # short-circuit when we don't want to install ginkgo
+          exit 0
+        fi
         CHECK=$(which ginkgo || true)
         if [[ -z "${CHECK}" ]]; then
             ${{ inputs.test_download_ginkgo_command }}
@@ -86,7 +89,7 @@ runs:
       shell: bash
       run: |
         go version
-        ginkgo version
+        [[ ! -z "${{ inputs.test_download_ginkgo_command }}" ]] && ginkgo version
         aws --version
         kubectl version
         helm version
