@@ -15,7 +15,6 @@ inputs:
   test_download_ginkgo_command:
     required: false
     description: The command to download Ginkgo
-    default: make install
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
