@@ -48,8 +48,6 @@ runs:
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
     - name: Install Ginkgo CLI
-      env:
-        GINKGO_COMMAND: ${{ inputs.test_download_ginkgo_command }}
       shell: bash
       run: |
         if [[ -z "${{ inputs.test_download_ginkgo_command }}" ]]; then
