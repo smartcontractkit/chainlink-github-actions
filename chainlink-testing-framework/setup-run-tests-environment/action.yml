@@ -52,6 +52,7 @@ runs:
         GINKGO_COMMAND: ${{ inputs.test_download_ginkgo_command }}
       shell: bash
       run: |
+        echo "'${GINKGO_COMMAND}'"
         if [[ ! -z "${GINKGO_COMMAND}" ]]; then
             CHECK=$(which ginkgo || true)
             if [[ -z "${CHECK}" ]]; then
