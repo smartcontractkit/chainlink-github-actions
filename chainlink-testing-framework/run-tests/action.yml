@@ -77,6 +77,10 @@ inputs:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
     default: "true"
+  TEST_INPUTS:
+    required: false
+    description: Additional inputs to be passed to the test
+    default: ""
 
 runs:
   using: composite
@@ -127,6 +131,7 @@ runs:
         CHAINLINK_IMAGE: ${{ inputs.cl_repo }}
         CHAINLINK_VERSION: ${{ inputs.cl_image_tag }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
+        TEST_INPUTS: ${{ inputs.TEST_INPUTS }}
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
