@@ -39,10 +39,6 @@ inputs:
   GOPRIVATE:
     required: false
     description: private repos needed for go
-  GH_TOKEN:
-    required: false
-    description: The token needed to install the operator ui
-    default: ${{ github.token }}
 
 runs:
   using: composite
@@ -91,11 +87,6 @@ runs:
       env:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       run: go mod tidy
-    - name: Install operator-ui
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.GH_TOKEN }}
-      run: make operator-ui
     - name: Env vars
       shell: bash
       run: env
