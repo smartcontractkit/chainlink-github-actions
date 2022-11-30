@@ -91,6 +91,6 @@ runs:
         go version
         [[ ! -z "${{ inputs.test_download_ginkgo_command }}" ]] && ginkgo version
         aws --version
-        kubectl version
+        kubectl version || echo "ignore failure to describe"
         helm version
         helm repo list
