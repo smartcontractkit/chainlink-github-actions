@@ -61,7 +61,7 @@ runs:
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@495fc37803e35461021a6229a7c1a9cda25e54fe
       with:
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
