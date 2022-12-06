@@ -43,6 +43,17 @@ runs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
+    - name: Tidy and check files
+      shell: bash
+      run: |
+        # find test go root by using the go_mod_path and change to that directory
+        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
+        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
+            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
+            cd "${TEST_LIB_PATH}"
+        fi
+        go mod tidy
+        git diff --stat --exit-code
     - name: Download Go Vendor Packages
       if: steps.cache-packages.outputs.cache-hit != 'true'
       shell: bash
