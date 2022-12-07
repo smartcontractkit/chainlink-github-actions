@@ -1,5 +1,6 @@
 name: Sync token issuer code
 on:
+  pull_request:
   push:
     branches:
       - develop
