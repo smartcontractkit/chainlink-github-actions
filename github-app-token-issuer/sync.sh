@@ -20,7 +20,7 @@ fail() {
   err "$1"
   exit 1
 }
-cd "$gitRoot/github-token-issuer"
+cd "$gitRoot/github-app-token-issuer"
 
 echo "Getting latest release for tag for $repo"
 action_releases=$(gh release list -R $repo | grep action | head -1 | awk '{ print $1 }')
