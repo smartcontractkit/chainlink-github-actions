@@ -12,9 +12,6 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
-  test_download_ginkgo_command:
-    required: false
-    description: The command to download Ginkgo
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -83,10 +80,9 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.0.30
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.0
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
-        test_download_ginkgo_command: ${{ inputs.test_download_ginkgo_command }}
         go_mod_path: ${{ inputs.go_mod_path }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
@@ -133,16 +129,6 @@ runs:
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         ${{ inputs.test_command_to_run }}
 
-    # Reporting and cleanup
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: failure()
-      with:
-        junit_files: ${{ inputs.publish_report_paths }}
-        github_token: ${{ inputs.token }}
-        check_name: ${{ inputs.publish_check_name }}
-        comment_mode: ${{ inputs.publish_test_results_comment_mode }}
-        commit: ${{ inputs.publish_test_results_commit }}
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3

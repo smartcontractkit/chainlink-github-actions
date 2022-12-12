@@ -5,9 +5,6 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
-  test_download_ginkgo_command:
-    required: false
-    description: The command to download Ginkgo
   go_mod_path:
     required: false
     description: The go.mod file path
@@ -25,7 +22,6 @@ inputs:
 runs:
   using: composite
   steps:
-
     # Go setup and caching
     - name: Setup Go
       uses: actions/setup-go@v3
@@ -58,17 +54,6 @@ runs:
       if: steps.cache-packages.outputs.cache-hit != 'true'
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
-    - name: Install Ginkgo CLI
-      shell: bash
-      run: |
-        if [[ -z "${{ inputs.test_download_ginkgo_command }}" ]]; then
-          # short-circuit when we don't want to install ginkgo
-          exit 0
-        fi
-        CHECK=$(which ginkgo || true)
-        if [[ -z "${CHECK}" ]]; then
-            ${{ inputs.test_download_ginkgo_command }}
-        fi
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials
@@ -95,12 +80,14 @@ runs:
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
 
+    - name: Set Up gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+
     # Display tool versions
     - name: Tool Versions
       shell: bash
       run: |
         go version
-        [[ ! -z "${{ inputs.test_download_ginkgo_command }}" ]] && ginkgo version
         aws --version
         kubectl version
         helm version
