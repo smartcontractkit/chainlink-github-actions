@@ -80,7 +80,7 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.0.30
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@2acd7d0efcd256d6ea7f50b2815f0e41b7c1e5c1
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_mod_path: ${{ inputs.go_mod_path }}
