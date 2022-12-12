@@ -32,7 +32,7 @@ jobs:
         run: ./github-token-issuer/sync.sh
 
       - name: Open PR
-        uses: peter-evans/create-pull-request@18f90432bedd2afd6a825469ffd38aa24712a91d # v4.1.1
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
         with:
           title: Update github-token-issuer
           branch: chore/update-token-issuer
