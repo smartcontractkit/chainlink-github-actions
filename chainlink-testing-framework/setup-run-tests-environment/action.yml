@@ -80,9 +80,6 @@ runs:
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
 
-    - name: Set Up gotestfmt
-      uses: GoTestTools/gotestfmt-action@v2
-
     # Display tool versions
     - name: Tool Versions
       shell: bash

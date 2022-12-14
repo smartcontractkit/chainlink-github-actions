@@ -80,7 +80,7 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.0
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.1
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_mod_path: ${{ inputs.go_mod_path }}
@@ -115,6 +115,12 @@ runs:
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
+
+    # gotestfmt gives us pretty test output
+    - name: Set Up gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        token: ${{ inputs.token }} # Avoids rate-limiting
 
     # Run the tests
     - name: Run Tests
