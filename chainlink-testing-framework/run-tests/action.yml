@@ -120,7 +120,7 @@ runs:
     - name: Set Up gotestfmt
       uses: GoTestTools/gotestfmt-action@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }} # Avoids rate-limiting
+        token: ${{ inputs.token }} # Avoids rate-limiting
 
     # Run the tests
     - name: Run Tests
