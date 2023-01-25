@@ -25,10 +25,24 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
 
+      - name: Assume role capable of dispatching action
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # v1.7.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_CHAINLINK_GITHUB_ACTIONS_SYNC_GATI_TOKEN_ISSUER_ROLE_ARN }}
+          role-duration-seconds: 3600
+          role-session-name: sync-github-app-token-issuer.update-version
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get Github Token
+        id: get-gh-token
+        uses: smartcontractkit/chainlink-github-actions/github-app-token-issuer@main
+        with:
+          url: ${{ secrets.AWS_INFRA_RELENG_TOKEN_ISSUER_LAMBDA_URL }}
+
       - name: Update version
         id: update
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.get-gh-token.outputs.access-token }}
         run: ./github-app-token-issuer/sync.sh
 
       - name: Open PR
