@@ -73,7 +73,7 @@ inputs:
   should_cleanup:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
-    default: "true"
+    default: "false"
 
 runs:
   using: composite
