@@ -1,6 +1,6 @@
 {
   "name": "@smartcontractkit/github-app-token-issuer-action",
-  "version": "0.0.2-c610002",
+  "version": "0.1.0-5136e7a",
   "description": "The github action for interfacing with the token issuer service",
   "main": "dist/index.js",
   "files": [
