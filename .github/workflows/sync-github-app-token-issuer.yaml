@@ -50,9 +50,15 @@ jobs:
           GH_TOKEN: ${{ steps.get-gh-token.outputs.access-token }}
         run: ./github-app-token-issuer/sync.sh
 
+      - name: Update buggy version
+        id: update
+        env:
+          GH_TOKEN: ${{ steps.get-gh-token.outputs.access-token }}
+        run: ./github-app-token-issuer-buggy/sync.sh
+
       - name: Open PR
         uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
         with:
-          title: Update github-app-token-issuer
-          branch: chore/update-github-app-token-issuer
-          commit-message: Update github-app-token-issuer
+          title: Update github-app-token-issuers
+          branch: chore/update-github-app-token-issuers
+          commit-message: Update github-app-token-issuers
