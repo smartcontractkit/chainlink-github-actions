@@ -23,7 +23,7 @@ fail() {
 cd "$gitRoot/github-app-token-issuer"
 
 echo "Getting latest release for tag for $repo"
-action_releases=$(gh release list -R $repo | grep action | head -1 | awk '{ print $1 }')
+action_releases=$(gh release list -R $repo | grep action | grep -v buggy | head -1 | awk '{ print $1 }')
 release=$(gh release view -R $repo --json 'tagName,body' "$action_releases")
 tag=$(echo "$release" | jq -r '.tagName')
 
