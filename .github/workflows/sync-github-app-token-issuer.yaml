@@ -7,7 +7,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: "0 */1 * * *" # Run every hour
+    - cron: "0 */1 * * *" # Runs every hour
 
 jobs:
   update-version:
