@@ -1,0 +1,25 @@
+{
+  "name": "@smartcontractkit/github-app-token-issuer-action-buggy",
+  "version": "0.0.3",
+  "description": "An intentionally buggy version of the github action for interfacing with the token issuer service",
+  "main": "dist/index.js",
+  "files": [
+    "dist/index.js",
+    "action.yml"
+  ],
+  "scripts": {
+    "clean": "tsc -b --clean",
+    "build:lint": "tsc -b",
+    "build": "esbuild index.ts --minify --bundle --platform=node --outfile=dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.15.18"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@types/node": "^18.14.0"
+  }
+}

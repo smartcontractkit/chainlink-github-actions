@@ -1,6 +1,6 @@
 {
   "name": "@smartcontractkit/github-app-token-issuer-action",
-  "version": "0.0.2-c610002",
+  "version": "0.1.2",
   "description": "The github action for interfacing with the token issuer service",
   "main": "dist/index.js",
   "files": [
@@ -9,17 +9,17 @@
   ],
   "scripts": {
     "clean": "tsc -b --clean",
-    "build:lint": "tsc -b",
-    "build": "esbuild index.ts --minify --bundle --platform=node --outfile=dist/index.js"
+    "build": "esbuild index.ts --minify --bundle --platform=node --outfile=dist/index.js",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.15.13"
+    "esbuild": "^0.15.18"
   },
   "dependencies": {
-    "@smartcontractkit/github-app-token-issuer-signed-request": "workspace:*",
-    "@actions/core": "^1.10.0"
+    "@actions/core": "^1.10.0",
+    "@smartcontractkit/github-app-token-issuer-signed-request": "workspace:*"
   }
 }
