@@ -1,0 +1,15 @@
+name: github-token-issuer-action-buggy
+runs:
+  using: node16
+  main: dist/index.js
+description: "NOTE: INTENTIONALLY BROKEN | Get an installation access token based on the current environmental AWS role"
+inputs:
+  error-type:
+    description: "The type of error to throw, either 'timeout' or 'http' or 'action', see index.ts for more details"
+    required: true
+  error-timeout-duration-seconds:
+    description: "The number of seconds to wait before throwing the a timeout error"
+    required: false
+outputs:
+  access-token:
+    description: The github access token that has permissions reflecting the current AWS role value
