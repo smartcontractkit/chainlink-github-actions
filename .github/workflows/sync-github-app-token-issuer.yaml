@@ -1,7 +1,6 @@
 name: Sync github app token issuer code
 
 on:
-  pull_request:
   push:
     branches:
       - main
