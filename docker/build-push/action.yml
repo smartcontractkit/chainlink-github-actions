@@ -3,7 +3,7 @@ description: Common docker image builder for building chainlink docker images
 inputs:
   tags:
     required: true
-    description: The full docker tag to use for the push to ecr, comma separated for multiple, example latest,develop,...
+    description: The full docker tag list to use for the push to ecr, new line separated
   file:
     required: true
     description: The path to the dockerfile to build
