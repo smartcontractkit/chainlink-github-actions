@@ -1,0 +1,42 @@
+name: Docker Image Exists In ECR
+description: Checks if a docker image tag exists in an ecr
+inputs:
+  repository:
+    required: true
+    description: The ecr repository to check, example - chainlink-tests
+  tag:
+    required: true
+    description: The docker image tag to check
+  AWS_REGION:
+    required: true
+    description: The AWS region to use
+  AWS_ROLE_TO_ASSUME:
+    required: true
+    description: The AWS role to assume
+outputs:
+  exists:
+    description: Did we clean up pods
+    value: ${{ steps.check.outputs.exists }}
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@e1e17a757e536f70e52b5a12b2e8d1d1c60e04ef # 2.0.0
+      with:
+        aws-region: ${{ inputs.AWS_REGION }}
+        role-to-assume: ${{ inputs.AWS_ROLE_TO_ASSUME }}
+        role-duration-seconds: 3600
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Check if image tag exists
+      id: check
+      shell: bash
+      run: |
+        # see if the tag exists in ecr
+        tag_found=$(aws ecr describe-images --repository-name ${{ inputs.repository }} --region ${{ inputs.AWS_REGION }} --image-ids=imageTag=${{ inputs.tag }} --output json | jq '.imageDetails | length' || echo "0")
+        if [[ "${tag_found}" == "0" ]]; then
+          echo "exists=false" >>$GITHUB_OUTPUT
+        else
+          echo "exists=true" >>$GITHUB_OUTPUT
+        fi
