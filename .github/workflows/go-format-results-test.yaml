@@ -1,0 +1,28 @@
+name: Go format results for logs test
+on:
+  pull_request:
+jobs:
+  can_format_test_results:
+    name: Formats results correctly for logs
+    runs-on: ubuntu-latest
+    env:
+      OUTPUT_PATH: "./tmp_output.json"
+      FIXTURES_PATH: "./go/format-results-for-logs"
+    steps:
+      - name: Check out Code
+        uses: actions/checkout@v3
+      - name: Format Results
+        uses: ./go/format-results-for-logs
+        with:
+          results: "test-results.xml"
+          test_results_path: "${{ env.FIXTURES_PATH}}/test_results.json"
+          outputs_path: ${{ env.OUTPUT_PATH }}
+      - name: Verify expected output is created
+        run: |
+          generated=${{ env.OUTPUT_PATH }}
+          expected="${{ env.FIXTURES_PATH}}/expected_output.json"
+          echofail() {
+            echo "Did not generate expected output"
+            exit 1
+          }
+          cmp $expected $generated || echofail

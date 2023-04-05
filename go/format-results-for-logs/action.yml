@@ -1,0 +1,31 @@
+name: Go Format Results
+description: Parse go test results into format for loki/grafana input
+inputs:
+  test_results_path:
+    required: false
+    description: Location of where error logs are written
+    default: ./test_results.json
+  outputs_path:
+    required: false
+    description: Location to put the artifacts
+    default: ./tests_results_log_fmt.log
+
+runs:
+  using: composite
+  steps:
+    - name: Parse results to output file
+      shell: sh
+      run: |
+        input_file="${{ inputs.test_results_path }}"
+        output_file="${{ inputs.outputs_path }}"
+
+        # Check for input file
+        [ ! -f "$input_file" ] && echo "No results file at ${input_file}" && exit 1
+
+        # Remove the output file if it exists
+        [ -f "$output_file" ] && rm "$output_file"
+
+        # Parse the pass/fail data we need from the results
+        jq -r 'select(.Action == "pass" or .Action == "fail")
+          | del(.Time, .Package)
+          | .Test //= "Test Suite Result"' "$input_file" > "$output_file"
