@@ -23,6 +23,11 @@ jobs:
           expected="${{ env.FIXTURES_PATH}}/expected_output.json"
           echofail() {
             echo "Did not generate expected output"
+            echo "Expected output:"
+            cat $expected
+            echo ""
+            echo "Found output:"
+            cat $generated
             exit 1
           }
           cmp $expected $generated || echofail
