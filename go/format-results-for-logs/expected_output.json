@@ -1,17 +1,14 @@
-[
-  {
+{
+  "TestMinResources5NodesEnvWithBlockscout": {
     "Action": "pass",
-    "Test": "TestMinResources5NodesEnvWithBlockscout",
     "Elapsed": 506.4
   },
-  {
+  "Test5NodesPlus2MiningGethsReorgEnv": {
     "Action": "fail",
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
     "Elapsed": 522.96
   },
-  {
+  "Test Suite Result": {
     "Action": "fail",
-    "Elapsed": 551.993,
-    "Test": "Test Suite Result"
+    "Elapsed": 551.993
   }
-]
+}

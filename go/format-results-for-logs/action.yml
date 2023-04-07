@@ -29,6 +29,8 @@ runs:
         jq -s '.' "$input_file" > "${output_file}.tmp"
 
         # Parse the pass/fail data we need from the results
-        jq -r '[.[] | select(.Action == "pass" or .Action == "fail") 
-            | del(.Time, .Package)
-            | .Test //= "Test Suite Result"]' "${output_file}.tmp" > "$output_file"
+        jq -r 'reduce (.[]
+          | select(.Action == "pass" or .Action == "fail")
+          | del(.Time, .Package)
+          | .Test //= "Test Suite Result") as $item
+          ({}; .[$item.Test] = {Action: $item.Action, Elapsed: $item.Elapsed})' "${output_file}.tmp" > "$output_file"
