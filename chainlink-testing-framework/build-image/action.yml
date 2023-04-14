@@ -63,14 +63,21 @@ runs:
     - name: Replace Solana deps
       if: ${{ inputs.dep_solana_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-solana@${{ inputs.dep_solana_sha }}
+      run: |
+        # switch back to just this first line after cosmos is fixed
+        # go get github.com/smartcontractkit/chainlink-solana@${{ inputs.dep_solana_sha }}
+
+        # This is a temporary work around to go get, not meant for long term use
+        file="go.mod"
+        new_line="github.com/smartcontractkit/chainlink-solana ${{ inputs.dep_solana_sha }}"
+        sed -i "s/^\s*github\.com\/smartcontractkit\/chainlink-solana .*\$/$(echo "$new_line" | sed -e 's/[]\/$*.^[]/\\&/g')/g" "$file"
     - name: Replace Cosmos deps
       if: ${{ inputs.dep_cosmos_sha }}
       shell: bash
       run: |
         # switch back to just this first line after cosmos is fixed
         # go get github.com/smartcontractkit/chainlink-cosmos@${{ inputs.dep_cosmos_sha }}
-        
+
         # This is a temporary work around to go get, not meant for long term use
         file="go.mod"
         new_line="github.com/smartcontractkit/chainlink-cosmos ${{ inputs.dep_cosmos_sha }}"
