@@ -39,11 +39,16 @@ inputs:
   GOPRIVATE:
     required: false
     description: private repos needed for go
+  should_checkout:
+    required: false
+    description: Do we want to checkout the chainlink code branch, sometimes we don't need to
+    default: 'true'
 
 runs:
   using: composite
   steps:
     - name: Checkout Chainlink repo
+      if: ${{ inputs.should_checkout == 'true' }}
       uses: actions/checkout@v3
       with:
         repository: ${{ inputs.cl_repo }}
