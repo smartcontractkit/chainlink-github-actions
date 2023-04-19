@@ -76,7 +76,8 @@ runs:
     - name: Replace StarkNet deps
       if: ${{ inputs.dep_starknet_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }}
+      # TODO - Remove replace due to cosmos issue
+      run: go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }} && printf '%s\n' /chainlink-relay/a 'github.com/smartcontractkit/chainlink-cosmos v0.1.7-0.20230407210547-2b9d8b0180ee' . w q | ex -s go.mod
     - name: Replace Atlas deps
       if: ${{ inputs.dep_atlas_sha }}
       shell: bash
