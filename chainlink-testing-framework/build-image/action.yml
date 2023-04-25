@@ -92,7 +92,16 @@ runs:
       if: ${{ inputs.dep_starknet_sha }}
       shell: bash
       # TODO - Remove replace due to cosmos issue
-      run: go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }} && printf '%s\n' /chainlink-relay/a 'github.com/smartcontractkit/chainlink-cosmos v0.1.7-0.20230407210547-2b9d8b0180ee' . w q | ex -s go.mod
+      run: |
+        # go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }} && printf '%s\n' /chainlink-relay/a 'github.com/smartcontractkit/chainlink-cosmos v0.1.7-0.20230407210547-2b9d8b0180ee' . w q | ex -s go.mod
+
+        # switch back to just this first line after cosmos is fixed
+        # go get github.com/smartcontractkit/chainlink-starknet/relayer@${{ inputs.dep_starknet_sha }}
+
+        # This is a temporary work around to go get, not meant for long term use
+        file="go.mod"
+        new_line="github.com/smartcontractkit/chainlink-starknet ${{ inputs.dep_starknet_sha }}"
+        sed -i "s/^\s*github\.com\/smartcontractkit\/chainlink-starknet\/relayer .*\$/$(echo "$new_line" | sed -e 's/[]\/$*.^[]/\\&/g')/g" "$file"
     - name: Replace Atlas deps
       if: ${{ inputs.dep_atlas_sha }}
       shell: bash
