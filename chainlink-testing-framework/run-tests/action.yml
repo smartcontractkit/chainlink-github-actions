@@ -54,6 +54,9 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
+  aws_registries:
+    required: false
+    description: AWS registries to log into for the test if needed
   dep_chainlink_integration_tests:
     required: false
     description: chainlink/integration-tests commit or branch
@@ -84,6 +87,7 @@ runs:
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_mod_path: ${{ inputs.go_mod_path }}
+        aws_registries: ${{ inputs.aws_registries }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
