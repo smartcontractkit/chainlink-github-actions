@@ -73,6 +73,10 @@ inputs:
     required: false
     description: Whether to have cgo enabled, defaults to enabled
     default: "1"
+  run_setup:
+    required: false
+    description: Should we run the setup before running the tests
+    default: "true"
   should_cleanup:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
@@ -83,7 +87,8 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.1
+      if: inputs.run_setup == 'true'
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.7
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_mod_path: ${{ inputs.go_mod_path }}
