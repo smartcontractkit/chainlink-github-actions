@@ -100,7 +100,7 @@ runs:
 
         # This is a temporary work around to go get, not meant for long term use
         file="go.mod"
-        new_line="github.com/smartcontractkit/chainlink-starknet ${{ inputs.dep_starknet_sha }}"
+        new_line="github.com/smartcontractkit/chainlink-starknet/relayer ${{ inputs.dep_starknet_sha }}"
         sed -i "s/^\s*github\.com\/smartcontractkit\/chainlink-starknet\/relayer .*\$/$(echo "$new_line" | sed -e 's/[]\/$*.^[]/\\&/g')/g" "$file"
     - name: Replace Atlas deps
       if: ${{ inputs.dep_atlas_sha }}
