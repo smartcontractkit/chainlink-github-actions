@@ -29,9 +29,9 @@ inputs:
 
       Examples:
         # prod
-        helm-chart-repo: ${{ secrets.AWS_ACCOUNT_ID_PROD }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/infra-charts
+        helm-chart-repo: $AWS_ACCOUNT_ID_PROD.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
         # sdlc
-        helm-chart-repo: ${{ secrets.AWS_ACCOUNT_ID_SDLC }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/infra-charts
+        helm-chart-repo: $AWS_ACCOUNT_ID_SDLC.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
     required: true
   helm-chart-repo-update:
     description: 'Whether or not to update the helm chart repo.'
