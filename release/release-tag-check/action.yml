@@ -13,4 +13,4 @@ runs:
       - name: Check release tag
         id: check
         shell: bash
-        run: ./scripts/releasetagcheck.sh
+        run: ${{ github.action_path }}/scripts/releasetagcheck.sh
