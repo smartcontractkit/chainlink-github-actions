@@ -1,0 +1,16 @@
+name: Release tag check
+description: Indicates whether a GitHub ref is a pre-release or a final release.
+outputs:
+  is-pre-release:
+    description: '`true` if the release is a pre-release'
+    value: ${{ steps.check.outputs.is-pre-release }}
+  is-release:
+    description: '`true if the release is final'
+    value: ${{ steps.check.outputs.is-release }}
+runs:
+  using: composite
+  steps:
+      - name: Check release tag
+        id: check
+        shell: bash
+        run: ./scripts/releasetagcheck.sh
