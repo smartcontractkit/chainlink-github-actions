@@ -21,6 +21,10 @@ inputs:
       Example:
         app-release-name: 'mercury-server'
     required: true
+  github-token:
+      description: The GITHUB_TOKEN for the workflow
+      required: false
+      default: ${{ github.token }}
   helm-chart-repo:
     description: |
       Helm chart repo URL to use, either `sdlc` or `prod`. 
@@ -114,4 +118,4 @@ runs:
         draft: ${{ inputs.pr-draft }}
         labels: ${{ inputs.pr-labels }}
         title: Bump Helm Chart to ${{ inputs.helm-chart-version }} for ${{ steps.get-filename-from-path.outputs.filename-path }}
-        token: ${{ steps.get-gh-token.outputs.access-token }}
+        token: ${{ inputs.github-token }}
