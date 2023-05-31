@@ -93,8 +93,7 @@ runs:
           --field pr-base-branch=${{ inputs.pr-base-branch }} \
           --field pr-labels=${{ inputs.pr-labels }} \
           --field pr-draft=${{ inputs.pr-draft }} \
-          --field release-type=${{ inputs.release-type }} \
-          --field gitRepo=${{ github.event.repository.name }}
+          --field release-type=${{ inputs.release-type }}
       env:
         GH_TOKEN: ${{ inputs.github-token }}
       
