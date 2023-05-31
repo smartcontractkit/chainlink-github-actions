@@ -82,7 +82,7 @@ runs:
       id: dispatch-workflow
       shell: bash
       run: |
-        gh workflow run ${{ inputs.workflow-name }} \
+        gh workflow run "${{ inputs.workflow-name }}" \
           --repo ${{ inputs.repo-destination-name }} \
           --ref ${{ inputs.repo-destination-git-branch }} \
           --field app-file-path-pattern=${{ inputs.app-file-path-pattern }} \
