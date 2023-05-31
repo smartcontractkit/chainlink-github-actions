@@ -96,5 +96,5 @@ runs:
           --field release-type=${{ inputs.release-type }} \
           --field gitRepo=${{ github.event.repository.name }}
       env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GH_TOKEN: ${{ inputs.github-token }}
       
