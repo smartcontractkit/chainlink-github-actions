@@ -1,0 +1,100 @@
+name: Helm Version Bump Sender
+description: |
+  This action will run from a separate repo that is from where the Argo CD repo
+  lives. It will dispatch a GitHub Actions workflow which will invoke the Helm
+  Version Bump Receiver action to ultimately update the helm chart version via
+  GitOps.
+inputs:
+  github-token:
+    description: 'GitHub token (not the workflow default token).'
+    required: true
+  app-file-path-pattern:
+    description: |
+      File path pattern to use to find the app file(s) to use for the helm
+      chart bump.
+
+      Example:
+        app-file-path-pattern: 'projects/mercury/apps/mercury-server-*-testnet.yaml'
+    required: true
+  app-release-name:
+    description: |
+      Name of the Argo CD app release to use for the helm chart bump.
+
+      Example:
+        app-release-name: 'mercury-server'
+    required: true
+  helm-chart-repo:
+    description: |
+      Helm chart repo URL to use, either `sdlc` or `prod`. 
+      Only used if `inputs.helm-chart-repo-update` is true.
+      Only use `sdlc` for pre-releases.
+
+      Examples:
+        # prod
+        helm-chart-repo: $AWS_ACCOUNT_ID_PROD.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
+        # sdlc
+        helm-chart-repo: $AWS_ACCOUNT_ID_SDLC.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
+    required: true
+  helm-chart-repo-update:
+    description: 'Whether or not to update the helm chart repo.'
+    required: true
+    default: 'false'
+  helm-chart-version:
+    description: |
+      Helm chart version to use for the helm chart bump.
+
+      Example:
+        helm-chart-version: '0.0.1'
+    required: true
+  pr-base-branch:
+    description: 'Base branch to create PR against.'
+    required: true
+    default: 'main'
+  pr-labels:
+      description: |
+        Comma separated list of labels to add to the PR.
+
+        Example:
+          pr-labels: 'preview-sand,do-not-merge'
+      required: true
+  pr-draft:
+    description: 'Whether or not to create the PR as a draft.'
+    required: true
+    default: 'true'
+  release-type:
+    description: 'Used to append to the branch name and the PR title.'
+    required: true
+    default: 'sandbox'
+  repo-destination-git-branch:
+    description: 'Destination repo git branch to dispatch workflow from.'
+    required: true
+    default: 'main'
+  repo-destination-name:
+    description: 'Destination repo name to dispatch against.'
+    required: true
+  workflow-file-name:
+    description: 'Name of the workflow file to dispatch.'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: 'Dispatch Workflow: Helm Version Bump Receiver'
+      id: dispatch-workflow
+      shell: bash
+      run: |
+        gh workflow run "${{ inputs.workflow-file-name }}" \
+          --repo ${{ inputs.repo-destination-name }} \
+          --ref ${{ inputs.repo-destination-git-branch }} \
+          --field app-file-path-pattern=${{ inputs.app-file-path-pattern }} \
+          --field app-release-name=${{ inputs.app-release-name }} \
+          --field helm-chart-repo=${{ inputs.helm-chart-repo }} \
+          --field helm-chart-repo-update=${{ inputs.helm-chart-repo-update }} \
+          --field helm-chart-version=${{ inputs.helm-chart-version }} \
+          --field pr-base-branch=${{ inputs.pr-base-branch }} \
+          --field pr-labels=${{ inputs.pr-labels }} \
+          --field pr-draft=${{ inputs.pr-draft }} \
+          --field release-type=${{ inputs.release-type }} \
+          --field gitRepo=${{ github.event.repository.name }}
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      
