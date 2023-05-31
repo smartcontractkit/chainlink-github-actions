@@ -72,8 +72,8 @@ inputs:
   repo-destination-name:
     description: 'Destination repo name to dispatch against.'
     required: true
-  workflow-name:
-    description: 'Name of the workflow to dispatch.'
+  workflow-file-name:
+    description: 'Name of the workflow file to dispatch.'
     required: true
 runs:
   using: composite
@@ -82,7 +82,7 @@ runs:
       id: dispatch-workflow
       shell: bash
       run: |
-        gh workflow run "${{ inputs.workflow-name }}" \
+        gh workflow run "${{ inputs.workflow-file-name }}" \
           --repo ${{ inputs.repo-destination-name }} \
           --ref ${{ inputs.repo-destination-git-branch }} \
           --field app-file-path-pattern=${{ inputs.app-file-path-pattern }} \
