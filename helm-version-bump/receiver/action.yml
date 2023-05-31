@@ -89,7 +89,7 @@ runs:
         APP_FILE_PATH_PATTERN: ${{ inputs.app-file-path-pattern }}
       shell: bash
       run: |
-        echo "filename-path=$(basename "${APP_FILE_PATH_PATTERN}") | tee -a "$GITHUB_OUTPUT"
+        echo "filename-path=$(basename ${APP_FILE_PATH_PATTERN})" | tee -a "$GITHUB_OUTPUT"
     - name: Bump helm chart version
       id: bump-helm-chart-version
       uses: mikefarah/yq@d2f1ae9db722ac6b0702dd7f8a08dd22722d8c2d # v4.33.3
