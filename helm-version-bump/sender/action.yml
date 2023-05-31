@@ -5,14 +5,8 @@ description: |
   Version Bump Receiver action to ultimately update the helm chart version via
   GitOps.
 inputs:
-  aws-role-to-assume:
-    description: 'AWS IAM role to assume in order to get the Github token from GATI.'
-    required: true
-  aws-region:
-    description: 'AWS region to use.'
-    required: true
-  gati-lambda-function-url:
-    description: 'URL of the GATI Lambda function to use to get the Github token.'
+  github-token:
+    description: 'GitHub token (not the workflow default token).'
     required: true
   app-file-path-pattern:
     description: |
@@ -84,17 +78,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Assume role capable of getting token from GATI
-      uses: aws-actions/configure-aws-credentials@e1e17a757e536f70e52b5a12b2e8d1d1c60e04ef # v2.0.0
-      with:
-        role-to-assume: ${{ inputs.aws-role-to-assume }}
-        role-duration-seconds: 900
-        aws-region: ${{ inputs.aws-region }}
-    - name: Get Github Token from GATI
-      id: get-gh-token
-      uses: smartcontractkit/chainlink-github-actions/github-app-token-issuer@main
-      with:
-        url: ${{ inputs.gati-lambda-function-url }}
     - name: 'Dispatch Workflow: Helm Version Bump Receiver'
       id: dispatch-workflow
       shell: bash
@@ -113,5 +96,5 @@ runs:
           --field release-type=${{ inputs.release-type }}' \
           --field gitRepo=${{ github.event.repository.name }}
       env:
-        GITHUB_TOKEN: ${{ steps.get-gh-token.outputs.access-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       
