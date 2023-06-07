@@ -143,6 +143,8 @@ runs:
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
+        # Handle bots as users
+        export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
