@@ -1,0 +1,18 @@
+name: 'SemVer Compare'
+description: 'Compare two semantic versions'
+inputs:
+  version1:
+    description: 'First semantic version'
+    required: true
+  version2:
+    description: 'Second semantic version'
+    required: true
+  operator:
+    description: 'Comparison operator (gt, lt, eq)'
+    required: true
+outputs:
+  result:
+    description: 'Comparison result'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
