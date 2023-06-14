@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 3109:
@@ -42,11 +42,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.versionCompare = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const semver_1 = __importDefault(__nccwpck_require__(1383));
-/**
- * Simple GitHub Actions wrapper around the semver library.
- */
+function versionCompare(version1, operator, version2) {
+    // Check for required input:
+    if (!version1 || !version2 || !operator) {
+        throw new Error('Required inputs not specified.');
+    }
+    // Validate the inputs:
+    if (!semver_1.default.valid(version1) || !semver_1.default.valid(version2)) {
+        throw new Error('Invalid version(s).');
+    }
+    if (!['gt', 'lt', 'eq'].includes(operator)) {
+        throw new Error('Invalid operator.');
+    }
+    // Compare the versions:
+    const result = semver_1.default[operator](version1, version2);
+    return result;
+}
+exports.versionCompare = versionCompare;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -54,19 +69,7 @@ function run() {
             const operator = core.getInput('operator');
             const version2 = core.getInput('version2');
             core.debug(`Comparing ${version1} ${operator} ${version2}`);
-            // Check for required input:
-            if (!version1 || !version2 || !operator) {
-                throw new Error('Required inputs not specified.');
-            }
-            // Validate the inputs:
-            if (!semver_1.default.valid(version1) || !semver_1.default.valid(version2)) {
-                throw new Error('Invalid version(s).');
-            }
-            if (!['gt', 'lt', 'eq'].includes(operator)) {
-                throw new Error('Invalid operator.');
-            }
-            // Compare the versions:
-            const result = semver_1.default[operator](version1, version2);
+            const result = versionCompare(version1, operator, version2);
             core.setOutput('result', result);
         }
         catch (error) {
@@ -6121,3 +6124,4 @@ module.exports = require("util");
 /******/ 	
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map
