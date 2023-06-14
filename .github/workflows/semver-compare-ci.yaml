@@ -12,6 +12,11 @@ on:
       - '.github/workflows/semver-compare-ci.yaml'
       - 'semver-compare/**'
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./semver-compare
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./semver-compare
+      - uses: .
         with:
           version1: 2.0.0
           operator: gt

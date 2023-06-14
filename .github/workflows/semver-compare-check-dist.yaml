@@ -22,6 +22,11 @@ on:
       - 'semver-compare/**'
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./semver-compare
+
 jobs:
   check-dist:
     runs-on: ubuntu-latest
