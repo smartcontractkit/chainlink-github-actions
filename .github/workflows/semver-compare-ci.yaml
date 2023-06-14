@@ -1,4 +1,4 @@
-name: 'semver-compare-build-test'
+name: 'semver-compare-build-ci'
 on:
   pull_request:
     paths:
