@@ -9,4 +9,3 @@ Make sure you build and commit the built files.
 ```shell
 npm run build
 ```
-
