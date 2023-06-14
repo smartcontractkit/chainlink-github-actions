@@ -2,14 +2,14 @@ name: 'semver-compare-build-test'
 on:
   pull_request:
     paths:
-      - '.github/workflows/semver-compare-test.yaml'
+      - '.github/workflows/semver-compare-ci.yaml'
       - 'semver-compare/**'
   push:
     branches:
       - main
       - 'release/*'
     paths:
-      - '.github/workflows/semver-compare-test.yaml'
+      - '.github/workflows/semver-compare-ci.yaml'
       - 'semver-compare/**'
 
 jobs:
