@@ -1,4 +1,4 @@
-import {versionCompare} from '../src/main'
+import {versionCompare} from '../src/compare'
 import semver from 'semver'
 
 describe('versionCompare', () => {
