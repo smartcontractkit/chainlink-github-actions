@@ -1,0 +1,30 @@
+name: 'semver-compare-build-test'
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/semver-compare-test.yaml'
+      - 'semver-compare/**'
+  push:
+    branches:
+      - main
+      - 'release/*'
+    paths:
+      - '.github/workflows/semver-compare-test.yaml'
+      - 'semver-compare/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run all
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./semver-compare
+        with:
+          version1: 2.0.0
+          operator: gt
+          version2: 1.0.0
