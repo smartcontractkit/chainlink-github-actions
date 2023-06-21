@@ -9,6 +9,9 @@ inputs:
     required: false
     description: The go.mod file path
     default: "go.mod"
+  aws_registries:
+    required: false
+    description: AWS registries to log into for the test if needed
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -67,6 +70,16 @@ runs:
       with:
         method: kubeconfig
         kubeconfig: ${{ inputs.QA_KUBECONFIG }}
+
+    # Login to AWS ECR registries if needed
+    - name: Login to Amazon ECR
+      if: ${{ inputs.aws_registries }}
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@2f9f10ea3fa2eed41ac443fee8bfbd059af2d0a4 # v1.6.0
+      with:
+        registries: ${{ inputs.aws_registries }}
+      env:
+        AWS_REGION: ${{ inputs.QA_AWS_REGION }}
 
     # Helm Setup
     - uses: smartcontractkit/tool-versions-to-env-action@v1.0.8
