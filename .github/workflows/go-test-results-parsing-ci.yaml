@@ -1,0 +1,50 @@
+name: 'semver-compare-build-ci'
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/go-test-results-parsing-ci.yaml'
+      - 'go/go-test-results-parsing/**'
+  push:
+    branches:
+      - main
+      - 'release/*'
+    paths:
+      - '.github/workflows/go-test-results-parsing-ci.yaml'
+      - 'go/go-test-results-parsing/**'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          cd go/go-test-results-parsing
+          npm ci
+          npm run all
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        output-mode: ['unit', 'e2e']
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./go/go-test-results-parsing
+        id: action_run
+        continue-on-error: true
+        with:
+          results-file: ./go/go-test-results-parsing/__tests__/__fixtures__/go_test_results_input.json
+          output-mode: ${{ matrix.output-mode }}
+      - name: Check for expected failure
+        run: |
+          RESULT=${{ steps.action_run.outcome }}
+          if [[ "$RESULT" == "failure" ]]; then
+            echo "Running the action created the expected failure."
+            exit 0
+          else
+            echo "Running the action should cause a failure."
+            exit 1
+          fi

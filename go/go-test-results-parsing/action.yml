@@ -1,0 +1,16 @@
+name: 'Parse Go Test Results'
+description: 'Parses go test results json so we can display only the relevant information for triage'
+inputs:
+  results-file:
+    description: 'The go test results file to parse'
+    required: true
+  output-mode:
+    description: 'The types are standard and json'
+    required: true
+    default: 'standard'
+  output-file:
+    description: 'The file you want to write the results out to, leave empty if you do not want to write to a file'
+    required: false
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

@@ -9,24 +9,21 @@ on:
   push:
     branches:
       - main
-    paths:
-    - '.github/workflows/semver-compare-check-dist.yaml'
-    - 'semver-compare/**'
   pull_request:
-    paths:
-      - '.github/workflows/semver-compare-check-dist.yaml'
-      - 'semver-compare/**'
   workflow_dispatch:
 
 defaults:
   run:
     shell: bash
-    working-directory: ./semver-compare
 
 jobs:
   check-dist:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        app:
+          - directory: ./semver-compare
+          - directory: ./go/go-test-results-parsing
     steps:
       - uses: actions/checkout@v3
 
@@ -34,13 +31,15 @@ jobs:
         uses: actions/setup-node@v3.6.0
         with:
           node-version: 16.x
-      - run: npm ci
       - name: Rebuild the dist/ directory
         run: |
+          cd ${{ matrix.app.directory }}
+          npm ci
           npm run build
           npm run package
       - name: Compare the expected and actual dist/ directories
         run: |
+          cd ${{ matrix.app.directory }}
           if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build.  See status below:"
             git diff
@@ -50,7 +49,7 @@ jobs:
 
       # If index.js was different than expected, upload the expected version as an artifact
       - uses: actions/upload-artifact@v3
-        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        if: failure()
         with:
           name: dist
-          path: dist/
+          path: ${{ matrix.app.directory }}/dist/

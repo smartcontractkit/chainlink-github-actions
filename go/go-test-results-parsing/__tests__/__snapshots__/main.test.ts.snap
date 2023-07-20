@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`output testing can deserialize file 1`] = `
+[
+  {
+    "Action": "start",
+  },
+  {
+    "Action": "pause",
+  },
+  {
+    "Action": "cont",
+  },
+  {
+    "Action": "run",
+    "Test": "TestOCIChart",
+  },
+  {
+    "Action": "output",
+    "Output": "=== RUN   TestOCIChart
+",
+    "Test": "TestOCIChart",
+  },
+  {
+    "Action": "output",
+    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
+",
+    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
+  },
+  {
+    "Action": "output",
+    "Output": "blah blah blah
+",
+  },
+  {
+    "Action": "skip",
+    "Elapsed": 1,
+    "Test": "TestMinResources5NodesEnvWithBlockscoutSkip",
+  },
+  {
+    "Action": "pass",
+    "Elapsed": 506.4,
+    "Test": "TestOCIChart",
+  },
+  {
+    "Action": "fail",
+    "Elapsed": 522.96,
+    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
+  },
+  {
+    "Action": "fail",
+    "Elapsed": 551.993,
+  },
+]
+`;
+
+exports[`output testing failed test list 1`] = `
+[
+  "Test5NodesPlus2MiningGethsReorgEnv",
+]
+`;
+
+exports[`output testing json test output 1`] = `
+[
+  {
+    "Action": "start",
+  },
+  {
+    "Action": "output",
+    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
+",
+    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
+  },
+  {
+    "Action": "output",
+    "Output": "blah blah blah
+",
+  },
+  {
+    "Action": "fail",
+    "Elapsed": 522.96,
+    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
+  },
+  {
+    "Action": "fail",
+    "Elapsed": 551.993,
+  },
+]
+`;
+
+exports[`output testing standard test output 1`] = `
+[
+  {
+    "Action": "output",
+    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
+",
+    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
+  },
+]
+`;
