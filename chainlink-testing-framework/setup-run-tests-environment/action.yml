@@ -5,6 +5,9 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  go_version:
+    required: false
+    description: Go version to install
   go_mod_path:
     required: false
     description: The go.mod file path
@@ -29,6 +32,7 @@ runs:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
+        go-version: ${{ inputs.go_version }}
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
     - name: Cache Vendor Packages
