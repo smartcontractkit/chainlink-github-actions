@@ -51,6 +51,9 @@ inputs:
     required: true
     description: The triggered-by label for the k8s namespace, required for cleanup
     default: ci
+  go_version:
+    required: false
+    description: Go version to install
   go_mod_path:
     required: false
     description: The go.mod file path
@@ -88,9 +91,10 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.2
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.3
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
+        go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
         aws_registries: ${{ inputs.aws_registries }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
