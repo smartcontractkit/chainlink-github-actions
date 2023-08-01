@@ -1,0 +1,11 @@
+{"Time":"2023-03-30T06:27:33.836441057Z","Action":"start","Package":"example/example/example"}
+{"Time":"2023-04-18T20:43:12.271659693Z","Action":"pause","Package":"command-line-arguments","Test":"TestVRFBasic"}
+{"Time":"2023-04-18T20:43:12.271763595Z","Action":"cont","Package":"command-line-arguments","Test":"TestVRFBasic"}
+{"Time":"2023-03-30T06:27:33.869697617Z","Action":"run","Package":"example/example/example","Test":"TestOCIChart"}
+{"Time":"2023-03-30T06:27:33.869749818Z","Action":"output","Package":"example/example/example","Test":"TestOCIChart","Output":"=== RUN   TestOCIChart\n"}
+{"Time":"2023-03-30T06:27:33.869749818Z","Action":"output","Package":"example/example/example","Test":"Test5NodesPlus2MiningGethsReorgEnv","Output":"=== RUN   Test5NodesPlus2MiningGethsReorgEnv\n"}
+{"Time":"2023-03-30T06:27:33.869749818Z","Action":"output","Output":"blah blah blah\n"}
+{"Time":"2023-03-30T06:36:45.823170355Z","Action":"skip","Package":"example/example/example","Test":"TestMinResources5NodesEnvWithBlockscoutSkip","Elapsed":1.0}
+{"Time":"2023-03-30T06:36:45.823170355Z","Action":"pass","Package":"example/example/example","Test":"TestOCIChart","Elapsed":506.4}
+{"Time":"2023-03-30T06:36:45.823267156Z","Action":"fail","Package":"example/example/example","Test":"Test5NodesPlus2MiningGethsReorgEnv","Elapsed":522.96}
+{"Time":"2023-03-30T06:36:45.829829906Z","Action":"fail","Package":"example/example/example","Elapsed":551.993}
