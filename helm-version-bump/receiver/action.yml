@@ -1,0 +1,121 @@
+name: Helm Version Bump Receiver
+description: |
+  This action will update the helm chart version used in an Argo CD app.
+  It is to be ran in the same repo where the Argo CD app lives.
+
+  It can be invoked via a workflow that might be dispatched from the Helm
+  Version Bump Sender action.
+inputs:
+  app-file-path-pattern:
+    description: |
+      File path pattern to use to find the app file(s) to use for the helm
+      chart bump.
+
+      Example:
+        app-file-path-pattern: 'projects/mercury/apps/mercury-server-*-testnet.yaml'
+    required: true
+  app-release-name:
+    description: |
+      Name of the Argo CD app release to use for the helm chart bump.
+
+      Example:
+        app-release-name: 'mercury-server'
+    required: true
+  github-token:
+      description: The GITHUB_TOKEN for the workflow
+      required: false
+      default: ${{ github.token }}
+  helm-chart-repo:
+    description: |
+      Helm chart repo URL to use, either `sdlc` or `prod`. 
+      Only used if `inputs.helm-chart-repo-update` is true.
+      Only use `sdlc` for pre-releases.
+
+      Examples:
+        # prod
+        helm-chart-repo: $AWS_ACCOUNT_ID_PROD.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
+        # sdlc
+        helm-chart-repo: $AWS_ACCOUNT_ID_SDLC.dkr.ecr.$AWS_REGION.amazonaws.com/infra-charts
+    required: true
+  helm-chart-repo-update:
+    description: 'Whether or not to update the helm chart repo.'
+    required: true
+    default: 'false'
+  helm-chart-version:
+    description: |
+      Helm chart version to use for the helm chart bump.
+
+      Example:
+        helm-chart-version: '0.0.1'
+    required: true
+  pr-base-branch:
+    description: 'Base branch to create PR against.'
+    required: true
+    default: 'main'
+  pr-labels:
+      description: |
+        Comma separated list of labels to add to the PR.
+
+        Example:
+          pr-labels: 'preview-sand,do-not-merge'
+      required: true
+  pr-draft:
+    description: 'Whether or not to create the PR as a draft.'
+    required: true
+    default: 'true'
+  release-type:
+    description: 'Used to append to the branch name and the PR title.'
+    required: true
+    default: 'sandbox'
+outputs:
+  pr-number:
+    description: PR number / ID
+    value: ${{ steps.create-pr.outputs.pull-request-number }}
+  pr-url:
+    description: PR URL
+    value: ${{ steps.create-pr.outputs.pull-request-url }}
+  pr-operation:
+    description: 'PR Operation, for ex: created, updated, closed'
+    value: ${{ steps.create-pr.outputs.pull-request-operation }}
+  pr-head-sha:
+    description: Commit SHA of the PR branch
+    value: ${{ steps.create-pr.outputs.pull-request-head-sha }}
+runs:
+  using: composite
+  steps:
+    - name: Get filename path from dir path
+      id: get-filename-from-path
+      env:
+        APP_FILE_PATH_PATTERN: ${{ inputs.app-file-path-pattern }}
+      shell: bash
+      run: |
+        echo "filename-path=$(basename ${APP_FILE_PATH_PATTERN})" | tee -a "$GITHUB_OUTPUT"
+    - name: Bump helm chart version
+      id: bump-helm-chart-version
+      uses: mikefarah/yq@d2f1ae9db722ac6b0702dd7f8a08dd22722d8c2d # v4.33.3
+      env:
+        AWS_SECRET_ACCESS_KEY: ""
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SESSION_TOKEN: ""
+      with:
+        cmd: yq eval -i '.releases[] |= select(.name == "${{ inputs.app-release-name }}").version = "${{ inputs.helm-chart-version }}"' ${{ inputs.app-file-path-pattern }}
+    - name: Update helm chart repo
+      if: inputs.helm-chart-repo-update == 'true'
+      id: update-helm-chart-repo
+      uses: mikefarah/yq@d2f1ae9db722ac6b0702dd7f8a08dd22722d8c2d # v4.33.3
+      env:
+        AWS_SECRET_ACCESS_KEY: ""
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SESSION_TOKEN: ""
+      with:
+        cmd: yq eval -i '.repositories[] |= select(.name == "infra-charts").url = "${{ inputs.helm-chart-repo }}"' ${{ inputs.app-file-path-pattern }}
+    - name: Create PR to deploy
+      id: create-pr
+      uses: peter-evans/create-pull-request@284f54f989303d2699d373481a0cfa13ad5a6666 # v5.0.1
+      with:
+        base: ${{ inputs.pr-base-branch }}
+        branch: auto/${{ inputs.app-release-name}}/helm-${{ inputs.helm-chart-version }}-${{ inputs.release-type }}
+        draft: ${{ inputs.pr-draft }}
+        labels: ${{ inputs.pr-labels }}
+        title: Bump Helm Chart to ${{ inputs.helm-chart-version }} for ${{ steps.get-filename-from-path.outputs.filename-path }}
+        token: ${{ inputs.github-token }}

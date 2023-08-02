@@ -51,9 +51,15 @@ inputs:
     required: true
     description: The triggered-by label for the k8s namespace, required for cleanup
     default: ci
+  go_version:
+    required: false
+    description: Go version to install
   go_mod_path:
     required: false
     description: The go.mod file path
+  aws_registries:
+    required: false
+    description: AWS registries to log into for the test if needed
   dep_chainlink_integration_tests:
     required: false
     description: chainlink/integration-tests commit or branch
@@ -70,6 +76,10 @@ inputs:
     required: false
     description: Whether to have cgo enabled, defaults to enabled
     default: "1"
+  run_setup:
+    required: false
+    description: Should we run the setup before running the tests
+    default: "true"
   should_cleanup:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
@@ -80,10 +90,13 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.1.1
+      if: inputs.run_setup == 'true'
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.3
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
+        go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
+        aws_registries: ${{ inputs.aws_registries }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
@@ -134,6 +147,8 @@ runs:
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
+        # Handle bots as users
+        export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
