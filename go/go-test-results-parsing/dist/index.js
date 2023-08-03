@@ -6656,7 +6656,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.outputHandler = exports.jsonTestOutput = exports.standardTestOutput = exports.getTestFailures = exports.deserializeTestResultsFile = void 0;
+exports.logAllOutput = exports.outputHandler = exports.jsonTestOutput = exports.standardTestOutput = exports.getTestFailures = exports.deserializeTestResultsFile = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const fs = __importStar(__nccwpck_require__(147));
 const types_1 = __nccwpck_require__(77);
@@ -6674,12 +6674,18 @@ function main() {
             const testResults = deserializeTestResultsFile(resultsFile);
             const failedTests = getTestFailures(testResults);
             if (outputMode === 'standard') {
-                standardTestOutput(failedTests, testResults, true);
+                standardTestOutput(failedTests.TestsFailed, testResults, true);
             }
             else if (outputMode === 'json') {
-                jsonTestOutput(failedTests, testResults, true);
+                jsonTestOutput(failedTests.TestsFailed, testResults, true);
             }
-            if (failedTests.length > 0) {
+            if (failedTests.TestsFailed.length > 0) {
+                throw new Error('Test Failures Found');
+            }
+            else if (failedTests.TestsFailed.length === 0 &&
+                failedTests.PackageFailure) {
+                // we have a failure without a test failure, log out all the output
+                logAllOutput(testResults);
                 throw new Error('Test Failures Found');
             }
         }
@@ -6710,14 +6716,20 @@ exports.deserializeTestResultsFile = deserializeTestResultsFile;
  */
 function getTestFailures(testResults) {
     const names = [];
+    let packageFailure = false;
     testResults.filter(testResult => {
         if (testResult.Action === 'fail') {
             if (testResult.Test) {
                 names.push(testResult.Test);
             }
+            else {
+                // we got a failure without a test failure
+                packageFailure = true;
+            }
         }
     });
-    return names;
+    // const out: TestRunFailures = {TestsFailed: names, PackageFailure: packageFailure}
+    return { TestsFailed: names, PackageFailure: packageFailure };
 }
 exports.getTestFailures = getTestFailures;
 /**
@@ -6797,6 +6809,23 @@ function outputHandler(output, shouldLog) {
 }
 exports.outputHandler = outputHandler;
 /**
+ * We have edge cases where we have a failure but no test failure
+ * In this case we want to output all the output for triage since we
+ * don't necessarily know what will be useful
+ * @param testResults The test results to print outputs from
+ */
+function logAllOutput(testResults) {
+    let outputString = '';
+    for (const testResult of testResults) {
+        if (testResult.Action === 'output') {
+            outputString += testResult.Output;
+        }
+    }
+    core.info('We had an error in the test run but no specific test had a failure log, logging out everything for triage');
+    core.info(outputString);
+}
+exports.logAllOutput = logAllOutput;
+/**
  * Takes kebob cased inputs and enforces they match the expected inputs
  * @param inputKey The input key to get
  * @param required Is the input required?
@@ -6861,6 +6890,10 @@ const TestResultSchema = zod_1.z.discriminatedUnion('Action', [
  */
 exports.TestResultsSchema = zod_1.z.array(TestResultSchema);
 const outputMode = zod_1.z.enum(['standard', 'json']);
+const testRunFailures = zod_1.z.object({
+    TestsFailed: zod_1.z.array(zod_1.z.string()),
+    PackageFailure: zod_1.z.boolean()
+});
 
 
 /***/ }),

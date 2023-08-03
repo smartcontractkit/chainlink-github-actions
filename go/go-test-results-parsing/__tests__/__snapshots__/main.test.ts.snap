@@ -60,6 +60,8 @@ exports[`output testing failed test list 1`] = `
 ]
 `;
 
+exports[`output testing failure without a test failure 1`] = `[]`;
+
 exports[`output testing json test output 1`] = `
 [
   {
