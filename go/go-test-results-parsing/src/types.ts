@@ -56,3 +56,9 @@ export const TestResultsSchema = z.array(TestResultSchema)
 
 const outputMode = z.enum(['standard', 'json'])
 export type OutputMode = z.infer<typeof outputMode>
+
+const testRunFailures = z.object({
+  TestsFailed: z.array(z.string()),
+  PackageFailure: z.boolean()
+})
+export type TestRunFailures = z.infer<typeof testRunFailures>

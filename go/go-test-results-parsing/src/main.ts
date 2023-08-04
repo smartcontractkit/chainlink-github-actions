@@ -1,7 +1,12 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
 import {KebabCasedProperties} from 'type-fest'
-import {OutputMode, TestResult, TestResultsSchema} from './types'
+import {
+  OutputMode,
+  TestResult,
+  TestResultsSchema,
+  TestRunFailures
+} from './types'
 
 /**
  * Github action to parse the output of go test -json output to wanted formats with wanted data
@@ -15,13 +20,20 @@ async function main(): Promise<void> {
     }
     const outputMode: OutputMode = getTypedInput('output-mode') as OutputMode
     const testResults: TestResult[] = deserializeTestResultsFile(resultsFile)
-    const failedTests: string[] = getTestFailures(testResults)
+    const failedTests: TestRunFailures = getTestFailures(testResults)
     if (outputMode === 'standard') {
-      standardTestOutput(failedTests, testResults, true)
+      standardTestOutput(failedTests.TestsFailed, testResults, true)
     } else if (outputMode === 'json') {
-      jsonTestOutput(failedTests, testResults, true)
+      jsonTestOutput(failedTests.TestsFailed, testResults, true)
     }
-    if (failedTests.length > 0) {
+    if (failedTests.TestsFailed.length > 0) {
+      throw new Error('Test Failures Found')
+    } else if (
+      failedTests.TestsFailed.length === 0 &&
+      failedTests.PackageFailure
+    ) {
+      // we have a failure without a test failure, log out all the output
+      logAllOutput(testResults)
       throw new Error('Test Failures Found')
     }
   } catch (error) {
@@ -49,16 +61,22 @@ export function deserializeTestResultsFile(resultsFile: string): TestResult[] {
  * @param testResults The test results to filter through
  * @returns The failed test names
  */
-export function getTestFailures(testResults: TestResult[]): string[] {
+export function getTestFailures(testResults: TestResult[]): TestRunFailures {
   const names: string[] = []
+  let packageFailure = false
   testResults.filter(testResult => {
     if (testResult.Action === 'fail') {
       if (testResult.Test) {
         names.push(testResult.Test)
+      } else {
+        // it is possible to have a package failure without a test failure
+        // so we are storing whether we have a package failure to determine
+        // if we need to output all the output for triage later for panic cases
+        packageFailure = true
       }
     }
   })
-  return names
+  return {TestsFailed: names, PackageFailure: packageFailure} as TestRunFailures
 }
 
 /**
@@ -143,6 +161,25 @@ export function outputHandler(output: string, shouldLog: boolean): void {
   if (outputFile) {
     fs.writeFileSync(outputFile, output)
   }
+}
+
+/**
+ * We have edge cases where we have a failure but no test failure
+ * In this case we want to output all the output for triage since we
+ * don't necessarily know what will be useful
+ * @param testResults The test results to print outputs from
+ */
+export function logAllOutput(testResults: TestResult[]): void {
+  let outputString = ''
+  for (const testResult of testResults) {
+    if (testResult.Action === 'output') {
+      outputString += testResult.Output
+    }
+  }
+  core.info(
+    'We had an error in the test run but no specific test had a failure log, logging out everything for triage'
+  )
+  core.info(outputString)
 }
 
 /**

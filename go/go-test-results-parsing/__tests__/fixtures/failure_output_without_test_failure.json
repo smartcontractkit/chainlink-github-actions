@@ -1,0 +1,4 @@
+{"Time":"2023-08-03T15:42:15.857924669Z","Action":"output","Package":"github.com/smartcontractkit/chainlink/v2/core/gethwrappers","Test":"TestCheckContractHashesFromLastGoGenerate","Output":"=== RUN   TestCheckContractHashesFromLastGoGenerate\n"}
+{"Time":"2023-08-03T15:42:15.867984853Z","Action":"output","Package":"github.com/smartcontractkit/chainlink/v2/core/gethwrappers","Test":"TestCheckContractHashesFromLastGoGenerate","Output":"Could not read abi path to create version hash: open ../../contracts/solc/v0.8.6/FunctionsBillingRegistryEventsMock.abi: no such file or directory\n"}
+{"Time":"2023-08-03T15:42:15.869135019Z","Action":"output","Package":"github.com/smartcontractkit/chainlink/v2/core/gethwrappers","Output":"FAIL\tgithub.com/smartcontractkit/chainlink/v2/core/gethwrappers\t74.285s\n"}
+{"Time":"2023-08-03T15:42:15.86915082Z","Action":"fail","Package":"github.com/smartcontractkit/chainlink/v2/core/gethwrappers","Elapsed":74.285}

@@ -36,7 +36,7 @@ jobs:
         id: action_run
         continue-on-error: true
         with:
-          results-file: ./go/go-test-results-parsing/__tests__/__fixtures__/go_test_results_input.json
+          results-file: ./go/go-test-results-parsing/__tests__/fixtures/go_test_results_input.json
           output-mode: ${{ matrix.output-mode }}
       - name: Check for expected failure
         run: |
