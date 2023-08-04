@@ -69,12 +69,13 @@ export function getTestFailures(testResults: TestResult[]): TestRunFailures {
       if (testResult.Test) {
         names.push(testResult.Test)
       } else {
-        // we got a failure without a test failure
+        // it is possible to have a package failure without a test failure
+        // so we are storing whether we have a package failure to determine
+        // if we need to output all the output for triage later for panic cases
         packageFailure = true
       }
     }
   })
-  // const out: TestRunFailures = {TestsFailed: names, PackageFailure: packageFailure}
   return {TestsFailed: names, PackageFailure: packageFailure} as TestRunFailures
 }
 
