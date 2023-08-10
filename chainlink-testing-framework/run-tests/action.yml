@@ -57,6 +57,13 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
+  cache_go_vendors:
+    required: false
+    description: |
+      Should we cache the go vendors
+      When this is part of a matrix job we can get issues with not being able to cache and
+      waste upwards of a minute waiting for the cache to build.
+    default: 'true'
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
@@ -96,6 +103,7 @@ runs:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
+        cache_go_vendors: ${{ inputs.cache_go_vendors }}
         aws_registries: ${{ inputs.aws_registries }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}

@@ -12,6 +12,13 @@ inputs:
     required: false
     description: The go.mod file path
     default: "go.mod"
+  cache_go_vendors:
+    required: false
+    description: |
+      Should we cache the go vendors
+      When this is part of a matrix job we can get issues with not being able to cache and
+      waste upwards of a minute waiting for the cache to build.
+    default: 'true'
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
@@ -36,6 +43,7 @@ runs:
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
     - name: Cache Vendor Packages
+      if: ${{ inputs.cache_go_vendors }}
       uses: actions/cache@v3
       id: cache-packages
       with:
