@@ -12,13 +12,10 @@ inputs:
     required: false
     description: The go.mod file path
     default: "go.mod"
-  cache_go_vendors:
+  matrix_id:
     required: false
-    description: |
-      Should we cache the go vendors
-      When this is part of a matrix job we can get issues with not being able to cache and
-      waste upwards of a minute waiting for the cache to build.
-    default: 'true'
+    description: Cache go vendors unique id for when this job is run as part of a matrix
+    default: '1'
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
@@ -43,7 +40,6 @@ runs:
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
     - name: Cache Vendor Packages
-      if: ${{ inputs.cache_go_vendors }}
       uses: actions/cache@v3
       id: cache-packages
       with:
@@ -53,7 +49,7 @@ runs:
           ~/go/bin
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
-          ${{ runner.os }}-go-
+          ${{ runner.os }}-go-${{ inputs.matrix_id }}-
     - name: Tidy and check files
       shell: bash
       run: |
