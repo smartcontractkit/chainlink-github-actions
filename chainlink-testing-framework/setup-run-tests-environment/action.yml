@@ -47,7 +47,7 @@ runs:
           ~/.cache/go-build
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-${{ inputs.matrix_id }}-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-${{ inputs.matrix_id }}-
     - name: Tidy and check files
