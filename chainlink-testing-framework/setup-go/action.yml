@@ -24,7 +24,7 @@ runs:
   using: composite
   steps:
     - name: Setup Go
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.8
+      uses: actions/setup-go@v3
       with:
         go-version: ${{ inputs.go_version }}
         go-version-file: ${{ inputs.go_mod_path }}
