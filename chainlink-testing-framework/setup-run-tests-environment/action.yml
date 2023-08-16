@@ -41,7 +41,7 @@ runs:
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@fc9ac55b5b8c86e6324f62f3c1f773f6805252e6
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
-        go-version: ${{ inputs.go_version }}
+        go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
