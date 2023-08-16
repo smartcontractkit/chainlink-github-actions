@@ -1,0 +1,74 @@
+name: setup-run-tests-environment
+description: Common test env setup
+inputs:
+  test_download_vendor_packages_command:
+    required: false
+    description: The command to download the go modules
+    default: make download
+  go_version:
+    required: false
+    description: Go version to install
+  go_mod_path:
+    required: false
+    description: The go.mod file path
+    default: "go.mod"
+  cache_restore_only:
+    required: false
+    description: Only restore the cache, set to true if you want to restore and save on cache hit miss
+    default: 'false'
+  cache_key_id:
+    required: true
+    description: Cache go vendors unique id
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ inputs.go_version }}
+        go-version-file: ${{ inputs.go_mod_path }}
+        check-latest: true
+
+    - name: Cache Vendor Packages
+      if: inputs.cache_restore_only == 'false'
+      uses: actions/cache@v3
+      id: cache-packages
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+
+    - name: Restore Cache Vendor Packages
+      if: inputs.cache_restore_only != 'false'
+      uses: actions/cache/restore@v3
+      id: restore-cache-packages
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+
+    - name: Tidy and check files
+      shell: bash
+      run: |
+        # find test go root by using the go_mod_path and change to that directory
+        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
+        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
+            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
+            cd "${TEST_LIB_PATH}"
+        fi
+        go mod tidy
+        git diff --stat --exit-code
+
+    - name: Download Go Vendor Packages
+      if: steps.cache-packages.outputs.cache-hit == 'false' || steps.restore-cache-packages.outputs.cache-hit == 'false'
+      shell: bash
+      run: ${{ inputs.test_download_vendor_packages_command }}
