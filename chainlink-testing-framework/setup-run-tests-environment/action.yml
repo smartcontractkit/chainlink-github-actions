@@ -12,10 +12,14 @@ inputs:
     required: false
     description: The go.mod file path
     default: "go.mod"
-  matrix_id:
+  cache_restore_only:
     required: false
-    description: Cache go vendors unique id for when this job is run as part of a matrix
-    default: '1'
+    description: Only restore the cache, set to true if you want to restore and save on cache hit miss
+    default: 'false'
+  cache_key_id:
+    required: false
+    description: Cache go vendors unique id
+    default: go
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
@@ -34,37 +38,13 @@ runs:
   steps:
     # Go setup and caching
     - name: Setup Go
-      uses: actions/setup-go@v3
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@5409ce028dcc1df41c4584a9ad786e771bcb09b7
       with:
+        test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go-version: ${{ inputs.go_version }}
-        go-version-file: ${{ inputs.go_mod_path }}
-        check-latest: true
-    - name: Cache Vendor Packages
-      uses: actions/cache@v3
-      id: cache-packages
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-go-${{ inputs.matrix_id }}-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-${{ inputs.matrix_id }}-
-    - name: Tidy and check files
-      shell: bash
-      run: |
-        # find test go root by using the go_mod_path and change to that directory
-        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
-        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
-            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
-            cd "${TEST_LIB_PATH}"
-        fi
-        go mod tidy
-        git diff --stat --exit-code
-    - name: Download Go Vendor Packages
-      if: steps.cache-packages.outputs.cache-hit != 'true'
-      shell: bash
-      run: ${{ inputs.test_download_vendor_packages_command }}
+        go_mod_path: ${{ inputs.go_mod_path }}
+        cache_restore_only: ${{ inputs.cache_restore_only }}
+        cache_key_id: ${{ inputs.cache_key_id }}
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials
