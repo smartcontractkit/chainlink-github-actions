@@ -57,10 +57,14 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
-  matrix_id:
+  cache_restore_only:
     required: false
-    description: Cache go vendors unique id for when this job is run as part of a matrix
-    default: '1'
+    description: Only restore the cache, set to true if you want to restore and save on cache hit miss
+    default: 'false'
+  cache_key_id:
+    required: false
+    description: Cache go vendors unique id
+    default: go
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
@@ -95,12 +99,13 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.8
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@00857693a9604489b289a37f28ebb65d87b49a81
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
-        matrix_id: ${{ inputs.matrix_id }}
+        cache_restore_only: ${{ inputs.cache_restore_only }}
+        cache_key_id: ${{ inputs.cache_key_id }}
         aws_registries: ${{ inputs.aws_registries }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
