@@ -99,7 +99,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@ef305658553a920d48ec3d7168c0c8e345d8b1a5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@f764e3728c090af1a8e6813f44e7478a1fb85e79
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
