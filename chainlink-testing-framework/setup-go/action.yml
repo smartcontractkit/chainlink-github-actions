@@ -69,6 +69,5 @@ runs:
         git diff --stat --exit-code
 
     - name: Download Go Vendor Packages
-      if: steps.cache-packages.outputs.cache-hit == 'false' || steps.restore-cache-packages.outputs.cache-hit == 'false'
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
