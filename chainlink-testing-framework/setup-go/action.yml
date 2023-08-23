@@ -30,16 +30,31 @@ runs:
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
 
+    - name: Get sum path from mod
+      id: sum-path
+      shell: bash
+      run: |
+        # get the base path for the go test project
+        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
+        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
+            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
+            echo "path=${TEST_LIB_PATH}" >> $GITHUB_ENV
+        else
+            echo "path=./" >> $GITHUB_ENV
+        fi
+
     - name: Cache Vendor Packages
       if: inputs.cache_restore_only == 'false'
       uses: actions/cache@v3
       id: cache-packages
+      env:
+          sum-path: ${{steps.sum-path.outputs.path}}go.sum
       with:
         path: |
           ~/.cache/go-build
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles(env.sum-path) }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache_key_id }}-
 

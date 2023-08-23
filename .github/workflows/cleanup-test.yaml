@@ -8,6 +8,19 @@ jobs:
     steps:
       - name: Check out Code
         uses: actions/checkout@v3
+      - name: test
+        id: tester
+        run: |
+          set -x
+          echo "path=./LICENSE" >> $GITHUB_ENV
+          CONTENT=$(cat ./LICENSE)
+          echo "Hashing the file"
+          HASH=$(echo -n $(hashFiles($CONTENT)) )
+          echo "This is a test $HASH"
+          echo "hash=$HASH" >> $GITHUB_ENV
+      - name: hash test
+        run: |
+          echo "This is a test ${{ steps.tester.outputs.hash }}"
       - name: cleanup with cancel
         if: always()
         id: did_skip
