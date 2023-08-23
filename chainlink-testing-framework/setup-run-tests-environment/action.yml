@@ -38,7 +38,7 @@ runs:
   steps:
     # Go setup and caching
     - name: Setup Go
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.2.9
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.2.11
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
