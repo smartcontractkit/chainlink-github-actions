@@ -37,7 +37,8 @@ runs:
       run: |
         # see if the tag exists in ecr
         tag_found=$(aws ecr describe-images --repository-name ${{ inputs.repository }} --region ${{ inputs.AWS_REGION }} --image-ids=imageTag=${{ inputs.tag }} --output json | jq '.imageDetails | length' || echo "0")
-        if [[ "${tag_found}" == "0" ]]; then
+        echo "Debug: tag_found='${tag_found}'"
+        if [[ "${tag_found}" == "0" ]] || [[ -z "${tag_found}" ]]; then
           echo "exists=false" >>$GITHUB_OUTPUT
         else
           echo "exists=true" >>$GITHUB_OUTPUT
