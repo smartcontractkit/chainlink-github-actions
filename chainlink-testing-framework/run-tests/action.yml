@@ -4,7 +4,11 @@ inputs:
   artifacts_location:
     required: false
     description: Location of where error logs are written
-    default: ./tests/e2e/logs
+    default: ./integration-tests/smoke/logs
+  artifacts_name:
+    required: false
+    description: Name of the artifact to upload
+    default: test-logs
   test_command_to_run:
     required: true
     description: The command to run the tests
@@ -60,7 +64,7 @@ inputs:
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
-    default: 'false'
+    default: "false"
   cache_key_id:
     required: false
     description: Cache go vendors unique id
@@ -165,8 +169,9 @@ runs:
       if: failure()
       uses: actions/upload-artifact@v3
       with:
-        name: test-logs
+        name: ${{ inputs.artifacts_name }}
         path: ${{ inputs.artifacts_location }}
+
     - name: cleanup
       if: always()
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.29
