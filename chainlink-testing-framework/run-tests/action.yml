@@ -167,6 +167,7 @@ runs:
 
     - name: //DEBUG Artifacts Location
       shell: bash
+      if: always()
       run: |
         echo "Artifacts Location: ${{ inputs.artifacts_location }}"
         echo "Artifacts Name: ${{ inputs.artifacts_name }}"
