@@ -1,5 +1,5 @@
 name: setup-run-tests-environment
-description: Common test env setup
+description: Common golang setup
 inputs:
   test_download_vendor_packages_command:
     required: false
@@ -24,11 +24,12 @@ runs:
   using: composite
   steps:
     - name: Setup Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v4
       with:
         go-version: ${{ inputs.go_version }}
         go-version-file: ${{ inputs.go_mod_path }}
         check-latest: true
+        cache: false
 
     - name: Cache Vendor Packages
       if: inputs.cache_restore_only == 'false'
