@@ -167,11 +167,12 @@ runs:
 
     - name: //DEBUG Artifacts Location
       shell: bash
-      if: always()
+      if: failure()
       run: |
         echo "Artifacts Location: ${{ inputs.artifacts_location }}"
         echo "Artifacts Name: ${{ inputs.artifacts_name }}"
         ls -a
+        ls -a ./integration-tests/smoke
         ls -a ${{ inputs.artifacts_location }}
 
     - name: Publish Artifacts
