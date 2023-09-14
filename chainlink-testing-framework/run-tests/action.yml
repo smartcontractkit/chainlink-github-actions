@@ -165,16 +165,6 @@ runs:
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
         ${{ inputs.test_command_to_run }}
 
-    - name: //DEBUG Artifacts Location
-      shell: bash
-      if: failure()
-      run: |
-        echo "Artifacts Location: ${{ inputs.artifacts_location }}"
-        echo "Artifacts Name: ${{ inputs.artifacts_name }}"
-        ls -a
-        ls -a ./integration-tests/smoke
-        ls -a ${{ inputs.artifacts_location }}
-
     - name: Publish Artifacts
       if: failure()
       uses: actions/upload-artifact@v3
