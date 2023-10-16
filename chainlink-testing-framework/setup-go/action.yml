@@ -16,9 +16,9 @@ inputs:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
     default: 'false'
-  # cache_key_id:
-  #   required: true
-  #   description: Cache go vendors unique id
+  cache_key_id:
+    required: true
+    description: Cache go vendors unique id
 
 runs:
   using: composite
@@ -31,31 +31,31 @@ runs:
         check-latest: true
         cache: false
 
-    # - name: Cache Vendor Packages
-    #   if: inputs.cache_restore_only == 'false'
-    #   uses: actions/cache@v3
-    #   id: cache-packages
-    #   with:
-    #     path: |
-    #       ~/.cache/go-build
-    #       ~/go/pkg/mod
-    #       ~/go/bin
-    #     key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ inputs.cache_key_id }}-
+    - name: Cache Vendor Packages
+      if: inputs.cache_restore_only == 'false'
+      uses: actions/cache@v3
+      id: cache-packages
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
-    # - name: Restore Cache Vendor Packages
-    #   if: inputs.cache_restore_only != 'false'
-    #   uses: actions/cache/restore@v3
-    #   id: restore-cache-packages
-    #   with:
-    #     path: |
-    #       ~/.cache/go-build
-    #       ~/go/pkg/mod
-    #       ~/go/bin
-    #     key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ inputs.cache_key_id }}-
+    - name: Restore Cache Vendor Packages
+      if: inputs.cache_restore_only != 'false'
+      uses: actions/cache/restore@v3
+      id: restore-cache-packages
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+          ~/go/bin
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
     - name: Tidy and check files
       shell: bash
