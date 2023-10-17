@@ -12,5 +12,5 @@ inputs:
     description: 'The file you want to write the results out to, leave empty if you do not want to write to a file'
     required: false
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
