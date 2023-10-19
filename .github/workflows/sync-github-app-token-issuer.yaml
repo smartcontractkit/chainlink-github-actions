@@ -55,7 +55,7 @@ jobs:
         run: ./github-app-token-issuer-buggy/sync.sh
 
       - name: Open PR
-        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
+        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38 # v5.0.2
         with:
           title: Update github-app-token-issuers
           branch: chore/update-github-app-token-issuers
