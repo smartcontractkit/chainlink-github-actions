@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: |
           cd go/go-test-results-parsing
           npm ci
@@ -31,7 +31,7 @@ jobs:
       matrix:
         output-mode: ['unit', 'e2e']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./go/go-test-results-parsing
         id: action_run
         continue-on-error: true
