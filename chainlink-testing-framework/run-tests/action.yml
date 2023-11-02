@@ -72,6 +72,10 @@ inputs:
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
+  aws_role_duration_seconds:
+    required: false
+    default: "3600"
+    description: The duration to be logged into the aws role for
   dockerhub_username:
     description: Username for Docker Hub to avoid rate limits when pulling public images
     required: false
@@ -117,6 +121,7 @@ runs:
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
         aws_registries: ${{ inputs.aws_registries }}
+        aws_role_duration_seconds: ${{ inputs.aws_role_duration_seconds }}
         dockerhub_username: ${{ inputs.dockerhub_username }}
         dockerhub_password: ${{ inputs.dockerhub_password }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}

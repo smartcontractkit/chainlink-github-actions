@@ -23,6 +23,10 @@ inputs:
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
+  aws_role_duration_seconds:
+    required: false
+    default: "3600"
+    description: The duration to be logged into the aws role for
   dockerhub_username:
     description: Username for Docker Hub to avoid rate limits when pulling public images
     required: false
@@ -58,7 +62,7 @@ runs:
       with:
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
-        role-duration-seconds: 3600
+        role-duration-seconds: ${{ inputs.aws_role_duration_seconds }}
 
     - name: Set Kubernetes Context
       if: inputs.QA_KUBECONFIG
