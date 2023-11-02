@@ -76,6 +76,12 @@ inputs:
     required: false
     default: "3600"
     description: The duration to be logged into the aws role for
+  dockerhub_username:
+    description: Username for Docker Hub to avoid rate limits when pulling public images
+    required: false
+  dockerhub_password:
+    description: Password for Docker Hub to avoid rate limits when pulling public images
+    required: false
   dep_chainlink_integration_tests:
     required: false
     description: chainlink/integration-tests commit or branch
@@ -107,7 +113,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.13
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.14
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -116,6 +122,8 @@ runs:
         cache_key_id: ${{ inputs.cache_key_id }}
         aws_registries: ${{ inputs.aws_registries }}
         aws_role_duration_seconds: ${{ inputs.aws_role_duration_seconds }}
+        dockerhub_username: ${{ inputs.dockerhub_username }}
+        dockerhub_password: ${{ inputs.dockerhub_password }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
@@ -179,7 +187,7 @@ runs:
 
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.0.29
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.2.14
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}

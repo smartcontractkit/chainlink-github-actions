@@ -27,6 +27,12 @@ inputs:
     required: false
     default: "3600"
     description: The duration to be logged into the aws role for
+  dockerhub_username:
+    description: Username for Docker Hub to avoid rate limits when pulling public images
+    required: false
+  dockerhub_password:
+    description: Password for Docker Hub to avoid rate limits when pulling public images
+    required: false
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -42,7 +48,7 @@ runs:
   steps:
     # Go setup and caching
     - name: Setup Go
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.2.13
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.2.14
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -57,7 +63,9 @@ runs:
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: ${{ inputs.aws_role_duration_seconds }}
+
     - name: Set Kubernetes Context
+      if: inputs.QA_KUBECONFIG
       uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
@@ -65,7 +73,7 @@ runs:
 
     # Login to AWS ECR registries if needed
     - name: Login to Amazon ECR
-      if: ${{ inputs.aws_registries }}
+      if: inputs.aws_registries && inputs.QA_AWS_REGION
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
       with:
@@ -73,12 +81,18 @@ runs:
       env:
         AWS_REGION: ${{ inputs.QA_AWS_REGION }}
 
+    # To avoid rate limiting from Docker Hub, we can login with a paid user account.
+    - name: Login to Docker Hub
+      if: inputs.dockerhub_username && inputs.dockerhub_password
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+      with:
+        username: ${{ inputs.dockerhub_username }}
+        password: ${{ inputs.dockerhub_password }}
+
     # Helm Setup
-    - uses: smartcontractkit/tool-versions-to-env-action@v1.0.8
-      id: tool-versions
     - uses: azure/setup-helm@v3
       with:
-        version: v${{ steps.tool-versions.outputs.helm_version }}
+        version: v3.13.1
     - name: Add required helm charts including chainlink-qa
       shell: bash
       run: |
@@ -91,6 +105,5 @@ runs:
       run: |
         go version
         aws --version
-        kubectl version
         helm version
         helm repo list
