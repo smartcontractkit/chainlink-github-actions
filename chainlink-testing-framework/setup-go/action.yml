@@ -15,14 +15,14 @@ inputs:
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
-    default: 'false'
+    default: "false"
   cache_key_id:
     required: true
     description: Cache go vendors unique id
   no_cache:
     required: false
     description: Do not use a go cache
-    default: 'false'
+    default: "false"
 
 runs:
   using: composite
@@ -36,7 +36,7 @@ runs:
         cache: false
 
     - name: Cache Vendor Packages
-      if: inputs.cache_restore_only == 'false' && inputs.no_cache == "false"
+      if: inputs.cache_restore_only == 'false' && inputs.no_cache == 'false'
       uses: actions/cache@v3
       id: cache-packages
       with:
@@ -49,7 +49,7 @@ runs:
           ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
     - name: Restore Cache Vendor Packages
-      if: inputs.cache_restore_only != 'false' && inputs.no_cache == "false"
+      if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
       uses: actions/cache/restore@v3
       id: restore-cache-packages
       with:

@@ -15,7 +15,7 @@ inputs:
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
-    default: 'false'
+    default: "false"
   cache_key_id:
     required: false
     description: Cache go vendors unique id
@@ -40,7 +40,7 @@ inputs:
     required: true
     description: The AWS role to assume
   QA_KUBECONFIG:
-    required: true
+    required: false
     description: The kubernetes configuration to use
 
 runs:
