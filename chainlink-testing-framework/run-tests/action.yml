@@ -92,7 +92,7 @@ inputs:
     required: true
     description: The AWS role to assume
   QA_KUBECONFIG:
-    required: true
+    required: false
     description: The kubernetes configuration to use
   CGO_ENABLED:
     required: false
@@ -113,7 +113,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.14
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.15
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -187,7 +187,7 @@ runs:
 
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.2.14
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.2.15
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}
