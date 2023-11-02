@@ -72,6 +72,10 @@ inputs:
   aws_registries:
     required: false
     description: AWS registries to log into for the test if needed
+  aws_role_duration_seconds:
+    required: false
+    default: "3600"
+    description: The duration to be logged into the aws role for
   dep_chainlink_integration_tests:
     required: false
     description: chainlink/integration-tests commit or branch
@@ -111,6 +115,7 @@ runs:
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
         aws_registries: ${{ inputs.aws_registries }}
+        aws_role_duration_seconds: ${{ inputs.aws_role_duration_seconds }}
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
