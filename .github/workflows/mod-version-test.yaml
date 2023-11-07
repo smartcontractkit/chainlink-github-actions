@@ -1,0 +1,56 @@
+name: Mod Version Test
+on:
+  pull_request:
+jobs:
+  can_cancel_cleanup:
+    name: Can Cleanup and Cancel Cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Code
+        uses: actions/checkout@v4
+      - name: Create Test Mod Files
+        run: |
+          mkdir ./testgood
+          mkdir ./testbad
+          echo "github.com/smartcontractkit/chainlink-testing-framework v1.18.4" >> ./testgood/go.mod
+          echo "github.com/smartcontractkit/chainlink-testing-framework v1.18.5-0.20231107092923-3aa655167f65" >> ./testbad/go.mod
+      - name: Get Good Mod Package
+        uses: ./chainlink-testing-framework/mod-version
+        id: good_mod
+        with:
+          go-project-path: ./testgood
+          module-name: github.com/smartcontractkit/chainlink-testing-framework
+          enforce-semantic-tag: "true"
+      - name: Verify Good Mod Output
+        env:
+          version: ${{ steps.good_mod.outputs.version }}
+          is_semantic: ${{ steps.good_mod.outputs.is_semantic }}
+        run: |
+          if [ "${version}" != "v1.18.4" ]; then
+            echo "Failed to get the correct version, should be \"v1.18.4\", but got \"${version}\""
+            exit 1
+          fi
+          if [ "${is_semantic}" != "true" ]; then
+            echo "Failed to set the semantic flag correctly, should be \"true\", but got \"${is_semantic}\""
+            exit 1
+          fi
+      - name: Get Bad Mod Package
+        uses: ./chainlink-testing-framework/mod-version
+        id: bad_mod
+        with:
+          go-project-path: ./testbad
+          module-name: github.com/smartcontractkit/chainlink-testing-framework
+          enforce-semantic-tag: "false"
+      - name: Verify Bad Mod Output
+        env:
+          version: ${{ steps.bad_mod.outputs.version }}
+          is_semantic: ${{ steps.bad_mod.outputs.is_semantic }}
+        run: |
+          if [ "${version}" != "v1.18.5-0.20231107092923-3aa655167f65" ]; then
+            echo "Failed to get the correct version, should be \""v1.18.5-0.20231107092923-3aa655167f65"\", but got \"${version}\""
+            exit 1
+          fi
+          if [ "${is_semantic}" != "false" ]; then
+            echo "Failed to set the semantic flag correctly, should be \"false\", but got \"${is_semantic}\""
+            exit 1
+          fi
