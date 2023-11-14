@@ -26,7 +26,7 @@ runs:
   steps:
     - name: wait-for-workflows
       id: wfw
-      uses: actions/github-script@v6
+      uses: actions/github-script@e69ef5462fd455e02edcaf4dd7708eda96b9eda0 # v7.0.0
       env:
         MAX_TIMEOUT: ${{ inputs.max-timeout }}
         POLLING_INTERVAL: ${{ inputs.polling-interval }}
@@ -52,7 +52,7 @@ runs:
               const workflows = WORKFLOW_RUNS_FOR_REPO_RESPONSE.data.workflow_runs.reduce((acc, val) => acc.concat([{ run_id: val.id, name: val.name, workflow_id: val.workflow_id, run_attempt: val.run_attempt }]), [])
               console.log("workflow_runs:", workflows)
             }
-            
+
             // pending workflows
             const PENDING_WORKFLOWS = WORKFLOW_RUNS_FOR_REPO_RESPONSE.data.workflow_runs.filter(
               (run) => !EXCLUDE_WORKFLOW_RUN_IDS.includes(run.id) && !EXCLUDE_WORKFLOW_NAMES.includes(run.name) && !EXCLUDE_WORKFLOW_IDS.includes(run.workflow_id) && (run.status == 'queued' || run.status == 'in_progress')
