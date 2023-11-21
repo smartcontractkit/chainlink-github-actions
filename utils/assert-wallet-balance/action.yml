@@ -1,0 +1,24 @@
+name: Assert Wallet Balance
+description: Asserts that an address balance is greater or equal to the given amount
+inputs:
+  address:
+    description: "The wallet address to check"
+    required: true
+  amount:
+    description: "The amount of ETH to check for"
+    required: true
+  rpc-url:
+    description: "The HTTP RPC URL for the network you want to check"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Mask URL
+      shell: bash
+      run: |
+        echo "::add-mask::${{ inputs.rpc-url }}"
+    - name: Assert Wallet Balance
+      shell: bash
+      run: |
+        curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["${{ inputs.address }}","latest"],"id":1}' ${{ inputs.ethereum_node_url }}
