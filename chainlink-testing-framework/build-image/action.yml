@@ -89,7 +89,7 @@ runs:
     - name: Replace chainlink-common deps
       if: ${{ inputs.dep_common_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-common@${{ inputs.dep_common_sha }}
+      run: go get -x github.com/smartcontractkit/chainlink-common@${{ inputs.dep_common_sha }}
     - name: Tidy
       shell: bash
       env:
