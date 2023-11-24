@@ -89,7 +89,7 @@ runs:
     - name: Replace chainlink-common deps
       if: ${{ inputs.dep_common_sha }}
       shell: bash
-      run: GOPROXY=direct go get -x github.com/smartcontractkit/chainlink-common@${{ inputs.dep_common_sha }}
+      run: GOPROXY=direct go get -x github.com/smartcontractkit/chainlink-common@v0.1.6
     - name: Tidy
       shell: bash
       env:
