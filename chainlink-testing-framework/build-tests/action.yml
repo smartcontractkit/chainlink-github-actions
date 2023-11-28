@@ -77,5 +77,5 @@ runs:
       if: failure()
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.binary_location }}
+        name: ${{ inputs.binary_name }}
         path: ./integration-tests/tests
