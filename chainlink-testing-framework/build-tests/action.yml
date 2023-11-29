@@ -75,7 +75,7 @@ runs:
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
-        cd ./integration-tests && go test -c -ldflags="-s -w external -extldflags '-static'" -o ./tests ./${{ inputs.test_type }}
+        cd ./integration-tests && go test -c -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
         echo "Built binary at ./integration-tests/tests"
 
     - name: Publish Binary
