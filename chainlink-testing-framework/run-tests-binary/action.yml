@@ -55,12 +55,6 @@ inputs:
     required: true
     description: The triggered-by label for the k8s namespace, required for cleanup
     default: ci
-  go_version:
-    required: false
-    description: Go version to install
-  go_mod_path:
-    required: false
-    description: The go.mod file path
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
