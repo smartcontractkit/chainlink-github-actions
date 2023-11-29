@@ -113,7 +113,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.15
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.0
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -187,7 +187,7 @@ runs:
 
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.2.15
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.3.0
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}
