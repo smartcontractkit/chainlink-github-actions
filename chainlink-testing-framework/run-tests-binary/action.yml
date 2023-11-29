@@ -11,7 +11,8 @@ inputs:
     default: test-logs
   test_command_to_run:
     required: true
-    description: The command to run the tests
+    description: The command to run the tests by calling your binary (note that -test.json is not supported)
+    # https://github.com/golang/go/issues/22996
   test_download_vendor_packages_command:
     required: false
     description: The command to download the go modules
@@ -128,12 +129,6 @@ runs:
       if: inputs.build_gauntlet_command != 'false'
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
-
-    # gotestfmt gives us pretty test output
-    - name: Set Up gotestfmt
-      uses: GoTestTools/gotestfmt-action@v2
-      with:
-        token: ${{ inputs.token }} # Avoids rate-limiting
 
     # Run the tests
     - name: Run Tests
