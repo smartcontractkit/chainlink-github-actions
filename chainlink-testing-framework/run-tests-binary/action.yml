@@ -101,7 +101,7 @@ runs:
   using: composite
   steps:
     - name: Setup Environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.2.15
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@b664381f1437cb2b3cf63ddbc3fa663823d82586
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_necessary: "false"
