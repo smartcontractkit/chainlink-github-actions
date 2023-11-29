@@ -36,8 +36,8 @@ inputs:
     description: chainlink/integration-tests commit or branch
   CGO_ENABLED:
     required: false
-    description: Whether to have cgo enabled, defaults to enabled
-    default: "1"
+    description: Whether to have cgo enabled, defaults to disabled
+    default: "0"
 
 runs:
   using: composite
@@ -75,7 +75,7 @@ runs:
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
-        cd ./integration-tests && go test -c -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
+        cd ./integration-tests && go test -c -ldflags="-s -w external -extldflags '-static'" -o ./tests ./${{ inputs.test_type }}
         echo "Built binary at ./integration-tests/tests"
 
     - name: Publish Binary
