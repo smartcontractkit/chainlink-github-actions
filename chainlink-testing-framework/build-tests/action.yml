@@ -1,0 +1,85 @@
+name: chainlink-testing-framework-test-builder
+description: Builds a test binary for chainlink integration tests
+inputs:
+  binary_name:
+    required: false
+    description: Name of the artifact to upload
+    default: test-logs
+  test_download_vendor_packages_command:
+    required: false
+    description: The command to download the go modules
+    default: make download
+  test_type:
+    required: false
+    description: The name of the test type you plan to run, e.g. smoke
+    default: smoke
+  token:
+    required: false
+    description: The GITHUB_TOKEN for the workflow
+    default: ${{ github.token }}
+  go_version:
+    required: false
+    description: Go version to install
+  go_mod_path:
+    required: false
+    description: The go.mod file path
+  cache_restore_only:
+    required: false
+    description: Only restore the cache, set to true if you want to restore and save on cache hit miss
+    default: "false"
+  cache_key_id:
+    required: false
+    description: Cache go vendors unique id
+    default: go
+  dep_chainlink_integration_tests:
+    required: false
+    description: chainlink/integration-tests commit or branch
+  CGO_ENABLED:
+    required: false
+    description: Whether to have cgo enabled, defaults to disabled
+    default: "0"
+
+runs:
+  using: composite
+  steps:
+    # Setup Tools and libraries
+    - name: Setup Go
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.0
+      with:
+        test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
+        go_version: ${{ inputs.go_version }}
+        go_mod_path: ${{ inputs.go_mod_path }}
+        cache_restore_only: ${{ inputs.cache_restore_only }}
+        cache_key_id: ${{ inputs.cache_key_id }}
+
+    - name: Replace chainlink/integration-tests deps
+      if: ${{ inputs.dep_chainlink_integration_tests }}
+      shell: bash
+      run: |
+        # find test go root by using the go_mod_path and change to that directory
+        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
+        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
+            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
+            cd "${TEST_LIB_PATH}"
+        fi
+
+        go version
+        # update the integration-tests lib to the branch or commit
+        go get github.com/smartcontractkit/chainlink/integration-tests@${{ inputs.dep_chainlink_integration_tests }}
+        go mod tidy
+
+    - name: Build Tests
+      shell: bash
+      env:
+        CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
+      run: |
+        PATH=$PATH:$(go env GOPATH)/bin
+        export PATH
+        cd ./integration-tests && go test -c -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
+        echo "Built binary at ./integration-tests/tests"
+
+    - name: Publish Binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.binary_name }}
+        path: ./integration-tests/tests

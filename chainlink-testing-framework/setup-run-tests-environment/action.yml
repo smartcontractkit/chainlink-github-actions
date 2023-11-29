@@ -12,6 +12,10 @@ inputs:
     required: false
     description: The go.mod file path
     default: "go.mod"
+  go_necessary:
+    required: false
+    description: Whether to install go, should be true unless you already have a test binary
+    default: "true"
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
@@ -48,7 +52,8 @@ runs:
   steps:
     # Go setup and caching
     - name: Setup Go
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.2.15
+      if: inputs.go_necessary == 'true'
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.0
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}

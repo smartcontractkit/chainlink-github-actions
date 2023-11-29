@@ -1,21 +1,18 @@
-name: chainlink-testing-framework-test-runner
-description: Common runner for chainlink-testing-framework based tests
+name: chainlink-testing-framework-binary-test-runner
+description: Used to run Chainlink tests only after the binary has been built with the build-tests action
 inputs:
   artifacts_location:
     required: false
     description: Location of where error logs are written
-    default: ./integration-tests/smoke/logs
+    default: ./logs
   artifacts_name:
     required: false
     description: Name of the artifact to upload
     default: test-logs
   test_command_to_run:
     required: true
-    description: The command to run the tests
-  test_download_vendor_packages_command:
-    required: false
-    description: The command to download the go modules
-    default: make download
+    description: The command to run the tests by calling your binary (note that -test.json is not supported)
+    # https://github.com/golang/go/issues/22996
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -32,35 +29,14 @@ inputs:
     required: false
     description: Path where the contract artifacts need to be placed
     default: "none"
-  publish_report_paths:
-    required: false
-    description: The path of the output report
-    default: "./tests-smoke-report.xml"
-  publish_check_name:
-    required: false
-    description: The check name for publishing the reports
-    default: Smoke Test Results
   token:
     required: false
     description: The GITHUB_TOKEN for the workflow
     default: ${{ github.token }}
-  publish_test_results_comment_mode:
-    required: false
-    description: comment_mode value for EnricoMi/publish-unit-test-result-action@v1
-    default: always
-  publish_test_results_commit:
-    required: false
-    description: Commit SHA to which test results are published. Only needed if the value of GITHUB_SHA does not work for you.
   triggered_by:
     required: true
     description: The triggered-by label for the k8s namespace, required for cleanup
     default: ci
-  go_version:
-    required: false
-    description: Go version to install
-  go_mod_path:
-    required: false
-    description: The go.mod file path
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
@@ -82,9 +58,6 @@ inputs:
   dockerhub_password:
     description: Password for Docker Hub to avoid rate limits when pulling public images
     required: false
-  dep_chainlink_integration_tests:
-    required: false
-    description: chainlink/integration-tests commit or branch
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -94,30 +67,22 @@ inputs:
   QA_KUBECONFIG:
     required: false
     description: The kubernetes configuration to use
-  CGO_ENABLED:
-    required: false
-    description: Whether to have cgo enabled, defaults to enabled
-    default: "1"
-  run_setup:
-    required: false
-    description: Should we run the setup before running the tests
-    default: "true"
   should_cleanup:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
     default: "false"
+  binary_name:
+    required: true
+    description: Name of the binary artifact to run
+    default: tests
 
 runs:
   using: composite
   steps:
-    # Setup Tools and libraries
-    - name: Setup environment
-      if: inputs.run_setup == 'true'
+    - name: Setup Environment
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.0
       with:
-        test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
-        go_version: ${{ inputs.go_version }}
-        go_mod_path: ${{ inputs.go_mod_path }}
+        go_necessary: "false"
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
         aws_registries: ${{ inputs.aws_registries }}
@@ -127,20 +92,6 @@ runs:
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
-    - name: Replace chainlink/integration-tests deps
-      if: ${{ inputs.dep_chainlink_integration_tests }}
-      shell: bash
-      run: |
-        # find test go root by using the go_mod_path and change to that directory
-        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
-        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
-            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
-            cd "${TEST_LIB_PATH}"
-        fi
-
-        # update the integration-tests lib to the branch or commit
-        go get github.com/smartcontractkit/chainlink/integration-tests@${{ inputs.dep_chainlink_integration_tests }}
-        go mod tidy
 
     # Download any external artifacts
     - name: Download Artifacts
@@ -156,12 +107,6 @@ runs:
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
 
-    # gotestfmt gives us pretty test output
-    - name: Set Up gotestfmt
-      uses: GoTestTools/gotestfmt-action@v2
-      with:
-        token: ${{ inputs.token }} # Avoids rate-limiting
-
     # Run the tests
     - name: Run Tests
       shell: bash
@@ -171,11 +116,12 @@ runs:
         CHAINLINK_ENV_USER: ${{ github.actor }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
       run: |
-        PATH=$PATH:$(go env GOPATH)/bin
-        export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         # Handle bots as users
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
+
+        chmod +x ./${{ inputs.binary_name }}
+
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
