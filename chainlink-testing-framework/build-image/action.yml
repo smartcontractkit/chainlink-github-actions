@@ -13,6 +13,10 @@ inputs:
     required: false
     description: The chainlink dockerfile to use to build the image with
     default: core/chainlink.Dockerfile
+  cl_docker_context:
+    required: false
+    description: The context to use for the docker build for chainlink repository
+    default: .
   push_tag:
     required: true
     description: The full docker tag to use for the push to ecr, does not push anything if tag is empty
@@ -131,7 +135,7 @@ runs:
     - name: Build and Push
       uses: docker/build-push-action@v3
       with:
-        context: .
+        context: ${{ inputs.cl_docker_context }}
         file: ${{ inputs.cl_dockerfile }}
         # comma separated like: KEY1=VAL1,KEY2=VAL2,...
         build-args: |
