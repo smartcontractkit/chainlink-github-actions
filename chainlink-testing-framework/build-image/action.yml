@@ -132,6 +132,9 @@ runs:
     - name: Set up Docker Buildx
       if: steps.push.outputs.push == 'true'
       uses: docker/setup-buildx-action@v2
+    - name: Debug context
+      shell: bash
+      run: pwd
     - name: Build and Push
       uses: docker/build-push-action@v3
       with:
