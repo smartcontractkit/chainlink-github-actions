@@ -1,0 +1,30 @@
+{"Time":"2023-11-27T15:39:38.891004-07:00","Action":"start","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"pause","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"cont","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"run","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest"}
+{"Time":"2023-11-27T15:39:39.223203-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest","Output":"=== RUN   TestPassTest\n"}
+{"Time":"2023-11-27T15:39:39.223325-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest","Output":"--- PASS: TestPassTest (0.00s)\n"}
+{"Time":"2023-11-27T15:39:39.223335-07:00","Action":"pass","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Test":"TestPassTest","Elapsed":0}
+{"Time":"2023-11-27T15:39:39.223392-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Output":"PASS\n"}
+{"Time":"2023-11-27T15:39:39.223823-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Output":"ok  \tgithub.com/smartcontractkit/chainlink-testing-framework/passpackage\t0.332s\n"}
+{"Time":"2023-11-27T15:39:39.223871-07:00","Action":"pass","Package":"github.com/smartcontractkit/chainlink-testing-framework/passpackage","Elapsed":0.333}
+{"Time":"2023-11-27T15:43:53.048232-07:00","Action":"start","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"pause","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"cont","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2"}
+{"Time":"2023-11-27T15:39:39.223129-07:00","Action":"run","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2"}
+{"Time":"2023-11-27T15:39:39.223203-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2","Output":"=== RUN   TestPassTest2\n"}
+{"Time":"2023-11-27T15:39:39.223325-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2","Output":"--- PASS: TestPassTest2 (0.00s)\n"}
+{"Time":"2023-11-27T15:39:39.223335-07:00","Action":"pass","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestPassTest2","Elapsed":0}
+{"Time":"2023-11-27T15:43:53.397883-07:00","Action":"pause","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest"}
+{"Time":"2023-11-27T15:43:53.397884-07:00","Action":"cont","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest"}
+{"Time":"2023-11-27T15:43:53.397885-07:00","Action":"run","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest"}
+{"Time":"2023-11-27T15:43:53.397999-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"=== RUN   TestFailTest\n"}
+{"Time":"2023-11-27T15:43:53.398176-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"    mirror_test.go:12: \n"}
+{"Time":"2023-11-27T15:43:53.398181-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"        \tError Trace:\t/Users/blarg/git/chainlink-testing-framework/failpackage/mirror_test.go:12\n"}
+{"Time":"2023-11-27T15:43:53.398191-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"        \tError:      \tAn error is expected but got nil.\n"}
+{"Time":"2023-11-27T15:43:53.398197-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"        \tTest:       \tTestFailTest\n"}
+{"Time":"2023-11-27T15:43:53.398634-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Output":"--- FAIL: TestFailTest (0.00s)\n"}
+{"Time":"2023-11-27T15:43:53.39865-07:00","Action":"fail","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Test":"TestFailTest","Elapsed":0}
+{"Time":"2023-11-27T15:43:53.398988-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Output":"FAIL\n"}
+{"Time":"2023-11-27T15:43:53.399042-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Output":"FAIL\tgithub.com/smartcontractkit/chainlink-testing-framework/failpackage\t0.349s\n"}
+{"Time":"2023-11-27T15:43:53.399052-07:00","Action":"fail","Package":"github.com/smartcontractkit/chainlink-testing-framework/failpackage","Elapsed":0.351}

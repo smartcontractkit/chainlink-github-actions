@@ -1,7 +1,7 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 351:
+/***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -27,8 +27,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(37));
-const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(2037));
+const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
  *
@@ -100,7 +100,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 186:
+/***/ 2186:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -135,12 +135,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(351);
+const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
-const utils_1 = __nccwpck_require__(278);
-const os = __importStar(__nccwpck_require__(37));
-const path = __importStar(__nccwpck_require__(17));
-const oidc_utils_1 = __nccwpck_require__(41);
+const utils_1 = __nccwpck_require__(5278);
+const os = __importStar(__nccwpck_require__(2037));
+const path = __importStar(__nccwpck_require__(1017));
+const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
  */
@@ -425,17 +425,17 @@ exports.getIDToken = getIDToken;
 /**
  * Summary exports
  */
-var summary_1 = __nccwpck_require__(327);
+var summary_1 = __nccwpck_require__(1327);
 Object.defineProperty(exports, "summary", ({ enumerable: true, get: function () { return summary_1.summary; } }));
 /**
  * @deprecated use core.summary
  */
-var summary_2 = __nccwpck_require__(327);
+var summary_2 = __nccwpck_require__(1327);
 Object.defineProperty(exports, "markdownSummary", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));
 /**
  * Path exports
  */
-var path_utils_1 = __nccwpck_require__(981);
+var path_utils_1 = __nccwpck_require__(2981);
 Object.defineProperty(exports, "toPosixPath", ({ enumerable: true, get: function () { return path_utils_1.toPosixPath; } }));
 Object.defineProperty(exports, "toWin32Path", ({ enumerable: true, get: function () { return path_utils_1.toWin32Path; } }));
 Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: function () { return path_utils_1.toPlatformPath; } }));
@@ -472,10 +472,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(147));
-const os = __importStar(__nccwpck_require__(37));
-const uuid_1 = __nccwpck_require__(840);
-const utils_1 = __nccwpck_require__(278);
+const fs = __importStar(__nccwpck_require__(7147));
+const os = __importStar(__nccwpck_require__(2037));
+const uuid_1 = __nccwpck_require__(5840);
+const utils_1 = __nccwpck_require__(5278);
 function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -508,7 +508,7 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 
 /***/ }),
 
-/***/ 41:
+/***/ 8041:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -524,9 +524,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(255);
-const auth_1 = __nccwpck_require__(526);
-const core_1 = __nccwpck_require__(186);
+const http_client_1 = __nccwpck_require__(6255);
+const auth_1 = __nccwpck_require__(5526);
+const core_1 = __nccwpck_require__(2186);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
@@ -592,7 +592,7 @@ exports.OidcClient = OidcClient;
 
 /***/ }),
 
-/***/ 981:
+/***/ 2981:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -618,7 +618,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
-const path = __importStar(__nccwpck_require__(17));
+const path = __importStar(__nccwpck_require__(1017));
 /**
  * toPosixPath converts the given path to the posix form. On Windows, \\ will be
  * replaced with /.
@@ -657,7 +657,7 @@ exports.toPlatformPath = toPlatformPath;
 
 /***/ }),
 
-/***/ 327:
+/***/ 1327:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -673,8 +673,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
-const os_1 = __nccwpck_require__(37);
-const fs_1 = __nccwpck_require__(147);
+const os_1 = __nccwpck_require__(2037);
+const fs_1 = __nccwpck_require__(7147);
 const { access, appendFile, writeFile } = fs_1.promises;
 exports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
 exports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';
@@ -947,7 +947,7 @@ exports.summary = _summary;
 
 /***/ }),
 
-/***/ 278:
+/***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -994,7 +994,7 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 526:
+/***/ 5526:
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
@@ -1082,7 +1082,7 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 255:
+/***/ 6255:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1118,10 +1118,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;
-const http = __importStar(__nccwpck_require__(685));
-const https = __importStar(__nccwpck_require__(687));
-const pm = __importStar(__nccwpck_require__(835));
-const tunnel = __importStar(__nccwpck_require__(294));
+const http = __importStar(__nccwpck_require__(3685));
+const https = __importStar(__nccwpck_require__(5687));
+const pm = __importStar(__nccwpck_require__(9835));
+const tunnel = __importStar(__nccwpck_require__(4294));
 var HttpCodes;
 (function (HttpCodes) {
     HttpCodes[HttpCodes["OK"] = 200] = "OK";
@@ -1694,7 +1694,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 
 /***/ }),
 
-/***/ 835:
+/***/ 9835:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1777,27 +1777,27 @@ function isLoopbackAddress(host) {
 
 /***/ }),
 
-/***/ 294:
+/***/ 4294:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __nccwpck_require__(219);
+module.exports = __nccwpck_require__(4219);
 
 
 /***/ }),
 
-/***/ 219:
+/***/ 4219:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var net = __nccwpck_require__(808);
-var tls = __nccwpck_require__(404);
-var http = __nccwpck_require__(685);
-var https = __nccwpck_require__(687);
-var events = __nccwpck_require__(361);
-var assert = __nccwpck_require__(491);
-var util = __nccwpck_require__(837);
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(9491);
+var util = __nccwpck_require__(3837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -2057,7 +2057,7 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 840:
+/***/ 5840:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2121,29 +2121,29 @@ Object.defineProperty(exports, "parse", ({
   }
 }));
 
-var _v = _interopRequireDefault(__nccwpck_require__(628));
+var _v = _interopRequireDefault(__nccwpck_require__(8628));
 
-var _v2 = _interopRequireDefault(__nccwpck_require__(409));
+var _v2 = _interopRequireDefault(__nccwpck_require__(6409));
 
-var _v3 = _interopRequireDefault(__nccwpck_require__(122));
+var _v3 = _interopRequireDefault(__nccwpck_require__(5122));
 
-var _v4 = _interopRequireDefault(__nccwpck_require__(120));
+var _v4 = _interopRequireDefault(__nccwpck_require__(9120));
 
-var _nil = _interopRequireDefault(__nccwpck_require__(332));
+var _nil = _interopRequireDefault(__nccwpck_require__(5332));
 
-var _version = _interopRequireDefault(__nccwpck_require__(595));
+var _version = _interopRequireDefault(__nccwpck_require__(1595));
 
-var _validate = _interopRequireDefault(__nccwpck_require__(900));
+var _validate = _interopRequireDefault(__nccwpck_require__(6900));
 
-var _stringify = _interopRequireDefault(__nccwpck_require__(950));
+var _stringify = _interopRequireDefault(__nccwpck_require__(8950));
 
-var _parse = _interopRequireDefault(__nccwpck_require__(746));
+var _parse = _interopRequireDefault(__nccwpck_require__(2746));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 
-/***/ 569:
+/***/ 4569:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2154,7 +2154,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _crypto = _interopRequireDefault(__nccwpck_require__(113));
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2173,7 +2173,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 332:
+/***/ 5332:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2188,7 +2188,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 746:
+/***/ 2746:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2199,7 +2199,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _validate = _interopRequireDefault(__nccwpck_require__(900));
+var _validate = _interopRequireDefault(__nccwpck_require__(6900));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2266,7 +2266,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = rng;
 
-var _crypto = _interopRequireDefault(__nccwpck_require__(113));
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2286,7 +2286,7 @@ function rng() {
 
 /***/ }),
 
-/***/ 274:
+/***/ 5274:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2297,7 +2297,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _crypto = _interopRequireDefault(__nccwpck_require__(113));
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2316,7 +2316,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 950:
+/***/ 8950:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2327,7 +2327,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _validate = _interopRequireDefault(__nccwpck_require__(900));
+var _validate = _interopRequireDefault(__nccwpck_require__(6900));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2362,7 +2362,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 628:
+/***/ 8628:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2375,7 +2375,7 @@ exports["default"] = void 0;
 
 var _rng = _interopRequireDefault(__nccwpck_require__(807));
 
-var _stringify = _interopRequireDefault(__nccwpck_require__(950));
+var _stringify = _interopRequireDefault(__nccwpck_require__(8950));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2476,7 +2476,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 409:
+/***/ 6409:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2487,9 +2487,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _v = _interopRequireDefault(__nccwpck_require__(998));
+var _v = _interopRequireDefault(__nccwpck_require__(5998));
 
-var _md = _interopRequireDefault(__nccwpck_require__(569));
+var _md = _interopRequireDefault(__nccwpck_require__(4569));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2499,7 +2499,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 998:
+/***/ 5998:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2511,9 +2511,9 @@ Object.defineProperty(exports, "__esModule", ({
 exports["default"] = _default;
 exports.URL = exports.DNS = void 0;
 
-var _stringify = _interopRequireDefault(__nccwpck_require__(950));
+var _stringify = _interopRequireDefault(__nccwpck_require__(8950));
 
-var _parse = _interopRequireDefault(__nccwpck_require__(746));
+var _parse = _interopRequireDefault(__nccwpck_require__(2746));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2584,7 +2584,7 @@ function _default(name, version, hashfunc) {
 
 /***/ }),
 
-/***/ 122:
+/***/ 5122:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2597,7 +2597,7 @@ exports["default"] = void 0;
 
 var _rng = _interopRequireDefault(__nccwpck_require__(807));
 
-var _stringify = _interopRequireDefault(__nccwpck_require__(950));
+var _stringify = _interopRequireDefault(__nccwpck_require__(8950));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2628,7 +2628,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 120:
+/***/ 9120:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2639,9 +2639,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _v = _interopRequireDefault(__nccwpck_require__(998));
+var _v = _interopRequireDefault(__nccwpck_require__(5998));
 
-var _sha = _interopRequireDefault(__nccwpck_require__(274));
+var _sha = _interopRequireDefault(__nccwpck_require__(5274));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2651,7 +2651,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 900:
+/***/ 6900:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2675,7 +2675,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 595:
+/***/ 1595:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2686,7 +2686,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 
-var _validate = _interopRequireDefault(__nccwpck_require__(900));
+var _validate = _interopRequireDefault(__nccwpck_require__(6900));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2703,14 +2703,14 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 892:
+/***/ 9892:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ZodError = exports.quotelessJson = exports.ZodIssueCode = void 0;
-const util_1 = __nccwpck_require__(985);
+const util_1 = __nccwpck_require__(3985);
 exports.ZodIssueCode = util_1.util.arrayToEnum([
     "invalid_type",
     "invalid_literal",
@@ -2746,6 +2746,7 @@ class ZodError extends Error {
         };
         const actualProto = new.target.prototype;
         if (Object.setPrototypeOf) {
+            // eslint-disable-next-line ban/ban
             Object.setPrototypeOf(this, actualProto);
         }
         else {
@@ -2785,6 +2786,13 @@ class ZodError extends Error {
                         const terminal = i === issue.path.length - 1;
                         if (!terminal) {
                             curr[el] = curr[el] || { _errors: [] };
+                            // if (typeof el === "string") {
+                            //   curr[el] = curr[el] || { _errors: [] };
+                            // } else if (typeof el === "number") {
+                            //   const errorArray: any = [];
+                            //   errorArray._errors = [];
+                            //   curr[el] = curr[el] || errorArray;
+                            // }
                         }
                         else {
                             curr[el] = curr[el] || { _errors: [] };
@@ -2835,7 +2843,7 @@ ZodError.create = (issues) => {
 
 /***/ }),
 
-/***/ 566:
+/***/ 9566:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2860,7 +2868,7 @@ exports.getErrorMap = getErrorMap;
 
 /***/ }),
 
-/***/ 906:
+/***/ 9906:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2876,17 +2884,17 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(566), exports);
+__exportStar(__nccwpck_require__(9566), exports);
 __exportStar(__nccwpck_require__(888), exports);
-__exportStar(__nccwpck_require__(449), exports);
-__exportStar(__nccwpck_require__(985), exports);
-__exportStar(__nccwpck_require__(335), exports);
-__exportStar(__nccwpck_require__(892), exports);
+__exportStar(__nccwpck_require__(9449), exports);
+__exportStar(__nccwpck_require__(3985), exports);
+__exportStar(__nccwpck_require__(9335), exports);
+__exportStar(__nccwpck_require__(9892), exports);
 
 
 /***/ }),
 
-/***/ 513:
+/***/ 2513:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2912,7 +2920,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isAsync = exports.isValid = exports.isDirty = exports.isAborted = exports.OK = exports.DIRTY = exports.INVALID = exports.ParseStatus = exports.addIssueToContext = exports.EMPTY_PATH = exports.makeIssue = void 0;
-const errors_1 = __nccwpck_require__(566);
+const errors_1 = __nccwpck_require__(9566);
 const en_1 = __importDefault(__nccwpck_require__(468));
 const makeIssue = (params) => {
     const { data, path, errorMaps, issueData } = params;
@@ -2946,7 +2954,7 @@ function addIssueToContext(ctx, issueData) {
             ctx.common.contextualErrorMap,
             ctx.schemaErrorMap,
             (0, errors_1.getErrorMap)(),
-            en_1.default,
+            en_1.default, // then global default map
         ].filter((x) => !!x),
     });
     ctx.common.issues.push(issue);
@@ -2997,7 +3005,8 @@ class ParseStatus {
                 status.dirty();
             if (value.status === "dirty")
                 status.dirty();
-            if (typeof value.value !== "undefined" || pair.alwaysSet) {
+            if (key.value !== "__proto__" &&
+                (typeof value.value !== "undefined" || pair.alwaysSet)) {
                 finalObject[key.value] = value.value;
             }
         }
@@ -3024,7 +3033,7 @@ exports.isAsync = isAsync;
 
 /***/ }),
 
-/***/ 449:
+/***/ 9449:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3034,7 +3043,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 985:
+/***/ 3985:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3070,8 +3079,8 @@ var util;
             return obj[e];
         });
     };
-    util.objectKeys = typeof Object.keys === "function"
-        ? (obj) => Object.keys(obj)
+    util.objectKeys = typeof Object.keys === "function" // eslint-disable-line ban/ban
+        ? (obj) => Object.keys(obj) // eslint-disable-line ban/ban
         : (object) => {
             const keys = [];
             for (const key in object) {
@@ -3089,7 +3098,7 @@ var util;
         return undefined;
     };
     util.isInteger = typeof Number.isInteger === "function"
-        ? (val) => Number.isInteger(val)
+        ? (val) => Number.isInteger(val) // eslint-disable-line ban/ban
         : (val) => typeof val === "number" && isFinite(val) && Math.floor(val) === val;
     function joinValues(array, separator = " | ") {
         return array
@@ -3109,7 +3118,7 @@ var objectUtil;
     objectUtil.mergeShapes = (first, second) => {
         return {
             ...first,
-            ...second,
+            ...second, // second overwrites first
         };
     };
 })(objectUtil = exports.objectUtil || (exports.objectUtil = {}));
@@ -3184,7 +3193,7 @@ exports.getParsedType = getParsedType;
 
 /***/ }),
 
-/***/ 301:
+/***/ 3301:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3213,9 +3222,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.z = void 0;
-const z = __importStar(__nccwpck_require__(906));
+const z = __importStar(__nccwpck_require__(9906));
 exports.z = z;
-__exportStar(__nccwpck_require__(906), exports);
+__exportStar(__nccwpck_require__(9906), exports);
 exports["default"] = z;
 
 
@@ -3227,8 +3236,8 @@ exports["default"] = z;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const util_1 = __nccwpck_require__(985);
-const ZodError_1 = __nccwpck_require__(892);
+const util_1 = __nccwpck_require__(3985);
+const ZodError_1 = __nccwpck_require__(9892);
 const errorMap = (issue, _ctx) => {
     let message;
     switch (issue.code) {
@@ -3358,19 +3367,19 @@ exports["default"] = errorMap;
 
 /***/ }),
 
-/***/ 335:
+/***/ 9335:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.discriminatedUnion = exports.date = exports.boolean = exports.bigint = exports.array = exports.any = exports.coerce = exports.ZodFirstPartyTypeKind = exports.late = exports.ZodSchema = exports.Schema = exports.custom = exports.ZodPipeline = exports.ZodBranded = exports.BRAND = exports.ZodNaN = exports.ZodCatch = exports.ZodDefault = exports.ZodNullable = exports.ZodOptional = exports.ZodTransformer = exports.ZodEffects = exports.ZodPromise = exports.ZodNativeEnum = exports.ZodEnum = exports.ZodLiteral = exports.ZodLazy = exports.ZodFunction = exports.ZodSet = exports.ZodMap = exports.ZodRecord = exports.ZodTuple = exports.ZodIntersection = exports.ZodDiscriminatedUnion = exports.ZodUnion = exports.ZodObject = exports.ZodArray = exports.ZodVoid = exports.ZodNever = exports.ZodUnknown = exports.ZodAny = exports.ZodNull = exports.ZodUndefined = exports.ZodSymbol = exports.ZodDate = exports.ZodBoolean = exports.ZodBigInt = exports.ZodNumber = exports.ZodString = exports.ZodType = void 0;
-exports.NEVER = exports["void"] = exports.unknown = exports.union = exports.undefined = exports.tuple = exports.transformer = exports.symbol = exports.string = exports.strictObject = exports.set = exports.record = exports.promise = exports.preprocess = exports.pipeline = exports.ostring = exports.optional = exports.onumber = exports.oboolean = exports.object = exports.number = exports.nullable = exports["null"] = exports.never = exports.nativeEnum = exports.nan = exports.map = exports.literal = exports.lazy = exports.intersection = exports["instanceof"] = exports["function"] = exports["enum"] = exports.effect = void 0;
-const errors_1 = __nccwpck_require__(566);
-const errorUtil_1 = __nccwpck_require__(513);
+exports.date = exports.boolean = exports.bigint = exports.array = exports.any = exports.coerce = exports.ZodFirstPartyTypeKind = exports.late = exports.ZodSchema = exports.Schema = exports.custom = exports.ZodReadonly = exports.ZodPipeline = exports.ZodBranded = exports.BRAND = exports.ZodNaN = exports.ZodCatch = exports.ZodDefault = exports.ZodNullable = exports.ZodOptional = exports.ZodTransformer = exports.ZodEffects = exports.ZodPromise = exports.ZodNativeEnum = exports.ZodEnum = exports.ZodLiteral = exports.ZodLazy = exports.ZodFunction = exports.ZodSet = exports.ZodMap = exports.ZodRecord = exports.ZodTuple = exports.ZodIntersection = exports.ZodDiscriminatedUnion = exports.ZodUnion = exports.ZodObject = exports.ZodArray = exports.ZodVoid = exports.ZodNever = exports.ZodUnknown = exports.ZodAny = exports.ZodNull = exports.ZodUndefined = exports.ZodSymbol = exports.ZodDate = exports.ZodBoolean = exports.ZodBigInt = exports.ZodNumber = exports.ZodString = exports.ZodType = void 0;
+exports.NEVER = exports["void"] = exports.unknown = exports.union = exports.undefined = exports.tuple = exports.transformer = exports.symbol = exports.string = exports.strictObject = exports.set = exports.record = exports.promise = exports.preprocess = exports.pipeline = exports.ostring = exports.optional = exports.onumber = exports.oboolean = exports.object = exports.number = exports.nullable = exports["null"] = exports.never = exports.nativeEnum = exports.nan = exports.map = exports.literal = exports.lazy = exports.intersection = exports["instanceof"] = exports["function"] = exports["enum"] = exports.effect = exports.discriminatedUnion = void 0;
+const errors_1 = __nccwpck_require__(9566);
+const errorUtil_1 = __nccwpck_require__(2513);
 const parseUtil_1 = __nccwpck_require__(888);
-const util_1 = __nccwpck_require__(985);
-const ZodError_1 = __nccwpck_require__(892);
+const util_1 = __nccwpck_require__(3985);
+const ZodError_1 = __nccwpck_require__(9892);
 class ParseInputLazyPath {
     constructor(parent, value, path, key) {
         this._cachedPath = [];
@@ -3432,6 +3441,7 @@ function processCreateParams(params) {
 }
 class ZodType {
     constructor(def) {
+        /** Alias of safeParseAsync */
         this.spa = this.safeParseAsync;
         this._def = def;
         this.parse = this.parse.bind(this);
@@ -3455,6 +3465,7 @@ class ZodType {
         this.catch = this.catch.bind(this);
         this.describe = this.describe.bind(this);
         this.pipe = this.pipe.bind(this);
+        this.readonly = this.readonly.bind(this);
         this.isNullable = this.isNullable.bind(this);
         this.isOptional = this.isOptional.bind(this);
     }
@@ -3671,6 +3682,9 @@ class ZodType {
     pipe(target) {
         return ZodPipeline.create(this, target);
     }
+    readonly() {
+        return ZodReadonly.create(this);
+    }
     isOptional() {
         return this.safeParse(undefined).success;
     }
@@ -3683,12 +3697,31 @@ exports.Schema = ZodType;
 exports.ZodSchema = ZodType;
 const cuidRegex = /^c[^\s-]{8,}$/i;
 const cuid2Regex = /^[a-z][a-z0-9]*$/;
-const ulidRegex = /[0-9A-HJKMNP-TV-Z]{26}/;
-const uuidRegex = /^([a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}|00000000-0000-0000-0000-000000000000)$/i;
-const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\])|(\[IPv6:(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))\])|([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])*(\.[A-Za-z]{2,})+))$/;
-const emojiRegex = /^(\p{Extended_Pictographic}|\p{Emoji_Component})+$/u;
+const ulidRegex = /^[0-9A-HJKMNP-TV-Z]{26}$/;
+// const uuidRegex =
+//   /^([a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}|00000000-0000-0000-0000-000000000000)$/i;
+const uuidRegex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i;
+// from https://stackoverflow.com/a/46181/1550155
+// old version: too slow, didn't support unicode
+// const emailRegex = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
+//old email regex
+// const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@((?!-)([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})[^-<>()[\].,;:\s@"]$/i;
+// eslint-disable-next-line
+// const emailRegex =
+//   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\])|(\[IPv6:(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))\])|([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])*(\.[A-Za-z]{2,})+))$/;
+// const emailRegex =
+//   /^[a-zA-Z0-9\.\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+// const emailRegex =
+//   /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
+const emailRegex = /^(?!\.)(?!.*\.\.)([A-Z0-9_+-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+// const emailRegex =
+//   /^[a-z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9\-]+)*$/i;
+// from https://thekevinscott.com/emojis-in-javascript/#writing-a-regular-expression
+const _emojiRegex = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
+let emojiRegex;
 const ipv4Regex = /^(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))$/;
 const ipv6Regex = /^(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))$/;
+// Adapted from https://stackoverflow.com/a/3143231
 const datetimeRegex = (args) => {
     if (args.precision) {
         if (args.offset) {
@@ -3725,27 +3758,6 @@ function isValidIP(ip, version) {
     return false;
 }
 class ZodString extends ZodType {
-    constructor() {
-        super(...arguments);
-        this._regex = (regex, validation, message) => this.refinement((data) => regex.test(data), {
-            validation,
-            code: ZodError_1.ZodIssueCode.invalid_string,
-            ...errorUtil_1.errorUtil.errToObj(message),
-        });
-        this.nonempty = (message) => this.min(1, errorUtil_1.errorUtil.errToObj(message));
-        this.trim = () => new ZodString({
-            ...this._def,
-            checks: [...this._def.checks, { kind: "trim" }],
-        });
-        this.toLowerCase = () => new ZodString({
-            ...this._def,
-            checks: [...this._def.checks, { kind: "toLowerCase" }],
-        });
-        this.toUpperCase = () => new ZodString({
-            ...this._def,
-            checks: [...this._def.checks, { kind: "toUpperCase" }],
-        });
-    }
     _parse(input) {
         if (this._def.coerce) {
             input.data = String(input.data);
@@ -3757,7 +3769,9 @@ class ZodString extends ZodType {
                 code: ZodError_1.ZodIssueCode.invalid_type,
                 expected: util_1.ZodParsedType.string,
                 received: ctx.parsedType,
-            });
+            }
+            //
+            );
             return parseUtil_1.INVALID;
         }
         const status = new parseUtil_1.ParseStatus();
@@ -3831,6 +3845,9 @@ class ZodString extends ZodType {
                 }
             }
             else if (check.kind === "emoji") {
+                if (!emojiRegex) {
+                    emojiRegex = new RegExp(_emojiRegex, "u");
+                }
                 if (!emojiRegex.test(input.data)) {
                     ctx = this._getOrReturnCtx(input, ctx);
                     (0, parseUtil_1.addIssueToContext)(ctx, {
@@ -3983,6 +4000,13 @@ class ZodString extends ZodType {
         }
         return { status: status.value, value: input.data };
     }
+    _regex(regex, validation, message) {
+        return this.refinement((data) => regex.test(data), {
+            validation,
+            code: ZodError_1.ZodIssueCode.invalid_string,
+            ...errorUtil_1.errorUtil.errToObj(message),
+        });
+    }
     _addCheck(check) {
         return new ZodString({
             ...this._def,
@@ -4080,6 +4104,31 @@ class ZodString extends ZodType {
             ...errorUtil_1.errorUtil.errToObj(message),
         });
     }
+    /**
+     * @deprecated Use z.string().min(1) instead.
+     * @see {@link ZodString.min}
+     */
+    nonempty(message) {
+        return this.min(1, errorUtil_1.errorUtil.errToObj(message));
+    }
+    trim() {
+        return new ZodString({
+            ...this._def,
+            checks: [...this._def.checks, { kind: "trim" }],
+        });
+    }
+    toLowerCase() {
+        return new ZodString({
+            ...this._def,
+            checks: [...this._def.checks, { kind: "toLowerCase" }],
+        });
+    }
+    toUpperCase() {
+        return new ZodString({
+            ...this._def,
+            checks: [...this._def.checks, { kind: "toUpperCase" }],
+        });
+    }
     get isDatetime() {
         return !!this._def.checks.find((ch) => ch.kind === "datetime");
     }
@@ -4138,6 +4187,7 @@ ZodString.create = (params) => {
         ...processCreateParams(params),
     });
 };
+// https://stackoverflow.com/questions/3966484/why-does-modulus-operator-return-fractional-number-in-javascript/31711034#31711034
 function floatSafeRemainder(val, step) {
     const valDecCount = (val.toString().split(".")[1] || "").length;
     const stepDecCount = (step.toString().split(".")[1] || "").length;
@@ -4773,6 +4823,7 @@ ZodNull.create = (params) => {
 class ZodAny extends ZodType {
     constructor() {
         super(...arguments);
+        // to prevent instances of other classes from extending ZodAny. this causes issues with catchall in ZodObject.
         this._any = true;
     }
     _parse(input) {
@@ -4789,6 +4840,7 @@ ZodAny.create = (params) => {
 class ZodUnknown extends ZodType {
     constructor() {
         super(...arguments);
+        // required
         this._unknown = true;
     }
     _parse(input) {
@@ -4979,7 +5031,47 @@ class ZodObject extends ZodType {
     constructor() {
         super(...arguments);
         this._cached = null;
+        /**
+         * @deprecated In most cases, this is no longer needed - unknown properties are now silently stripped.
+         * If you want to pass through unknown properties, use `.passthrough()` instead.
+         */
         this.nonstrict = this.passthrough;
+        // extend<
+        //   Augmentation extends ZodRawShape,
+        //   NewOutput extends util.flatten<{
+        //     [k in keyof Augmentation | keyof Output]: k extends keyof Augmentation
+        //       ? Augmentation[k]["_output"]
+        //       : k extends keyof Output
+        //       ? Output[k]
+        //       : never;
+        //   }>,
+        //   NewInput extends util.flatten<{
+        //     [k in keyof Augmentation | keyof Input]: k extends keyof Augmentation
+        //       ? Augmentation[k]["_input"]
+        //       : k extends keyof Input
+        //       ? Input[k]
+        //       : never;
+        //   }>
+        // >(
+        //   augmentation: Augmentation
+        // ): ZodObject<
+        //   extendShape<T, Augmentation>,
+        //   UnknownKeys,
+        //   Catchall,
+        //   NewOutput,
+        //   NewInput
+        // > {
+        //   return new ZodObject({
+        //     ...this._def,
+        //     shape: () => ({
+        //       ...this._def.shape(),
+        //       ...augmentation,
+        //     }),
+        //   }) as any;
+        // }
+        /**
+         * @deprecated Use `.extend` instead
+         *  */
         this.augment = this.extend;
     }
     _getCached() {
@@ -5047,12 +5139,14 @@ class ZodObject extends ZodType {
             }
         }
         else {
+            // run catchall validation
             const catchall = this._def.catchall;
             for (const key of extraKeys) {
                 const value = ctx.data[key];
                 pairs.push({
                     key: { status: "valid", value: key },
-                    value: catchall._parse(new ParseInputLazyPath(ctx, value, ctx.path, key)),
+                    value: catchall._parse(new ParseInputLazyPath(ctx, value, ctx.path, key) //, ctx.child(key), value, getParsedType(value)
+                    ),
                     alwaysSet: key in ctx.data,
                 });
             }
@@ -5116,6 +5210,23 @@ class ZodObject extends ZodType {
             unknownKeys: "passthrough",
         });
     }
+    // const AugmentFactory =
+    //   <Def extends ZodObjectDef>(def: Def) =>
+    //   <Augmentation extends ZodRawShape>(
+    //     augmentation: Augmentation
+    //   ): ZodObject<
+    //     extendShape<ReturnType<Def["shape"]>, Augmentation>,
+    //     Def["unknownKeys"],
+    //     Def["catchall"]
+    //   > => {
+    //     return new ZodObject({
+    //       ...def,
+    //       shape: () => ({
+    //         ...def.shape(),
+    //         ...augmentation,
+    //       }),
+    //     }) as any;
+    //   };
     extend(augmentation) {
         return new ZodObject({
             ...this._def,
@@ -5125,6 +5236,11 @@ class ZodObject extends ZodType {
             }),
         });
     }
+    /**
+     * Prior to zod@1.0.12 there was a bug in the
+     * inferred type of merged objects. Please
+     * upgrade if you are experiencing issues.
+     */
     merge(merging) {
         const merged = new ZodObject({
             unknownKeys: merging._def.unknownKeys,
@@ -5137,9 +5253,65 @@ class ZodObject extends ZodType {
         });
         return merged;
     }
+    // merge<
+    //   Incoming extends AnyZodObject,
+    //   Augmentation extends Incoming["shape"],
+    //   NewOutput extends {
+    //     [k in keyof Augmentation | keyof Output]: k extends keyof Augmentation
+    //       ? Augmentation[k]["_output"]
+    //       : k extends keyof Output
+    //       ? Output[k]
+    //       : never;
+    //   },
+    //   NewInput extends {
+    //     [k in keyof Augmentation | keyof Input]: k extends keyof Augmentation
+    //       ? Augmentation[k]["_input"]
+    //       : k extends keyof Input
+    //       ? Input[k]
+    //       : never;
+    //   }
+    // >(
+    //   merging: Incoming
+    // ): ZodObject<
+    //   extendShape<T, ReturnType<Incoming["_def"]["shape"]>>,
+    //   Incoming["_def"]["unknownKeys"],
+    //   Incoming["_def"]["catchall"],
+    //   NewOutput,
+    //   NewInput
+    // > {
+    //   const merged: any = new ZodObject({
+    //     unknownKeys: merging._def.unknownKeys,
+    //     catchall: merging._def.catchall,
+    //     shape: () =>
+    //       objectUtil.mergeShapes(this._def.shape(), merging._def.shape()),
+    //     typeName: ZodFirstPartyTypeKind.ZodObject,
+    //   }) as any;
+    //   return merged;
+    // }
     setKey(key, schema) {
         return this.augment({ [key]: schema });
     }
+    // merge<Incoming extends AnyZodObject>(
+    //   merging: Incoming
+    // ): //ZodObject<T & Incoming["_shape"], UnknownKeys, Catchall> = (merging) => {
+    // ZodObject<
+    //   extendShape<T, ReturnType<Incoming["_def"]["shape"]>>,
+    //   Incoming["_def"]["unknownKeys"],
+    //   Incoming["_def"]["catchall"]
+    // > {
+    //   // const mergedShape = objectUtil.mergeShapes(
+    //   //   this._def.shape(),
+    //   //   merging._def.shape()
+    //   // );
+    //   const merged: any = new ZodObject({
+    //     unknownKeys: merging._def.unknownKeys,
+    //     catchall: merging._def.catchall,
+    //     shape: () =>
+    //       objectUtil.mergeShapes(this._def.shape(), merging._def.shape()),
+    //     typeName: ZodFirstPartyTypeKind.ZodObject,
+    //   }) as any;
+    //   return merged;
+    // }
     catchall(index) {
         return new ZodObject({
             ...this._def,
@@ -5170,6 +5342,9 @@ class ZodObject extends ZodType {
             shape: () => shape,
         });
     }
+    /**
+     * @deprecated
+     */
     deepPartial() {
         return deepPartialify(this);
     }
@@ -5246,6 +5421,7 @@ class ZodUnion extends ZodType {
         const { ctx } = this._processInputParams(input);
         const options = this._def.options;
         function handleResults(results) {
+            // return first issue-free validation if it exists
             for (const result of results) {
                 if (result.result.status === "valid") {
                     return result.result;
@@ -5253,10 +5429,12 @@ class ZodUnion extends ZodType {
             }
             for (const result of results) {
                 if (result.result.status === "dirty") {
+                    // add issues from dirty option
                     ctx.common.issues.push(...result.ctx.common.issues);
                     return result.result;
                 }
             }
+            // return invalid
             const unionErrors = results.map((result) => new ZodError_1.ZodError(result.ctx.common.issues));
             (0, parseUtil_1.addIssueToContext)(ctx, {
                 code: ZodError_1.ZodIssueCode.invalid_union,
@@ -5335,6 +5513,13 @@ ZodUnion.create = (types, params) => {
         ...processCreateParams(params),
     });
 };
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+//////////                                 //////////
+//////////      ZodDiscriminatedUnion      //////////
+//////////                                 //////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 const getDiscriminator = (type) => {
     if (type instanceof ZodLazy) {
         return getDiscriminator(type.schema);
@@ -5349,6 +5534,7 @@ const getDiscriminator = (type) => {
         return type.options;
     }
     else if (type instanceof ZodNativeEnum) {
+        // eslint-disable-next-line ban/ban
         return Object.keys(type.enum);
     }
     else if (type instanceof ZodDefault) {
@@ -5410,8 +5596,18 @@ class ZodDiscriminatedUnion extends ZodType {
     get optionsMap() {
         return this._def.optionsMap;
     }
+    /**
+     * The constructor of the discriminated union schema. Its behaviour is very similar to that of the normal z.union() constructor.
+     * However, it only allows a union of objects, all of which need to share a discriminator property. This property must
+     * have a different value for each object in the union.
+     * @param discriminator the name of the discriminator property
+     * @param types an array of object schemas
+     * @param params
+     */
     static create(discriminator, options, params) {
+        // Get all the valid discriminator values
         const optionsMap = new Map();
+        // try {
         for (const type of options) {
             const discriminatorValues = getDiscriminator(type.shape[discriminator]);
             if (!discriminatorValues) {
@@ -5574,7 +5770,7 @@ class ZodTuple extends ZodType {
                 return null;
             return schema._parse(new ParseInputLazyPath(ctx, item, ctx.path, itemIndex));
         })
-            .filter((x) => !!x);
+            .filter((x) => !!x); // filter nulls
         if (ctx.common.async) {
             return Promise.all(items).then((results) => {
                 return parseUtil_1.ParseStatus.mergeArray(status, results);
@@ -5661,6 +5857,12 @@ class ZodRecord extends ZodType {
 }
 exports.ZodRecord = ZodRecord;
 class ZodMap extends ZodType {
+    get keySchema() {
+        return this._def.keyType;
+    }
+    get valueSchema() {
+        return this._def.valueType;
+    }
     _parse(input) {
         const { status, ctx } = this._processInputParams(input);
         if (ctx.parsedType !== util_1.ZodParsedType.map) {
@@ -5859,16 +6061,20 @@ class ZodFunction extends ZodType {
         const params = { errorMap: ctx.common.contextualErrorMap };
         const fn = ctx.data;
         if (this._def.returns instanceof ZodPromise) {
-            return (0, parseUtil_1.OK)(async (...args) => {
+            // Would love a way to avoid disabling this rule, but we need
+            // an alias (using an arrow function was what caused 2651).
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const me = this;
+            return (0, parseUtil_1.OK)(async function (...args) {
                 const error = new ZodError_1.ZodError([]);
-                const parsedArgs = await this._def.args
+                const parsedArgs = await me._def.args
                     .parseAsync(args, params)
                     .catch((e) => {
                     error.addIssue(makeArgsIssue(args, e));
                     throw error;
                 });
-                const result = await fn(...parsedArgs);
-                const parsedReturns = await this._def.returns._def.type
+                const result = await Reflect.apply(fn, this, parsedArgs);
+                const parsedReturns = await me._def.returns._def.type
                     .parseAsync(result, params)
                     .catch((e) => {
                     error.addIssue(makeReturnsIssue(result, e));
@@ -5878,13 +6084,17 @@ class ZodFunction extends ZodType {
             });
         }
         else {
-            return (0, parseUtil_1.OK)((...args) => {
-                const parsedArgs = this._def.args.safeParse(args, params);
+            // Would love a way to avoid disabling this rule, but we need
+            // an alias (using an arrow function was what caused 2651).
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const me = this;
+            return (0, parseUtil_1.OK)(function (...args) {
+                const parsedArgs = me._def.args.safeParse(args, params);
                 if (!parsedArgs.success) {
                     throw new ZodError_1.ZodError([makeArgsIssue(args, parsedArgs.error)]);
                 }
-                const result = fn(...parsedArgs.data);
-                const parsedReturns = this._def.returns.safeParse(result, params);
+                const result = Reflect.apply(fn, this, parsedArgs.data);
+                const parsedReturns = me._def.returns.safeParse(result, params);
                 if (!parsedReturns.success) {
                     throw new ZodError_1.ZodError([makeReturnsIssue(result, parsedReturns.error)]);
                 }
@@ -5975,7 +6185,7 @@ ZodLiteral.create = (value, params) => {
 };
 function createZodEnum(values, params) {
     return new ZodEnum({
-        values: values,
+        values,
         typeName: ZodFirstPartyTypeKind.ZodEnum,
         ...processCreateParams(params),
     });
@@ -6120,8 +6330,29 @@ class ZodEffects extends ZodType {
     _parse(input) {
         const { status, ctx } = this._processInputParams(input);
         const effect = this._def.effect || null;
+        const checkCtx = {
+            addIssue: (arg) => {
+                (0, parseUtil_1.addIssueToContext)(ctx, arg);
+                if (arg.fatal) {
+                    status.abort();
+                }
+                else {
+                    status.dirty();
+                }
+            },
+            get path() {
+                return ctx.path;
+            },
+        };
+        checkCtx.addIssue = checkCtx.addIssue.bind(checkCtx);
         if (effect.type === "preprocess") {
-            const processed = effect.transform(ctx.data);
+            const processed = effect.transform(ctx.data, checkCtx);
+            if (ctx.common.issues.length) {
+                return {
+                    status: "dirty",
+                    value: ctx.data,
+                };
+            }
             if (ctx.common.async) {
                 return Promise.resolve(processed).then((processed) => {
                     return this._def.schema._parseAsync({
@@ -6139,23 +6370,10 @@ class ZodEffects extends ZodType {
                 });
             }
         }
-        const checkCtx = {
-            addIssue: (arg) => {
-                (0, parseUtil_1.addIssueToContext)(ctx, arg);
-                if (arg.fatal) {
-                    status.abort();
-                }
-                else {
-                    status.dirty();
-                }
-            },
-            get path() {
-                return ctx.path;
-            },
-        };
-        checkCtx.addIssue = checkCtx.addIssue.bind(checkCtx);
         if (effect.type === "refinement") {
-            const executeRefinement = (acc) => {
+            const executeRefinement = (acc
+            // effect: RefinementEffect<any>
+            ) => {
                 const result = effect.refinement(acc, checkCtx);
                 if (ctx.common.async) {
                     return Promise.resolve(result);
@@ -6175,6 +6393,7 @@ class ZodEffects extends ZodType {
                     return parseUtil_1.INVALID;
                 if (inner.status === "dirty")
                     status.dirty();
+                // return value is ignored
                 executeRefinement(inner.value);
                 return { status: status.value, value: inner.value };
             }
@@ -6309,6 +6528,7 @@ ZodDefault.create = (type, params) => {
 class ZodCatch extends ZodType {
     _parse(input) {
         const { ctx } = this._processInputParams(input);
+        // newCtx is used to not collect issues from inner types in ctx
         const newCtx = {
             ...ctx,
             common: {
@@ -6462,7 +6682,35 @@ class ZodPipeline extends ZodType {
     }
 }
 exports.ZodPipeline = ZodPipeline;
-const custom = (check, params = {}, fatal) => {
+class ZodReadonly extends ZodType {
+    _parse(input) {
+        const result = this._def.innerType._parse(input);
+        if ((0, parseUtil_1.isValid)(result)) {
+            result.value = Object.freeze(result.value);
+        }
+        return result;
+    }
+}
+exports.ZodReadonly = ZodReadonly;
+ZodReadonly.create = (type, params) => {
+    return new ZodReadonly({
+        innerType: type,
+        typeName: ZodFirstPartyTypeKind.ZodReadonly,
+        ...processCreateParams(params),
+    });
+};
+const custom = (check, params = {}, 
+/**
+ * @deprecated
+ *
+ * Pass `fatal` into the params object instead:
+ *
+ * ```ts
+ * z.string().custom((val) => val.length > 5, { fatal: false })
+ * ```
+ *
+ */
+fatal) => {
     if (check)
         return ZodAny.create().superRefine((data, ctx) => {
             var _a, _b;
@@ -6520,11 +6768,15 @@ var ZodFirstPartyTypeKind;
     ZodFirstPartyTypeKind["ZodPromise"] = "ZodPromise";
     ZodFirstPartyTypeKind["ZodBranded"] = "ZodBranded";
     ZodFirstPartyTypeKind["ZodPipeline"] = "ZodPipeline";
+    ZodFirstPartyTypeKind["ZodReadonly"] = "ZodReadonly";
 })(ZodFirstPartyTypeKind = exports.ZodFirstPartyTypeKind || (exports.ZodFirstPartyTypeKind = {}));
+// requires TS 4.4+
 class Class {
     constructor(..._) { }
 }
-const instanceOfType = (cls, params = {
+const instanceOfType = (
+// const instanceOfType = <T extends new (...args: any[]) => any>(
+cls, params = {
     message: `Input not instance of ${cls.name}`,
 }) => (0, exports.custom)((data) => data instanceof cls, params);
 exports["instanceof"] = instanceOfType;
@@ -6655,13 +6907,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.logAllOutput = exports.outputHandler = exports.jsonTestOutput = exports.standardTestOutput = exports.getTestFailures = exports.deserializeTestResultsFile = void 0;
-const core = __importStar(__nccwpck_require__(186));
-const fs = __importStar(__nccwpck_require__(147));
-const types_1 = __nccwpck_require__(77);
+exports.flushStreamOutput = exports.streamOutput = exports.processTestResultsFile = exports.preprocessTestResultsFile = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const fs = __importStar(__nccwpck_require__(7147));
+const readline = __importStar(__nccwpck_require__(4521));
+const types_1 = __nccwpck_require__(5077);
 /**
- * Github action to parse the output of go test -json output to wanted formats with wanted data
+ * Github action to parse the output of go test -json output to show only failure information
  */
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -6670,22 +6930,17 @@ function main() {
             if (!resultsFile) {
                 core.error('No results file provided');
             }
-            const outputMode = getTypedInput('output-mode');
-            const testResults = deserializeTestResultsFile(resultsFile);
-            const failedTests = getTestFailures(testResults);
-            if (outputMode === 'standard') {
-                standardTestOutput(failedTests.TestsFailed, testResults, true);
-            }
-            else if (outputMode === 'json') {
-                jsonTestOutput(failedTests.TestsFailed, testResults, true);
-            }
-            if (failedTests.TestsFailed.length > 0) {
-                throw new Error('Test Failures Found');
-            }
-            else if (failedTests.TestsFailed.length === 0 &&
-                failedTests.PackageFailure) {
-                // we have a failure without a test failure, log out all the output
-                logAllOutput(testResults);
+            const outputFile = getTypedInput('output-file', false);
+            // We have output files that are too large to read in to memory so we need to stream them
+            // Go test information can be in strange orders at times, especially when panics happen
+            // We need to process what packages and tests actually failed in 1 pass and then write out
+            // the wanted output in a second pass
+            // read through the file once to preprocess what tests and packages actually need written out
+            const failureMap = yield preprocessTestResultsFile(resultsFile);
+            // read through a second time and write out the wanted output
+            const passed = yield processTestResultsFile(failureMap, resultsFile, true, outputFile);
+            // throw an error if we have any failures so the action fails
+            if (!passed) {
                 throw new Error('Test Failures Found');
             }
         }
@@ -6696,136 +6951,240 @@ function main() {
     });
 }
 /**
- * Deserialize the go test results file into a TestResult array
- * @param resultsFile The file with the -json go test results output
- * @returns The TestResult array with all the go test results data
+ * Read through the file as a stream and build a map of package and test failures
+ * @param resultsFile The file to parse
+ * @returns The package map with failure information needed to write out the wanted output
  */
-function deserializeTestResultsFile(resultsFile) {
-    const fileData = fs.readFileSync(resultsFile, 'utf8');
-    // Split the content by newline characters
-    const lines = fileData.split('\n').filter(line => line.trim() !== '');
-    // Parse each line as a JSON object and collect the parsed objects in an array
-    const jsonArray = lines.map(line => JSON.parse(line));
-    return types_1.TestResultsSchema.parse(jsonArray);
-}
-exports.deserializeTestResultsFile = deserializeTestResultsFile;
-/**
- * Get all the failed test names from the test results array
- * @param testResults The test results to filter through
- * @returns The failed test names
- */
-function getTestFailures(testResults) {
-    const names = [];
-    let packageFailure = false;
-    testResults.filter(testResult => {
-        if (testResult.Action === 'fail') {
-            if (testResult.Test) {
-                names.push(testResult.Test);
-            }
-            else {
-                // it is possible to have a package failure without a test failure
-                // so we are storing whether we have a package failure to determine
-                // if we need to output all the output for triage later for panic cases
-                packageFailure = true;
-            }
-        }
-    });
-    return { TestsFailed: names, PackageFailure: packageFailure };
-}
-exports.getTestFailures = getTestFailures;
-/**
- * Standard test output.
- * Only failures and just the output in the original format.
- * @param failedTestNames The names of the failed tests to output
- * @param testResults The test results to filter
- * @param shouldLogOutput Should we log the output to the workflow console?
- * @returns The filtered list of test failures outputs
- */
-function standardTestOutput(failedTestNames, testResults, shouldLogOutput) {
-    let outputString = '';
-    const filteredResults = testResults.filter(testResult => {
-        if (testResult.Action === 'output') {
-            if (testResult.Test && failedTestNames.includes(testResult.Test)) {
-                outputString += testResult.Output;
-                return testResult;
-            }
-        }
-    });
-    outputHandler(outputString, shouldLogOutput);
-    return filteredResults;
-}
-exports.standardTestOutput = standardTestOutput;
-/**
- * json test output.
- * Only failures and other output that doesn't inclue a test name.
- * Printed in the original broken json array format compatible with gotestfmt
- * @param failedTestNames
- * @param testResults
- * @param shouldLogOutput
- * @returns The filtered list of test result objects
- */
-function jsonTestOutput(failedTestNames, testResults, shouldLogOutput) {
-    let outputString = '';
-    const filteredResults = testResults.filter(testResult => {
-        if (testResult.Action === 'output' ||
-            testResult.Action === 'run' ||
-            testResult.Action === 'fail') {
-            if (testResult.Test) {
-                // if we have a test name then we only want tests in the failed test list
-                if (failedTestNames.includes(testResult.Test)) {
-                    outputString += `${JSON.stringify(testResult)}\n`;
-                    return testResult;
+function preprocessTestResultsFile(resultsFile) {
+    var _a, e_1, _b, _c;
+    return __awaiter(this, void 0, void 0, function* () {
+        // create a map to hold packages that failed and tests that failed for that package
+        const failureMap = new Map();
+        // setup a stream to read the file in line by line
+        const stream1 = fs.createReadStream(resultsFile);
+        const reader1 = readline.createInterface({ input: stream1 });
+        try {
+            for (var _d = true, reader1_1 = __asyncValues(reader1), reader1_1_1; reader1_1_1 = yield reader1_1.next(), _a = reader1_1_1.done, !_a; _d = true) {
+                _c = reader1_1_1.value;
+                _d = false;
+                const line = _c;
+                let result;
+                try {
+                    const parsed = JSON.parse(line);
+                    result = types_1.TestResultSchema.parse(parsed);
+                }
+                catch (error) {
+                    // we ran into errors parsing the json, ignore in the preprocessing step
+                    continue;
+                }
+                // if we don't have package information then we can skip it
+                if (!result.Package) {
+                    continue;
+                }
+                // we have a package, see if it is in the map and if not add it
+                const key = result.Package;
+                if (!failureMap.has(key)) {
+                    failureMap.set(key, {
+                        tests: [],
+                        packageFailButNoTestFail: false,
+                        panicTestsFound: []
+                    });
+                }
+                // get the item from the map to use to update with data below
+                const item = failureMap.get(key);
+                if (!item) {
+                    continue;
+                }
+                // if we have a test then we need to add it to the maps array at that key
+                if (result.Test) {
+                    // do we already have the test in the array
+                    let foundIndex = -1;
+                    for (let i = 0; i < item.tests.length; i++) {
+                        if (item.tests[i].test === result.Test) {
+                            foundIndex = i;
+                        }
+                    }
+                    // if not then add a failing test in to the array
+                    if (foundIndex === -1) {
+                        foundIndex = item.tests.length;
+                        item.tests.push({ test: result.Test, pass: false, completed: false });
+                    }
+                    // if the test passed or failed we mark it as so and also mark the test as completed
+                    if (result.Action === 'fail' || result.Action === 'pass') {
+                        item.tests[foundIndex].pass = result.Action === 'pass';
+                        item.tests[foundIndex].completed = true;
+                    }
+                }
+                // if package is a pass then we can remove it from the map since all tests passed
+                if ((!result.Test &&
+                    (result.Action === 'pass' || result.Action === 'skip')) ||
+                    ('Output' in result && result.Output.includes('[no test files]'))) {
+                    failureMap.delete(key);
+                }
+                // check for output with panics that have a test name and add it to a list of panic tests found
+                if ('Output' in result && result.Output.includes('panic:')) {
+                    const pattern = /^panic:.* (Test[A-Z]\w*)/;
+                    const match = result.Output.match(pattern);
+                    if (match) {
+                        const panicTestName = match[1];
+                        if (!item.panicTestsFound.includes(panicTestName)) {
+                            item.panicTestsFound.push(panicTestName);
+                        }
+                    }
                 }
             }
-            else {
-                // if we don't have a test name then we want to just output whatever it is
-                outputString += `${JSON.stringify(testResult)}\n`;
-                return testResult;
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (!_d && !_a && (_b = reader1_1.return)) yield _b.call(reader1_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        // now that we have all the packages and tests that failed we need to check for packages that failed
+        // but no tests failed. This can happen when things like logging happen after a test failure
+        for (const value of failureMap.values()) {
+            let hasFailure = false;
+            for (const test of value.tests) {
+                if (!test.pass) {
+                    hasFailure = true;
+                }
+            }
+            if (!hasFailure) {
+                value.packageFailButNoTestFail = true;
             }
         }
-        else if (testResult.Action === 'start') {
-            // keep this to make gotestfmt happy
-            outputString += `${JSON.stringify(testResult)}\n`;
-            return testResult;
-        }
+        return failureMap;
     });
-    outputHandler(outputString, shouldLogOutput);
-    return filteredResults;
 }
-exports.jsonTestOutput = jsonTestOutput;
+exports.preprocessTestResultsFile = preprocessTestResultsFile;
 /**
- * Write the output to the workflow console if wanted
- * Also write the output to a file if the filename was provided
- * @param output The string to output
- * @param shouldLog Whether we should log to the console
+ * Read through the results file and write out the wanted failed test data
+ * @param failureMap The map of test and package failures to write out
+ * @param resultsFile The file to read through
+ * @param outputToConsole Should we output to the console
+ * @param outputFile A file we can optionally write out to the results to.
+ * @returns A boolean for whether all tests and packages passed or not
  */
-function outputHandler(output, shouldLog) {
-    if (shouldLog) {
-        core.info(output);
-    }
-    const outputFile = getTypedInput('output-file', false);
-    if (outputFile) {
-        fs.writeFileSync(outputFile, output);
-    }
-}
-exports.outputHandler = outputHandler;
-/**
- * We have edge cases where we have a failure but no test failure
- * In this case we want to output all the output for triage since we
- * don't necessarily know what will be useful
- * @param testResults The test results to print outputs from
- */
-function logAllOutput(testResults) {
-    let outputString = '';
-    for (const testResult of testResults) {
-        if (testResult.Action === 'output') {
-            outputString += testResult.Output;
+function processTestResultsFile(failureMap, resultsFile, outputToConsole, outputFile) {
+    var _a, e_2, _b, _c;
+    return __awaiter(this, void 0, void 0, function* () {
+        let outputStreamString = '';
+        const stream = fs.createReadStream(resultsFile);
+        const reader = readline.createInterface({ input: stream });
+        const packageWithoutTestFailuresHasBeenSeenBefore = [];
+        try {
+            for (var _d = true, reader_1 = __asyncValues(reader), reader_1_1; reader_1_1 = yield reader_1.next(), _a = reader_1_1.done, !_a; _d = true) {
+                _c = reader_1_1.value;
+                _d = false;
+                const line = _c;
+                let result;
+                try {
+                    const parsed = JSON.parse(line);
+                    result = types_1.TestResultSchema.parse(parsed);
+                }
+                catch (error) {
+                    // we ran into errors parsing the json, print it out because it may be useful for triage
+                    outputStreamString = streamOutput(outputStreamString, `${line}\n`, outputToConsole, outputFile);
+                    continue;
+                }
+                // if we have package information then parse through it to set keys and such
+                if (result.Package) {
+                    // if the failure map does not include this package then we can skip all logging for it
+                    const item = failureMap.get(result.Package);
+                    if (!item) {
+                        continue;
+                    }
+                    // if we don't have output in this result then we can skip it.
+                    if (!('Output' in result)) {
+                        continue;
+                    }
+                    // if the failure map has this package but no tests then we need to log all the output, weird case
+                    if (item.tests.length === 0 || item.packageFailButNoTestFail) {
+                        if (!packageWithoutTestFailuresHasBeenSeenBefore.includes(result.Package)) {
+                            packageWithoutTestFailuresHasBeenSeenBefore.push(result.Package);
+                            outputStreamString = streamOutput(outputStreamString, `${result.Package} has failure logging but no test failures, the output below may be useful for triage\n`, outputToConsole, outputFile);
+                        }
+                        // if we have a panic test then we only want to log output for that test and not the others
+                        if (item.panicTestsFound.length > 0 && result.Test) {
+                            for (const panicTestName of item.panicTestsFound) {
+                                if (result.Test === panicTestName) {
+                                    // Using a type assertion to reassure TypeScript about the type of `result`
+                                    const output = result.Output;
+                                    outputStreamString = streamOutput(outputStreamString, output, outputToConsole, outputFile);
+                                }
+                            }
+                        }
+                        else {
+                            // Log out all other output and test logs
+                            outputStreamString = streamOutput(outputStreamString, result.Output, outputToConsole, outputFile);
+                        }
+                        continue;
+                    }
+                    // if the failure map has this package and tests then we need to log the output for the tests that failed
+                    if (result.Test) {
+                        for (const test of item.tests) {
+                            // if this test failed then we log it
+                            if (test.test === result.Test && !test.pass) {
+                                // Using a type assertion to reassure TypeScript about the type of `result`
+                                // it loses track that we already checked for the existence of `Output` above
+                                // causing the static analysis to fail unless we have this line :shrug:
+                                const output = result.Output;
+                                outputStreamString = streamOutput(outputStreamString, output, outputToConsole, outputFile);
+                            }
+                        }
+                    }
+                    else {
+                        // the package can have other fail data in it outside of a test such as a test logging after a failure
+                        // if the package data just says PASS then we can skip it since it can cause confusion
+                        if (result.Output === 'PASS\n') {
+                            continue;
+                        }
+                        // add to output stream
+                        outputStreamString = streamOutput(outputStreamString, result.Output, outputToConsole, outputFile);
+                    }
+                }
+            }
         }
-    }
-    core.info('We had an error in the test run but no specific test had a failure log, logging out everything for triage');
-    core.info(outputString);
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (!_d && !_a && (_b = reader_1.return)) yield _b.call(reader_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        // write out the rest of the buffer before we exit
+        flushStreamOutput(outputStreamString, outputToConsole, outputFile);
+        return failureMap.size === 0;
+    });
 }
-exports.logAllOutput = logAllOutput;
+exports.processTestResultsFile = processTestResultsFile;
+function streamOutput(existingOutput, newOutput, shouldLog, outputFile) {
+    existingOutput += newOutput;
+    // once the string gets to be pretty big lets flush it so we don't have to worry about memory issues
+    if (existingOutput.length > 64000) {
+        flushStreamOutput(existingOutput, shouldLog, outputFile);
+        // reset existing output to empty since everything is now written out
+        existingOutput = '';
+    }
+    return existingOutput;
+}
+exports.streamOutput = streamOutput;
+function flushStreamOutput(existingOutput, shouldLog, outputFile) {
+    // if nothing to flush then do nothing
+    if (existingOutput.length === 0) {
+        return;
+    }
+    // only log if we want to
+    if (shouldLog) {
+        core.info(existingOutput);
+    }
+    // only output to file if we want to, heavily used in testing
+    if (outputFile) {
+        fs.appendFileSync(outputFile, existingOutput);
+    }
+}
+exports.flushStreamOutput = flushStreamOutput;
 /**
  * Takes kebob cased inputs and enforces they match the expected inputs
  * @param inputKey The input key to get
@@ -6841,65 +7200,81 @@ main();
 
 /***/ }),
 
-/***/ 77:
+/***/ 5077:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TestResultsSchema = exports.handledTestResultsSchema = void 0;
-const zod_1 = __nccwpck_require__(301);
+exports.passFailMapSchema = exports.passFailTestSchema = exports.TestResultsSchema = exports.TestResultSchema = exports.handledTestResultsSchema = void 0;
+const zod_1 = __nccwpck_require__(3301);
 /**
  * The subschema for the test results that we want to handle
  * when generating the test result summary
  */
 const handledTestStatuses = zod_1.z.enum(['pass', 'fail']);
 exports.handledTestResultsSchema = zod_1.z.object({
+    Package: zod_1.z.string().min(1).optional(),
     Test: zod_1.z.string().min(1).optional(),
     Action: handledTestStatuses,
     Elapsed: zod_1.z.number().nonnegative()
 });
-const TestResultSchema = zod_1.z.discriminatedUnion('Action', [
+exports.TestResultSchema = zod_1.z.discriminatedUnion('Action', [
     exports.handledTestResultsSchema,
     zod_1.z.object({
         Test: zod_1.z.string().min(1).optional(),
         Action: zod_1.z.literal('skip'),
-        Elapsed: zod_1.z.number().nonnegative()
+        Elapsed: zod_1.z.number().nonnegative(),
+        Package: zod_1.z.string().min(1).optional()
     }),
     zod_1.z.object({
         Test: zod_1.z.string().min(1),
-        Action: zod_1.z.literal('run')
+        Action: zod_1.z.literal('run'),
+        Package: zod_1.z.string().min(1).optional()
     }),
     zod_1.z.object({
         Output: zod_1.z.string().min(1),
         Action: zod_1.z.literal('output'),
+        Test: zod_1.z.string().min(1).optional(),
+        Package: zod_1.z.string().min(1).optional()
+    }),
+    zod_1.z.object({
+        Action: zod_1.z.literal('start'),
+        Package: zod_1.z.string().min(1).optional(),
         Test: zod_1.z.string().min(1).optional()
     }),
     zod_1.z.object({
-        Action: zod_1.z.literal('start')
+        Action: zod_1.z.literal('pause'),
+        Package: zod_1.z.string().min(1).optional(),
+        Test: zod_1.z.string().min(1).optional()
     }),
     zod_1.z.object({
-        Action: zod_1.z.literal('pause')
-    }),
-    zod_1.z.object({
-        Action: zod_1.z.literal('cont')
+        Action: zod_1.z.literal('cont'),
+        Package: zod_1.z.string().min(1).optional(),
+        Test: zod_1.z.string().min(1).optional()
     })
 ]);
 /**
  * A representation of a file containing all test logs of
  * the JSONL format outputted by https://pkg.go.dev/cmd/test2json
  */
-exports.TestResultsSchema = zod_1.z.array(TestResultSchema);
+exports.TestResultsSchema = zod_1.z.array(exports.TestResultSchema);
 const outputMode = zod_1.z.enum(['standard', 'json']);
-const testRunFailures = zod_1.z.object({
-    TestsFailed: zod_1.z.array(zod_1.z.string()),
-    PackageFailure: zod_1.z.boolean()
+exports.passFailTestSchema = zod_1.z.object({
+    test: zod_1.z.string().min(1),
+    pass: zod_1.z.boolean(),
+    completed: zod_1.z.boolean()
+});
+exports.passFailMapSchema = zod_1.z.object({
+    tests: zod_1.z.array(exports.passFailTestSchema),
+    packageFailButNoTestFail: zod_1.z.boolean(),
+    panicTestsFound: zod_1.z.array(zod_1.z.string().min(1))
 });
 
 
 /***/ }),
 
-/***/ 491:
+/***/ 9491:
 /***/ ((module) => {
 
 "use strict";
@@ -6907,7 +7282,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 113:
+/***/ 6113:
 /***/ ((module) => {
 
 "use strict";
@@ -6915,7 +7290,7 @@ module.exports = require("crypto");
 
 /***/ }),
 
-/***/ 361:
+/***/ 2361:
 /***/ ((module) => {
 
 "use strict";
@@ -6923,7 +7298,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 147:
+/***/ 7147:
 /***/ ((module) => {
 
 "use strict";
@@ -6931,7 +7306,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 685:
+/***/ 3685:
 /***/ ((module) => {
 
 "use strict";
@@ -6939,7 +7314,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 687:
+/***/ 5687:
 /***/ ((module) => {
 
 "use strict";
@@ -6947,7 +7322,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 808:
+/***/ 1808:
 /***/ ((module) => {
 
 "use strict";
@@ -6955,7 +7330,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 37:
+/***/ 2037:
 /***/ ((module) => {
 
 "use strict";
@@ -6963,7 +7338,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 17:
+/***/ 1017:
 /***/ ((module) => {
 
 "use strict";
@@ -6971,7 +7346,15 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 404:
+/***/ 4521:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("readline");
+
+/***/ }),
+
+/***/ 4404:
 /***/ ((module) => {
 
 "use strict";
@@ -6979,7 +7362,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 837:
+/***/ 3837:
 /***/ ((module) => {
 
 "use strict";

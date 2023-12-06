@@ -1,102 +1,76 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`output testing can deserialize file 1`] = `
-[
-  {
-    "Action": "start",
-  },
-  {
-    "Action": "pause",
-  },
-  {
-    "Action": "cont",
-  },
-  {
-    "Action": "run",
-    "Test": "TestOCIChart",
-  },
-  {
-    "Action": "output",
-    "Output": "=== RUN   TestOCIChart
-",
-    "Test": "TestOCIChart",
-  },
-  {
-    "Action": "output",
-    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
-",
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
-  },
-  {
-    "Action": "output",
-    "Output": "blah blah blah
-",
-  },
-  {
-    "Action": "skip",
-    "Elapsed": 1,
-    "Test": "TestMinResources5NodesEnvWithBlockscoutSkip",
-  },
-  {
-    "Action": "pass",
-    "Elapsed": 506.4,
-    "Test": "TestOCIChart",
-  },
-  {
-    "Action": "fail",
-    "Elapsed": 522.96,
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
-  },
-  {
-    "Action": "fail",
-    "Elapsed": 551.993,
-  },
-]
+exports[`output testing can parse a panic for a test name and only output logs for that panic from that package 1`] = `
+"github.com/smartcontractkit/chainlink/v2/core/services/telemetry has failure logging but no test failures, the output below may be useful for triage
+=== RUN   TestNewManager
+--- PASS: TestNewManager (0.00s)
+PASS
+panic: Log in goroutine after TestNewManager has completed: 2023-11-28T11:38:06.521Z	WARN	TelemetryManager.TelemetryIngressBatchClient	wsrpc@v0.7.2/uni_client.go:97	ctx error context canceled reconnecting	{"version": "2.7.0@0957729"}
+
+goroutine 80 [running]:
+testing.(*common).logDepth(0xc00172c000, {0xc000052840, 0xad}, 0x3)
+	/opt/hostedtoolcache/go/1.21.4/x64/src/testing/testing.go:1022 +0x4c5
+testing.(*common).log(...)
+	/opt/hostedtoolcache/go/1.21.4/x64/src/testing/testing.go:1004
+testing.(*common).Logf(0xc00172c000, {0x18770d6?, 0x4110c5?}, {0xc0016a1190?, 0x15d9f00?, 0x1?})
+	/opt/hostedtoolcache/go/1.21.4/x64/src/testing/testing.go:1055 +0x54
+go.uber.org/zap/zaptest.testingWriter.Write({{0x7f63c4847198?, 0xc00172c000?}, 0x70?}, {0xc0017aa800?, 0xae, 0xc0016a1180?})
+	/home/runner/go/pkg/mod/go.uber.org/zap@v1.26.0/zaptest/logger.go:130 +0xdc
+go.uber.org/zap/zapcore.(*ioCore).Write(0xc0017808d0, {0x1, {0xc15192279f1426a5, 0x9fcc1ad, 0x2bb1d20}, {0xc001080060, 0x2c}, {0xc001080270, 0x27}, {0x1, ...}, ...}, ...)
+	/home/runner/go/pkg/mod/go.uber.org/zap@v1.26.0/zapcore/core.go:99 +0xb5
+go.uber.org/zap/zapcore.(*CheckedEntry).Write(0xc0010bc820, {0x0, 0x0, 0x0})
+	/home/runner/go/pkg/mod/go.uber.org/zap@v1.26.0/zapcore/entry.go:253 +0x1dc
+go.uber.org/zap.(*SugaredLogger).log(0xc000246168, 0x1, {0x197ac35?, 0x19?}, {0xc0016a1140?, 0x1?, 0x1?}, {0x0, 0x0, 0x0})
+	/home/runner/go/pkg/mod/go.uber.org/zap@v1.26.0/sugar.go:316 +0xec
+go.uber.org/zap.(*SugaredLogger).Warnf(...)
+FAIL	github.com/smartcontractkit/chainlink/v2/core/services/telemetry	0.192s
+"
 `;
 
-exports[`output testing failed test list 1`] = `
-[
-  "Test5NodesPlus2MiningGethsReorgEnv",
-]
+exports[`output testing can read file with all failures 1`] = `
+"=== RUN   TestGetImage
+    mirror_test.go:12: 
+        	Error Trace:	/Users/blarg/git/chainlink-testing-framework/mirror/mirror_test.go:12
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestGetImage
+--- FAIL: TestGetImage (0.00s)
+FAIL
+FAIL	github.com/smartcontractkit/chainlink-testing-framework/mirror	0.349s
+"
 `;
 
-exports[`output testing failure without a test failure 1`] = `[]`;
-
-exports[`output testing json test output 1`] = `
-[
-  {
-    "Action": "start",
-  },
-  {
-    "Action": "output",
-    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
-",
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
-  },
-  {
-    "Action": "output",
-    "Output": "blah blah blah
-",
-  },
-  {
-    "Action": "fail",
-    "Elapsed": 522.96,
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
-  },
-  {
-    "Action": "fail",
-    "Elapsed": 551.993,
-  },
-]
+exports[`output testing can read file with mix of pass and failures 1`] = `
+"=== RUN   TestFailTest
+    mirror_test.go:12: 
+        	Error Trace:	/Users/blarg/git/chainlink-testing-framework/failpackage/mirror_test.go:12
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestFailTest
+--- FAIL: TestFailTest (0.00s)
+FAIL
+FAIL	github.com/smartcontractkit/chainlink-testing-framework/failpackage	0.349s
+"
 `;
 
-exports[`output testing standard test output 1`] = `
-[
-  {
-    "Action": "output",
-    "Output": "=== RUN   Test5NodesPlus2MiningGethsReorgEnv
-",
-    "Test": "Test5NodesPlus2MiningGethsReorgEnv",
-  },
-]
+exports[`output testing can read file with mix of pass and failures failures and non json txt injected from other potential errors in the go runner 1`] = `
+"some error output stuff that won't parse correctly so just write it out1
+some error output stuff that won't parse correctly so just write it out2
+=== RUN   TestFailTest
+    mirror_test.go:12: 
+        	Error Trace:	/Users/blarg/git/chainlink-testing-framework/failpackage/mirror_test.go:12
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestFailTest
+--- FAIL: TestFailTest (0.00s)
+FAIL
+FAIL	github.com/smartcontractkit/chainlink-testing-framework/failpackage	0.349s
+some error output stuff that won't parse correctly so just write it out3
+"
+`;
+
+exports[`output testing can read file with package failure but no test failure 1`] = `
+"github.com/smartcontractkit/chainlink-testing-framework/mirror has failure logging but no test failures, the output below may be useful for triage
+=== RUN   TestGetImage
+--- PASS: TestGetImage (0.00s)
+FAIL
+FAIL	github.com/smartcontractkit/chainlink-testing-framework/mirror	0.349s
+"
 `;

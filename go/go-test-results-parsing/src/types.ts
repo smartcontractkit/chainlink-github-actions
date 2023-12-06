@@ -7,6 +7,7 @@ import {z} from 'zod'
 const handledTestStatuses = z.enum(['pass', 'fail'])
 export type HandledTestResults = z.infer<typeof handledTestResultsSchema>
 export const handledTestResultsSchema = z.object({
+  Package: z.string().min(1).optional(),
   Test: z.string().min(1).optional(),
   Action: handledTestStatuses,
   Elapsed: z.number().nonnegative()
@@ -22,30 +23,39 @@ export const handledTestResultsSchema = z.object({
  * @see https://github.com/colinhacks/zod/issues/2315
  */
 export type TestResult = z.infer<typeof TestResultSchema>
-const TestResultSchema = z.discriminatedUnion('Action', [
+export const TestResultSchema = z.discriminatedUnion('Action', [
   handledTestResultsSchema,
   z.object({
     Test: z.string().min(1).optional(),
     Action: z.literal('skip'),
-    Elapsed: z.number().nonnegative()
+    Elapsed: z.number().nonnegative(),
+    Package: z.string().min(1).optional()
   }),
   z.object({
     Test: z.string().min(1),
-    Action: z.literal('run')
+    Action: z.literal('run'),
+    Package: z.string().min(1).optional()
   }),
   z.object({
     Output: z.string().min(1),
     Action: z.literal('output'),
+    Test: z.string().min(1).optional(),
+    Package: z.string().min(1).optional()
+  }),
+  z.object({
+    Action: z.literal('start'),
+    Package: z.string().min(1).optional(),
     Test: z.string().min(1).optional()
   }),
   z.object({
-    Action: z.literal('start')
+    Action: z.literal('pause'),
+    Package: z.string().min(1).optional(),
+    Test: z.string().min(1).optional()
   }),
   z.object({
-    Action: z.literal('pause')
-  }),
-  z.object({
-    Action: z.literal('cont')
+    Action: z.literal('cont'),
+    Package: z.string().min(1).optional(),
+    Test: z.string().min(1).optional()
   })
 ])
 /**
@@ -57,8 +67,16 @@ export const TestResultsSchema = z.array(TestResultSchema)
 const outputMode = z.enum(['standard', 'json'])
 export type OutputMode = z.infer<typeof outputMode>
 
-const testRunFailures = z.object({
-  TestsFailed: z.array(z.string()),
-  PackageFailure: z.boolean()
+export type PassFailTest = z.infer<typeof passFailTestSchema>
+export const passFailTestSchema = z.object({
+  test: z.string().min(1),
+  pass: z.boolean(),
+  completed: z.boolean()
 })
-export type TestRunFailures = z.infer<typeof testRunFailures>
+
+export type PassFailMapItem = z.infer<typeof passFailMapSchema>
+export const passFailMapSchema = z.object({
+  tests: z.array(passFailTestSchema),
+  packageFailButNoTestFail: z.boolean(),
+  panicTestsFound: z.array(z.string().min(1))
+})

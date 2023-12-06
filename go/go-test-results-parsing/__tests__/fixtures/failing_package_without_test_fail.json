@@ -1,0 +1,8 @@
+{"Time":"2023-11-27T16:16:06.849991-07:00","Action":"start","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror"}
+{"Time":"2023-11-27T16:16:07.184219-07:00","Action":"run","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Test":"TestGetImage"}
+{"Time":"2023-11-27T16:16:07.184264-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Test":"TestGetImage","Output":"=== RUN   TestGetImage\n"}
+{"Time":"2023-11-27T16:16:07.18478-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Test":"TestGetImage","Output":"--- PASS: TestGetImage (0.00s)\n"}
+{"Time":"2023-11-27T16:16:07.184798-07:00","Action":"pass","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Test":"TestGetImage","Elapsed":0}
+{"Time":"2023-11-27T15:43:53.398988-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Output":"FAIL\n"}
+{"Time":"2023-11-27T15:43:53.399042-07:00","Action":"output","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Output":"FAIL\tgithub.com/smartcontractkit/chainlink-testing-framework/mirror\t0.349s\n"}
+{"Time":"2023-11-27T16:16:07.185307-07:00","Action":"fail","Package":"github.com/smartcontractkit/chainlink-testing-framework/mirror","Elapsed":0.335}
