@@ -80,6 +80,7 @@ runs:
         export PATH
         TAGS="${{ inputs.go_tags }}"
         if [ -z "$TAGS" ]; then
+            echo "Using build tags: $TAGS"
             TAGS="-tags ${TAGS}"
         fi
         cd ./integration-tests && go test -c $TAGS -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
