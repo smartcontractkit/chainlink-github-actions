@@ -23,6 +23,9 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
+  go_tags:
+    required: false
+    description: Go tags to use when building
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
@@ -75,7 +78,11 @@ runs:
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
-        cd ./integration-tests && go test -c -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
+        TAGS="${{ inputs.go_tags }}"
+        if [ -z "$TAGS" ]; then
+            TAGS="-tags ${TAGS}"
+        fi
+        cd ./integration-tests && go test -c $TAGS -ldflags="-s -w" -o ./tests ./${{ inputs.test_type }}
         echo "Built binary at ./integration-tests/tests"
 
     - name: Publish Binary
