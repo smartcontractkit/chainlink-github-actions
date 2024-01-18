@@ -15,6 +15,11 @@ runs:
         inputDir="${{ inputs.test_directory }}"
         cleanTestDir=${inputDir%/}
         directory="$clean_test_dir/.test_summary"
+        echo "Looking for test summary in: $directory"
+        echo "Current dir:"
+        pwd
+        echo "Files in current dir:"
+        ls -la
         files=("$directory"/*)
         if [ -d "$directory" ]; then
           echo "Test summary folder found"
