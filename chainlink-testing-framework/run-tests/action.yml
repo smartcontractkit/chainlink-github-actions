@@ -176,6 +176,8 @@ runs:
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         # Handle bots as users
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
+        # mark current directory as root, so we don't end up looking for TOML configs in parent folders
+        touch .root_dir
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts

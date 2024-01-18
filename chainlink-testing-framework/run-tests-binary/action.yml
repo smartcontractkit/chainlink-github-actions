@@ -121,7 +121,9 @@ runs:
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
 
         chmod +x ./${{ inputs.binary_name }}
-
+        
+        # mark current directory as root, so we don't end up looking for TOML configs in parent folders
+        touch .root_dir
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
