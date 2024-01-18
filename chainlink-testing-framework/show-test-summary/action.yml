@@ -13,7 +13,7 @@ runs:
       shell: bash
       if: always()
       run: |
-        inputDir="${{ .inputs.test_directory}}"
+        inputDir="${{ inputs.test_directory }}"
         cleanTestDir=${inputDir%/}
         directory="$clean_test_dir/.test_summary"
         files=("$directory"/*)
