@@ -16,10 +16,6 @@ runs:
         cleanTestDir=${inputDir%/}
         directory="$cleanTestDir/.test_summary"
         echo "Looking for test summary in: $directory"
-        echo "Current dir:"
-        pwd
-        echo "Files in current dir:"
-        ls -la
         files=("$directory"/*)
         if [ -d "$directory" ]; then
           echo "Test summary folder found"
