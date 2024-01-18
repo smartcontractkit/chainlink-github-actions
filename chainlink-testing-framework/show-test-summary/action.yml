@@ -14,7 +14,7 @@ runs:
       run: |
         inputDir="${{ inputs.test_directory }}"
         cleanTestDir=${inputDir%/}
-        directory="$clean_test_dir/.test_summary"
+        directory="$cleanTestDir/.test_summary"
         echo "Looking for test summary in: $directory"
         echo "Current dir:"
         pwd
