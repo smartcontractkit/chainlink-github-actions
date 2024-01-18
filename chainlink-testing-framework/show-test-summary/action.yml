@@ -1,4 +1,4 @@
-name: chainlink-testing-framework-show-test-summary
+name: show-test-summary
 description: Sends test summary to Github Step Summary
 inputs:
   test_directory:
@@ -11,11 +11,11 @@ runs:
   steps:
     - name: Print failed test summary
       shell: bash
-      if: always()
       run: |
-        inputDir="${{ .inputs.test_directory}}"
+        inputDir="${{ inputs.test_directory }}"
         cleanTestDir=${inputDir%/}
-        directory="$clean_test_dir/.test_summary"
+        directory="$cleanTestDir/.test_summary"
+        echo "Looking for test summary in: $directory"
         files=("$directory"/*)
         if [ -d "$directory" ]; then
           echo "Test summary folder found"
