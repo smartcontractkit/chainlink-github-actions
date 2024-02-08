@@ -59,12 +59,13 @@ runs:
       with:
         repository: ${{ inputs.cl_repo }}
         ref: ${{ inputs.cl_ref }}
-    - uses: actions/setup-go@v3
+    - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
       env:
         GOPRIVATE: ${{ inputs.GOPRIVATE }}
       with:
         go-version-file: "go.mod"
         check-latest: true
+        cache: false
     - name: Replace GHA URL
       shell: bash
       env:
