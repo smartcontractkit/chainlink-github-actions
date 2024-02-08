@@ -37,7 +37,7 @@ runs:
 
     - name: Cache Vendor Packages
       if: inputs.cache_restore_only == 'false' && inputs.no_cache == 'false'
-      uses: actions/cache@v3
+      uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: cache-packages
       with:
         path: |
@@ -50,7 +50,7 @@ runs:
 
     - name: Restore Cache Vendor Packages
       if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: restore-cache-packages
       with:
         path: |
