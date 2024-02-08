@@ -27,7 +27,7 @@ inputs:
       default: ${{ github.token }}
   helm-chart-repo:
     description: |
-      Helm chart repo URL to use, either `sdlc` or `prod`. 
+      Helm chart repo URL to use, either `sdlc` or `prod`.
       Only used if `inputs.helm-chart-repo-update` is true.
       Only use `sdlc` for pre-releases.
 
@@ -111,7 +111,7 @@ runs:
         cmd: yq eval -i '.repositories[] |= select(.name == "infra-charts").url = "${{ inputs.helm-chart-repo }}"' ${{ inputs.app-file-path-pattern }}
     - name: Create PR to deploy
       id: create-pr
-      uses: peter-evans/create-pull-request@284f54f989303d2699d373481a0cfa13ad5a6666 # v5.0.1
+      uses: peter-evans/create-pull-request@b1ddad2c994a25fbc81a28b3ec0e368bb2021c50 # v6.0.0
       with:
         base: ${{ inputs.pr-base-branch }}
         branch: auto/${{ inputs.app-release-name}}/helm-${{ inputs.helm-chart-version }}-${{ inputs.release-type }}
