@@ -1,0 +1,24 @@
+name: 'Mask TOML Secrets'
+description: 'Masks all secret values in Base64-encoded TOML configurations within GitHub Actions logs'
+inputs:
+  base64_toml_content:
+    description: 'Base64-encoded TOML configurations separated by spaces that contain "_secret" keys to be masked'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - run: pip install toml
+      shell: bash
+
+    - name: Run mask script tests
+      run: python3 mask_toml_secrets.py --test
+      shell: bash
+
+    - name: Mask secrets in TOML
+      run: python mask_toml_secrets.py ${{ inputs.base64_toml_content }}
+      shell: bash
