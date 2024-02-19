@@ -16,9 +16,9 @@ runs:
       shell: bash
 
     - name: Run mask script tests
-      run: python3 mask_toml_secrets.py --test
+      run: python3 ${{ github.action_path }}/mask_toml_secrets.py --test
       shell: bash
 
     - name: Mask secrets in TOML
-      run: python mask_toml_secrets.py ${{ inputs.base64_toml_content }}
+      run: python ${{ github.action_path }}/mask_toml_secrets.py ${{ inputs.base64_toml_content }}
       shell: bash
