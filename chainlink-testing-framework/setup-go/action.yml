@@ -67,7 +67,7 @@ runs:
 
     - name: Tidy and check files
       if: ${{ inputs.should_tidy == 'true' }}
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/go-mod-tidy@a212edfc39d51b81c38917450603cd58409b30ff
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/go-mod-tidy@v2.3.6
       with:
         go_mod_path: ${{ inputs.go_mod_path }}
 

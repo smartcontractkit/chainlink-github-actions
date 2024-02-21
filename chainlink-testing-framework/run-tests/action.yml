@@ -106,6 +106,10 @@ inputs:
     required: false
     description: Whether to run the cleanup at the end, soak tests and such would not want to automatically cleanup
     default: "false"
+  should_tidy:
+    required: false
+    description: Should we check go mod tidy
+    default: "true"
 
 runs:
   using: composite
@@ -113,7 +117,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.6
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -127,6 +131,7 @@ runs:
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
+        should_tidy: ${{ inputs.should_tidy }}
     - name: Replace chainlink/integration-tests deps
       if: ${{ inputs.dep_chainlink_integration_tests }}
       shell: bash
@@ -187,7 +192,7 @@ runs:
 
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.3.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.3.6
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}
