@@ -23,6 +23,10 @@ inputs:
     required: false
     description: Do not use a go cache
     default: "false"
+  should_tidy:
+    required: false
+    description: Should we check go mod tidy
+    default: "true"
 
 runs:
   using: composite
@@ -62,16 +66,10 @@ runs:
           ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
     - name: Tidy and check files
-      shell: bash
-      run: |
-        # find test go root by using the go_mod_path and change to that directory
-        TEST_LIB_PATH="${{ inputs.go_mod_path }}"
-        if [ "${#TEST_LIB_PATH}" -gt "6" ]; then
-            TEST_LIB_PATH=${TEST_LIB_PATH%go.mod}
-            cd "${TEST_LIB_PATH}"
-        fi
-        go mod tidy
-        git diff --stat --exit-code
+      if: ${{ inputs.should_tidy == 'true' }}
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/go-mod-tidy@v2.3.6
+      with:
+        go_mod_path: ${{ inputs.go_mod_path }}
 
     - name: Download Go Vendor Packages
       shell: bash

@@ -75,12 +75,16 @@ inputs:
     required: true
     description: Name of the binary artifact to run
     default: tests
+  should_tidy:
+    required: false
+    description: Should we check go mod tidy
+    default: "true"
 
 runs:
   using: composite
   steps:
     - name: Setup Environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.6
       with:
         go_necessary: "false"
         cache_restore_only: ${{ inputs.cache_restore_only }}
@@ -92,6 +96,7 @@ runs:
         QA_AWS_REGION: ${{ inputs.QA_AWS_REGION }}
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
+        should_tidy: ${{ inputs.should_tidy }}
 
     # Download any external artifacts
     - name: Download Artifacts
@@ -133,7 +138,7 @@ runs:
 
     - name: cleanup
       if: always()
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.3.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/cleanup@v2.3.6
       with:
         triggered_by: ${{ inputs.triggered_by }}
         should_cleanup: ${{ inputs.should_cleanup }}

@@ -47,13 +47,14 @@ runs:
   steps:
     # Setup Tools and libraries
     - name: Setup Go
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.5
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.6
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
         go_mod_path: ${{ inputs.go_mod_path }}
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
+        should_tidy: "true"
 
     - name: Replace chainlink/integration-tests deps
       if: ${{ inputs.dep_chainlink_integration_tests }}
