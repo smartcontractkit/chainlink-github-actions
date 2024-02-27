@@ -55,7 +55,7 @@ runs:
   steps:
     - name: Checkout Chainlink repo
       if: ${{ inputs.should_checkout == 'true' }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
         repository: ${{ inputs.cl_repo }}
         ref: ${{ inputs.cl_ref }}
