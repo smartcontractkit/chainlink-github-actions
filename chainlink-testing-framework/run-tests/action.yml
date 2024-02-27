@@ -117,7 +117,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.6
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.7
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -163,7 +163,7 @@ runs:
 
     # gotestfmt gives us pretty test output
     - name: Set Up gotestfmt
-      uses: GoTestTools/gotestfmt-action@v2
+      uses: GoTestTools/gotestfmt-action@8b4478c7019be847373babde9300210e7de34bfb # v2.2.0
       with:
         token: ${{ inputs.token }} # Avoids rate-limiting
 

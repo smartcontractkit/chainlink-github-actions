@@ -55,7 +55,7 @@ runs:
   steps:
     - name: Checkout Chainlink repo
       if: ${{ inputs.should_checkout == 'true' }}
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
         repository: ${{ inputs.cl_repo }}
         ref: ${{ inputs.cl_ref }}
@@ -131,9 +131,9 @@ runs:
         mask-password: "true"
     - name: Set up Docker Buildx
       if: steps.push.outputs.push == 'true'
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@0d103c3126aa41d772a8362f6aa67afac040f80c # v3.1.0
     - name: Build and Push
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
       with:
         context: .
         file: ${{ inputs.cl_dockerfile }}
@@ -144,3 +144,5 @@ runs:
         tags: ${{ inputs.push_tag }}
         push: ${{ steps.push.outputs.push }}
         secrets: ${{ inputs.docker_secrets }}
+        # enabled by default as of v4 - disable while upgrading action reference (v3 -> v5)
+        provenance: false

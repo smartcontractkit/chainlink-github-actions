@@ -1,4 +1,4 @@
-name: setup-run-tests-environment
+name: setup-go
 description: Common golang setup
 inputs:
   test_download_vendor_packages_command:
