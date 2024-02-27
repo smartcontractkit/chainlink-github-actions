@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Assume role capable of dispatching action
-        uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a # 4.0.1
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # 4.0.2
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_CHAINLINK_GITHUB_ACTIONS_SYNC_GATI_TOKEN_ISSUER_ROLE_ARN }}
           role-duration-seconds: 3600
