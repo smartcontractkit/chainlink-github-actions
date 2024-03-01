@@ -17,7 +17,7 @@ run_test_case() {
     env_vars=(
         "GITHUB_REF=$GITHUB_REF"
         "GITHUB_OUTPUT=$GITHUB_OUTPUT"
-        "PREFIX_TO_STRIP=${PREFIX_TO_STRIP:-v}"
+        "VERSION_PREFIX=${VERSION_PREFIX:-v}"
     )
 
     # Add regex overrides to environment variables if provided
@@ -63,30 +63,30 @@ run_test_case "refs/tags/v1.2.4" "true" "false" "1.2.4" "null"
 # Pre-release with multiple identifiers
 run_test_case "refs/tags/v1.2.5-alpha.1.beta" "false" "true" "null" "1.2.5-alpha.1.beta"
 
-# Release version without 'v' prefix (requires changing PREFIX_TO_STRIP)
-PREFIX_TO_STRIP=""
+# Release version without 'v' prefix (requires changing VERSION_PREFIX)
+VERSION_PREFIX=""
 run_test_case "refs/tags/1.2.6" "true" "false" "1.2.6" "null" "^[0-9]+\.[0-9]+\.[0-9]+$"
-PREFIX_TO_STRIP="v" 
+VERSION_PREFIX="v" 
 
 # Tag with a non-standard prefix "release-v"
-PREFIX_TO_STRIP="release-v"
+VERSION_PREFIX="release-v"
 run_test_case "refs/tags/release-v1.3.0" "true" "false" "1.3.0" "null" "^release-v[0-9]+\.[0-9]+\.[0-9]+$"
-PREFIX_TO_STRIP="v"
+VERSION_PREFIX="v"
 
 # Tag with a non-standard prefix "release-" (no 'v')
-PREFIX_TO_STRIP="release-"
+VERSION_PREFIX="release-"
 run_test_case "refs/tags/release-1.3.0" "true" "false" "1.3.0" "null" "^release-[0-9]+\.[0-9]+\.[0-9]+$"
-PREFIX_TO_STRIP="v"
+VERSION_PREFIX="v"
 
 # Tag with a non-standard prefix "release-v" (prerelease)
-PREFIX_TO_STRIP="release-v"
+VERSION_PREFIX="release-v"
 run_test_case "refs/tags/release-v1.3.0-beta.5" "false" "true" "null" "1.3.0-beta.5" "^release-v[0-9]+\.[0-9]+\.[0-9]+$" "^release-v[0-9]+\.[0-9]+\.[0-9]+-(.+)$"
-PREFIX_TO_STRIP="v"
+VERSION_PREFIX="v"
 
 # Tag with a non-standard prefix "release-" (no 'v') (prereslease)
-PREFIX_TO_STRIP="release-"
+VERSION_PREFIX="release-"
 run_test_case "refs/tags/release-1.3.0-beta.0" "false" "true" "null" "1.3.0-beta.0" "^release-[0-9]+\.[0-9]+\.[0-9]+$" "^release-[0-9]+\.[0-9]+\.[0-9]+-(.+)$"
-PREFIX_TO_STRIP="v"
+VERSION_PREFIX="v"
 
 # Tag with complex pre-release and build metadata
 run_test_case "refs/tags/v1.3.1-rc.1+build.123" "false" "true" "null" "1.3.1-rc.1+build.123"

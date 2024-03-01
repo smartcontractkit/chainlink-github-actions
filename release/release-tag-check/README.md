@@ -15,7 +15,7 @@ These are passed by setting environment variables.
 - PRE_RELEASE_REGEX
     - Used to determine if the tag pushed is the expected format of a pre-release
     - Defaults to: `^v[0-9]+\.[0-9]+\.[0-9]+-(.+)$`
-- PREFIX_TO_STRIP
+- VERSION_PREFIX
     - Used for determining the `release-version` and `pre-release-version` outputs only. This will not affect how the release/pre-release regexes determine the output.
     - Defaults to: `v`
 
@@ -23,9 +23,9 @@ These are passed by setting environment variables.
 ## Outputs
 
 - `is-release` - whether the tag name conformed to the release regex (`refs/tag/<tag name>`)
-    - If yes, `release-version` should be set to the version. Without the `$PREFIX_TO_STRIP` on the tag name
+    - If yes, `release-version` should be set to the version. Without the `$VERSION_PREFIX` on the tag name
 - `is-pre-release` whether the tag name conformed to the pre-release regex (`refs/tag/<tag name>`)
-    - If yes, `pre-release-version` should be set to the version. Without the `$PREFIX_TO_STRIP` on the tag name
+    - If yes, `pre-release-version` should be set to the version. Without the `$VERSION_PREFIX` on the tag name
 
 
 ## Examples
@@ -40,7 +40,7 @@ These are passed by setting environment variables.
     - is-release: true
     - pre-release-version: null
     - release-version: 1.2.3
-3. Ref: refs/tag/release-v1.2.3 (must override release_regex, and prefix_to_strip)
+3. Ref: refs/tag/release-v1.2.3 (must override release_regex, and VERSION_PREFIX)
     - is-pre-release: false
     - is-release: true
     - pre-release-version: null

@@ -7,7 +7,7 @@ RELEASE_REGEX=${RELEASE_REGEX:-"^v[0-9]+\.[0-9]+\.[0-9]+$"}
 PRE_RELEASE_REGEX=${PRE_RELEASE_REGEX:-"^v[0-9]+\.[0-9]+\.[0-9]+-(.+)$"}
 
 # Configurable prefix removal with default
-PREFIX_TO_STRIP=${PREFIX_TO_STRIP:-"v"} 
+VERSION_PREFIX=${VERSION_PREFIX:-"v"} 
 
 if [[ -z "${GITHUB_REF:-}" ]]; then
     echo "ERROR: GITHUB_REF environment variable is required"
@@ -18,7 +18,7 @@ TAG_REF="${GITHUB_REF}"
 TAG_NAME=${TAG_REF:10} # remove "refs/tags/" prefix
 
 # Remove specified prefix from the version tag
-VERSION_TAG=${TAG_NAME#"${PREFIX_TO_STRIP}"}
+VERSION_TAG=${TAG_NAME#"${VERSION_PREFIX}"}
 
 echo "Tag: $TAG_NAME"
 echo "Checking if $TAG_NAME is a release or pre-release tag..."
