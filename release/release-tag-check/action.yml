@@ -7,6 +7,12 @@ outputs:
   is-release:
     description: '`true if the release is final'
     value: ${{ steps.check.outputs.is-release }}
+  release-version:
+    description: 'The version of the release'
+    value: ${{ steps.check.outputs.release-version }}
+  pre-release-version:
+    description: 'The version of the pre-release'
+    value: ${{ steps.check.outputs.pre-release-version }}
 runs:
   using: composite
   steps:
