@@ -8,7 +8,7 @@ These are passed by setting environment variables.
 
 - GITHUB_REF
     - Automatically available in a Github workflow. Will only work with `tag` pushes, otherwise the extracted ref will have an extra `/`
-    - If a tag is the git ref, the prefix will be `refs/tag/`, if a branch is the git ref, the prefix will be `refs/head/` (9 characters vs 10 characters).
+    - If a tag is the git ref, the prefix will be `refs/tags/`, if a branch is the git ref, the prefix will be `refs/heads/` (10 characters vs 11 characters).
 - RELEASE_REGEX
     - Used to determine if the tag pushed is the expected format of a release
     - Defaults to: `^v[0-9]+\.[0-9]+\.[0-9]+$`
