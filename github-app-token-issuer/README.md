@@ -35,7 +35,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version-file: .tool-versions
 
       - name: Get github installation access token
         id: get-gh-token
