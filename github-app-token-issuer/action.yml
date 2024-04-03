@@ -1,11 +1,11 @@
 name: github-token-issuer-action
 runs:
-  using: node16
-  main: dist/index.js
+  using: node20
+  main: dist/index.mjs
 description: Get an installation access token based on the current environmental AWS role
 inputs:
   url:
-    description: "The lambda function URL to invoke"
+    description: 'The lambda function URL to invoke'
     required: true
 outputs:
   access-token:

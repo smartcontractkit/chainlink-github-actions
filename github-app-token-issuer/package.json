@@ -2,15 +2,16 @@
   "name": "@smartcontractkit/github-app-token-issuer-action",
   "version": "0.1.5",
   "description": "The github action for interfacing with the token issuer service",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/index.mjs",
   "files": [
-    "dist/index.js",
+    "dist/index.mjs",
     "action.yml"
   ],
   "scripts": {
     "clean": "tsc -b --clean",
-    "build": "esbuild index.ts --minify --bundle --platform=node --outfile=dist/index.js",
-    "start": "node dist/index.js"
+    "build": "node ./build",
+    "start": "node ."
   },
   "keywords": [],
   "author": "",
