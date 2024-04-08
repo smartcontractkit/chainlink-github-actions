@@ -161,11 +161,16 @@ runs:
       shell: bash
       run: ${{ inputs.build_gauntlet_command }}
 
-    # gotestfmt gives us pretty test output
+    # TODO: Remove this once gotestloghelper has replaced all usages of gotestfmt
     - name: Set Up gotestfmt
       uses: GoTestTools/gotestfmt-action@8b4478c7019be847373babde9300210e7de34bfb # v2.2.0
       with:
         token: ${{ inputs.token }} # Avoids rate-limiting
+
+    # gotestfmt gives us pretty test output
+    - name: Set Up gotestloghelper
+      shell: bash
+      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.0.3
 
     # Run the tests
     - name: Run Tests
