@@ -61,6 +61,12 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
+  go_coverage_src_dir:
+    required: false
+    description: The source directory for go coverage files 
+  go_coverage_dest_dir:
+    required: false
+    description: The destination directory to store go coverage files   
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
@@ -180,6 +186,8 @@ runs:
         CHAINLINK_VERSION: ${{ inputs.cl_image_tag }}
         CHAINLINK_ENV_USER: ${{ github.actor }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
+        GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
+        GO_COVERAGE_DEST_DIR: ${{ inputs.go_coverage_dest_dir }}
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
