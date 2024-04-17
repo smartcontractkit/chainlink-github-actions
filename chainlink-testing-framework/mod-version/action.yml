@@ -31,12 +31,13 @@ runs:
       run: |
         cd ${go_project_path}
         # Extract the version of the package from go.mod
-        version=$(grep $package_name go.mod | awk '{print $2}')
-        echo "Found version: $version"
+        version=$(grep "$package_name " go.mod | awk '{print $2}')
         # Check if version is empty
         if [ -z "$version" ]; then
-            echo "There is no version for ${{ inputs.module-name }}"
+            echo "There is no version for $package_name"
             exit 1  # Exit with a failure code
+        else
+            echo "Found version: $version"
         fi
         echo "version=${version}" >>$GITHUB_OUTPUT
     - name: Enforce Semantic version
