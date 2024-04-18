@@ -24,6 +24,10 @@ inputs:
     required: false
     description: The chainlink image to use
     default: develop
+  cl_image_go_cover_dir:
+    required: false
+    description: The source directory for go coverage files on the chainlink image    
+    default: /var/tmp/go-coverage
   build_gauntlet_command:
     required: false
     description: How to build gauntlet if necessary
@@ -61,12 +65,6 @@ inputs:
   go_mod_path:
     required: false
     description: The go.mod file path
-  go_coverage_src_dir:
-    required: false
-    description: The source directory for go coverage files 
-  go_coverage_dest_dir:
-    required: false
-    description: The destination directory to store go coverage files   
   cache_restore_only:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
@@ -185,9 +183,8 @@ runs:
         CHAINLINK_IMAGE: ${{ inputs.cl_repo }}
         CHAINLINK_VERSION: ${{ inputs.cl_image_tag }}
         CHAINLINK_ENV_USER: ${{ github.actor }}
+        CHAINLINK_IMAGE_GO_COVER_DIR: ${{ inputs.cl_image_go_cover_dir }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
-        GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
-        GO_COVERAGE_DEST_DIR: ${{ inputs.go_coverage_dest_dir }}
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
