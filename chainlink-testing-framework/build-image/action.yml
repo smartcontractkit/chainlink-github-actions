@@ -46,6 +46,10 @@ inputs:
   GOPRIVATE:
     required: false
     description: private repos needed for go
+  GO_COVER_FLAG:
+    required: false
+    default: false
+    description: Build chainlink binary with cover flag
   should_checkout:
     required: false
     description: Do we want to checkout the chainlink code branch, sometimes we don't need to
@@ -145,6 +149,7 @@ runs:
         build-args: |
           COMMIT_SHA=${{ github.sha }}
           CHAINLINK_USER=chainlink
+          GO_COVER_FLAG=${{ inputs.GO_COVER_FLAG }}
         tags: ${{ inputs.push_tag }}
         push: ${{ steps.push.outputs.push }}
         secrets: ${{ inputs.docker_secrets }}
