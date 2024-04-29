@@ -116,6 +116,10 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  no_cache:
+    required: false
+    description: Do not use a go cache
+    default: "false"
 
 runs:
   using: composite
@@ -138,6 +142,7 @@ runs:
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
         should_tidy: ${{ inputs.should_tidy }}
+        no_cache: ${{ inputs.no_cache }}
     - name: Replace chainlink/integration-tests deps
       if: ${{ inputs.dep_chainlink_integration_tests }}
       shell: bash

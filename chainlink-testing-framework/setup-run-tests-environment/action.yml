@@ -50,6 +50,10 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  no_cache:
+    required: false
+    description: Do not use a go cache
+    default: "false"
 
 runs:
   using: composite
@@ -65,6 +69,7 @@ runs:
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
         should_tidy: ${{ inputs.should_tidy }}
+        no_cache: ${{ inputs.no_cache }}
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials
