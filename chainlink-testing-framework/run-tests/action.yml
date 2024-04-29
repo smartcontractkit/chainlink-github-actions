@@ -116,6 +116,10 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  no_cache:
+    required: false
+    description: Do not use a go cache
+    default: "false"
 
 runs:
   using: composite
@@ -123,7 +127,7 @@ runs:
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.7
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.15
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -138,6 +142,8 @@ runs:
         QA_AWS_ROLE_TO_ASSUME: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         QA_KUBECONFIG: ${{ inputs.QA_KUBECONFIG }}
         should_tidy: ${{ inputs.should_tidy }}
+        no_cache: ${{ inputs.no_cache }}
+
     - name: Replace chainlink/integration-tests deps
       if: ${{ inputs.dep_chainlink_integration_tests }}
       shell: bash
