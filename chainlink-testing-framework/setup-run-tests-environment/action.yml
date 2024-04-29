@@ -50,6 +50,10 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  no_cache:
+    required: false
+    description: Do not use a go cache
+    default: "false"
 
 runs:
   using: composite
@@ -57,7 +61,7 @@ runs:
     # Go setup and caching
     - name: Setup Go
       if: inputs.go_necessary == 'true'
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.7
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-go@v2.3.14
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
@@ -65,6 +69,7 @@ runs:
         cache_restore_only: ${{ inputs.cache_restore_only }}
         cache_key_id: ${{ inputs.cache_key_id }}
         should_tidy: ${{ inputs.should_tidy }}
+        no_cache: ${{ inputs.no_cache }}
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials
