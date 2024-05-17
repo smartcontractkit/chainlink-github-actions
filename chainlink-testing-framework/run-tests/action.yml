@@ -182,7 +182,7 @@ runs:
     # gotestfmt gives us pretty test output
     - name: Set Up gotestloghelper
       shell: bash
-      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.0.3
+      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.0.5
 
     # Run the tests
     - name: Run Tests
