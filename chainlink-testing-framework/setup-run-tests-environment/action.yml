@@ -78,6 +78,7 @@ runs:
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: ${{ inputs.aws_role_duration_seconds }}
+        mask-aws-account-id: true
 
     - name: Set Kubernetes Context
       if: inputs.QA_KUBECONFIG

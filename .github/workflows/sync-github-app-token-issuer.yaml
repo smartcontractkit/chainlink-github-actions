@@ -39,6 +39,7 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: sync-github-app-token-issuer.update-version
           aws-region: ${{ secrets.AWS_REGION }}
+          mask-aws-account-id: true
 
       - name: Get Github Token
         id: get-gh-token
