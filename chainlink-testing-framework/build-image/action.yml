@@ -131,6 +131,7 @@ runs:
         aws-region: ${{ inputs.QA_AWS_REGION }}
         role-to-assume: ${{ inputs.QA_AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: 3600
+        mask-aws-account-id: true
     - name: Login to Amazon ECR
       if: steps.push.outputs.push == 'true'
       id: login-ecr
