@@ -112,7 +112,7 @@ runs:
     - name: Add required helm charts including chainlink-qa
       shell: bash
       run: |
-        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo add bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
         helm repo add chainlink-qa https://raw.githubusercontent.com/smartcontractkit/qa-charts/gh-pages/
 
     # Display tool versions
