@@ -33,7 +33,7 @@ inputs:
     description: chainlink-common commit or branch
   dep_evm_sha:
     required: false
-    description: chainlink-evm commit or branch
+    description: chainlink-integrations/evm/relayer commit or branch
   QA_AWS_REGION:
     required: true
     description: The AWS region to use
@@ -101,10 +101,10 @@ runs:
       if: ${{ inputs.dep_common_sha }}
       shell: bash
       run: go get github.com/smartcontractkit/chainlink-common@${{ inputs.dep_common_sha }}
-    - name: Replace chainlink-evm deps
+    - name: Replace chainlink-integrations/evm/relayer deps
       if: ${{ inputs.dep_evm_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-evm@${{ inputs.dep_evm_sha }}
+      run: go get github.com/smartcontractkit/chainlink-integrations/evm/relayer@${{ inputs.dep_evm_sha }}
     - name: Tidy
       shell: bash
       env:
