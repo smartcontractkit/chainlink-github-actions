@@ -84,7 +84,7 @@ runs:
   using: composite
   steps:
     - name: Setup Environment
-      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.7
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@v2.3.20
       with:
         go_necessary: "false"
         cache_restore_only: ${{ inputs.cache_restore_only }}
