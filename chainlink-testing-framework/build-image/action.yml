@@ -104,7 +104,7 @@ runs:
     - name: Replace chainlink-evm deps
       if: ${{ inputs.dep_evm_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-evm@${{ inputs.dep_evm_sha }}
+      run: go get github.com/smartcontractkit/chainlink-integrations/evm/relayer@${{ inputs.dep_evm_sha }}
     - name: Tidy
       shell: bash
       env:
