@@ -1,9 +1,9 @@
 name: show-test-summary
 description: Sends test summary to Github Step Summary
 inputs:
-  test_directory:
+  test_directories:
     required: true
-    description: Directory in which the tests are located
+    description: Comma-separated directories in which the tests are located
     default: ./integration-tests/smoke
 
 runs:
@@ -12,24 +12,26 @@ runs:
     - name: Print failed test summary
       shell: bash
       run: |
-        inputDir="${{ inputs.test_directory }}"
-        cleanTestDir=${inputDir%/}
-        directory="$cleanTestDir/.test_summary"
-        echo "Looking for test summary in: $directory"
-        files=("$directory"/*)
-        if [ -d "$directory" ]; then
-          echo "Test summary folder found"
-          if [ ${#files[@]} -gt 0 ]; then
-            first_file="${files[0]}"
-            echo "Name of the first test summary file: $(basename "$first_file")"
-            echo "### Failed Test Execution Logs Dashboard (over VPN):" >> $GITHUB_STEP_SUMMARY
-            cat "$first_file" | jq -r '.loki[] | "* [\(.test_name)](\(.value))"' >> $GITHUB_STEP_SUMMARY
-            if [ ${#files[@]} -gt 1 ]; then
-              echo "Found more than one test summary file. This is incorrect, there should be only one file"
+        IFS=',' read -r -a directories <<< "$(echo "${{ inputs.test_directories }}" | tr -d '[:space:]')"
+        for inputDir in "${directories[@]}"; do
+          cleanTestDir=${inputDir%/}
+          directory="$cleanTestDir/.test_summary"
+          echo "Looking for test summary in: $directory"
+          files=("$directory"/*)
+          if [ -d "$directory" ]; then
+            echo "Test summary folder found in $inputDir"
+            if [ ${#files[@]} -gt 0 ]; then
+              first_file="${files[0]}"
+              echo "Name of the first test summary file: $(basename "$first_file")"
+              echo "### Failed Test Execution Logs Dashboard (over VPN):" >> $GITHUB_STEP_SUMMARY
+              cat "$first_file" | jq -r '.loki[] | "* [\(.test_name)](\(.value))"' >> $GITHUB_STEP_SUMMARY
+              if [ ${#files[@]} -gt 1 ]; then
+                echo "Found more than one test summary file in $inputDir. This is incorrect, there should be only one file"
+              fi
+            else
+              echo "Test summary directory in $inputDir is empty. This should not happen"
             fi
           else
-              echo "Test summary directory is empty. This should not happen"
+            echo "No test summary folder found in $inputDir. If no test failed or log collection wasn't explicitly requested this is correct. Exiting"
           fi
-        else
-          echo "No test summary folder found. If no test failed or log collection wasn't explicitly requested this is correct. Exiting"
-        fi
+        done
