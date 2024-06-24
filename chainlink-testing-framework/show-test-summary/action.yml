@@ -13,6 +13,7 @@ runs:
       shell: bash
       run: |
         ls -al ./integration-tests/smoke/
+        ls -al ./integration-tests/ccip-tests/
         ls -al ./integration-tests/ccip-tests/smoke/
         IFS=',' read -r -a directories <<< "$(echo "${{ inputs.test_directories }}" | tr -d '[:space:]')"
         for inputDir in "${directories[@]}"; do
