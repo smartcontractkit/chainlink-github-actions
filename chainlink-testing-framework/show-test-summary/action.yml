@@ -12,12 +12,13 @@ runs:
     - name: Print failed test summary
       shell: bash
       run: |
+        ls -l ./integration-tests/smoke/
+        ls -l ./integration-tests/ccip-tests/smoke/
         IFS=',' read -r -a directories <<< "$(echo "${{ inputs.test_directories }}" | tr -d '[:space:]')"
         for inputDir in "${directories[@]}"; do
           cleanTestDir=${inputDir%/}
           directory="$cleanTestDir/.test_summary"
           echo "Looking for test summary in: $directory"
-          ls -l "$directory"
           files=("$directory"/*)
           if [ -d "$directory" ]; then
             echo "Test summary folder found in $inputDir"
