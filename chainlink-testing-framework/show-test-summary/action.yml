@@ -24,7 +24,7 @@ runs:
               first_file="${files[0]}"
               echo "Name of the first test summary file: $(basename "$first_file")"
               echo "### Failed Test Execution Logs Dashboard (over VPN):" >> $GITHUB_STEP_SUMMARY
-              cat "$first_file" | jq -r '.loki[] | if .value != "" then "* [\(.test_name)](\(.value))" else "No URL found for \(.test_name)" end (most probably because shortening failed)' >> $GITHUB_STEP_SUMMARY
+              cat "$first_file" | jq -r 'if .loki then (.loki[] | if .value != "" then "* [\(.test_name)](\(.value))" else "No URL found for \(.test_name)" end) else "No Grafana URLs found" end' >> $GITHUB_STEP_SUMMARY
               if [ ${#files[@]} -gt 1 ]; then
                 echo "Found more than one test summary file in $inputDir. This is incorrect, there should be only one file"
               fi
