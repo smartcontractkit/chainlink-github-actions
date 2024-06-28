@@ -101,10 +101,27 @@ runs:
       if: ${{ inputs.dep_common_sha }}
       shell: bash
       run: go get github.com/smartcontractkit/chainlink-common@${{ inputs.dep_common_sha }}
-    - name: Replace chainlink-integrations/evm/relayer deps
+
+    # TODO: Remove this when it is no longer needed and uncomment the replace lower down.
+    - name: Replace the chainlink-integration deps
       if: ${{ inputs.dep_evm_sha }}
       shell: bash
-      run: go get github.com/smartcontractkit/chainlink-integrations/evm/relayer@${{ inputs.dep_evm_sha }}
+      env:
+        MODULE: github.com/smartcontractkit/chainlink-integrations/evm/relayer
+        COMMIT_HASH: ${{ inputs.dep_evm_sha }}
+      run: |
+        # Update to the evm/relayer code we wish to test against
+        go env -w GOPRIVATE=github.com/smartcontractkit/chainlink-integrations
+        go get ${MODULE}@${COMMIT_HASH}
+        # push replace into core go.mod, remove this once the evm migration is complete
+        PSEUDO_VERSION=$(go list -m -mod=mod ${MODULE}@${COMMIT_HASH} | awk '{print $2}')
+        go mod edit -replace=github.com/smartcontractkit/chainlink/v2/core/chains/evm=${MODULE}@${PSEUDO_VERSION}
+        go mod tidy
+    # TODO: put this back in when the replace above is no longer needed
+    # - name: Replace chainlink-integrations/evm/relayer deps
+    #   if: ${{ inputs.dep_evm_sha }}
+    #   shell: bash
+    #   run: go get github.com/smartcontractkit/chainlink-integrations/evm/relayer@${{ inputs.dep_evm_sha }}
     - name: Tidy
       shell: bash
       env:
