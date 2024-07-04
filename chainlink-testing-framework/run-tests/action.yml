@@ -16,6 +16,9 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  test_secrets_override_base64:
+    required: false
+    description: The base64 .env secrets to override    
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -184,6 +187,23 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
+    - name: Decode secrets and and set them as env vars
+      if: inputs.test_secrets_override_base64 != ''
+      shell: bash
+      run: |
+        # Decode the base64 secret and save to a file
+        echo ${{ inputs.test_secrets_override_base64 }} | base64 -d > decoded.env
+        
+        # Read each line, mask the secret and export it
+        while IFS='=' read -r key value; do
+          if [[ -n $key && -n $value ]]; then
+            echo ::add-mask::$value
+            echo "$key=$value" >> $GITHUB_ENV
+          fi
+        done < decoded.env
+
+        cat decoded.env
+
     # Run the tests
     - name: Run Tests
       shell: bash
@@ -195,12 +215,16 @@ runs:
         GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
         GO_COVERAGE_DEST_DIR: ${{ inputs.go_coverage_dest_dir }}
       run: |
-        PATH=$PATH:$(go env GOPATH)/bin
-        export PATH
-        export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
-        # Handle bots as users
-        export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
-        ${{ inputs.test_command_to_run }}
+        echo "Running tests..."
+        echo "CHAINLINK_IMAGE: $CHAINLINK_IMAGE"
+        echo "TEST_CONFIG_ARBITRUM_SEPOLIA_WALLET_KEY_2: $TEST_CONFIG_ARBITRUM_SEPOLIA_WALLET_KEY_2"
+
+        # PATH=$PATH:$(go env GOPATH)/bin
+        # export PATH
+        # export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
+        # # Handle bots as users
+        # export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
+        # ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
       if: failure()
