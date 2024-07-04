@@ -227,6 +227,33 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
+    - name: Set default test secrets
+      shell: bash
+      run: |
+        echo "TEST_CONFIG_CHAINLINK_IMAGE=${{ inputs.DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_LOKI_TENANT_ID=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_TENANT_ID }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_LOKI_ENDPOINT=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_ENDPOINT }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_GRAFANA_BASE_URL=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_PYROSCOPE_KEY=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_KEY }}" >> $GITHUB_ENV    
+        echo "TEST_CONFIG_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
+        echo "TEST_CONFIG_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
+
+      # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
+    - name: Set test secrets overrides
+      if: inputs.test_secrets_override_base64 != ''
+      shell: bash
+      run: go run ${{ github.action_path }}/mask_values_in_dot_env.go "${{ inputs.test_secrets_override_base64 }}"
+
+    - name: Set test config overrides
+      if: inputs.test_config_override_base64 != ''
+      shell: bash
+      run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
+
     # Run the tests
     - name: Run Tests
       shell: bash
@@ -237,42 +264,12 @@ runs:
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
         GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
         GO_COVERAGE_DEST_DIR: ${{ inputs.go_coverage_dest_dir }}
-        # Set the default secrets for tests    
-        TEST_CONFIG_CHAINLINK_IMAGE: ${{ inputs.DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE }}
-        TEST_CONFIG_LOKI_TENANT_ID: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_TENANT_ID }}
-        TEST_CONFIG_LOKI_ENDPOINT: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_ENDPOINT }}
-        TEST_CONFIG_LOKI_BASIC_AUTH: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH }}
-        TEST_CONFIG_LOKI_BEARER_TOKEN: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN }}
-        TEST_CONFIG_GRAFANA_BASE_URL: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL }}
-        TEST_CONFIG_GRAFANA_DASHBOARD_URL: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL }}
-        TEST_CONFIG_GRAFANA_BEARER_TOKEN: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN }}
-        TEST_CONFIG_PYROSCOPE_SERVER_URL: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL }}
-        TEST_CONFIG_PYROSCOPE_KEY: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_KEY }}
-        TEST_CONFIG_PYROSCOPE_ENVIRONMENT: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT }}
-        TEST_CONFIG_PYROSCOPE_ENABLED: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED }}
-
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         # Handle bots as users
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
-
-        # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
-        if [[ "${{ inputs.test_secrets_override_base64 }}" != "" ]]; then
-          echo "Test secrets override provided in 'test_secrets_override_base64'"
-          go run ${{ github.action_path }}/mask_values_in_dot_env.go "${{ inputs.test_secrets_override_base64 }}"
-        else 
-          echo "No test secrets override provided in 'test_secrets_override_base64'"
-        fi
-
-        if [[ "${{ inputs.test_config_override_base64 }}" != "" ]]; then
-          echo "Test config override provided in 'test_config_override_base64'"
-          export BASE64_CONFIG_OVERRIDE="${{ inputs.test_config_override_base64 }}"
-        else 
-          echo "No test config override provided in 'test_config_override_base64'"
-        fi
-
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
