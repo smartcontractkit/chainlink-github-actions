@@ -16,9 +16,12 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  test_config_override_base64:
+    required: false
+    description: The base64-encoded test config override
   test_secrets_override_base64:
     required: false
-    description: The base64-encoded .env file with key=value secrets
+    description: The base64-encoded .env file with key=value secrets to override default secrets
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -257,9 +260,17 @@ runs:
 
         # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
         if [[ "${{ inputs.test_secrets_override_base64 }}" != "" ]]; then
+          echo "Test secrets override provided in 'test_secrets_override_base64'"
           go run ${{ github.action_path }}/mask_values_in_dot_env.go "${{ inputs.test_secrets_override_base64 }}"
         else 
-          echo "No custom secrets provided in 'test_secrets_override_base64'"
+          echo "No test secrets override provided in 'test_secrets_override_base64'"
+        fi
+
+        if [[ "${{ inputs.test_config_override_base64 }}" != "" ]]; then
+          echo "Test config override provided in 'test_config_override_base64'"
+          export BASE64_CONFIG_OVERRIDE="${{ inputs.test_config_override_base64 }}"
+        else 
+          echo "No test config override provided in 'test_config_override_base64'"
         fi
 
         ${{ inputs.test_command_to_run }}
