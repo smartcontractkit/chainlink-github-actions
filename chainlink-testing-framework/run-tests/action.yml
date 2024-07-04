@@ -123,6 +123,43 @@ inputs:
     required: false
     description: Do not use a go cache
     default: "false"
+  # Default secrets used for tests
+  DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE:
+    required: false
+    description: The chainlink image to use
+  DEFAULT_TEST_CONFIG_LOKI_TENANT_ID:
+    required: false
+    description: The loki tenant id to use    
+  DEFAULT_TEST_CONFIG_LOKI_ENDPOINT:
+    required: false
+    description: The loki endpoint to use
+  DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH:
+    required: false
+    description: The loki basic auth to use
+  DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN:
+    required: false
+    description: The loki bearer token to use
+  DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL:
+    required: false
+    description: The grafana base url to use 
+  DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL:
+    required: false
+    description: The grafana dashboard url to use  
+  DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN:
+    required: false
+    description: The grafana bearer token to use  
+  DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL:
+    required: false
+    description: The pyroscope server url to use
+  DEFAULT_TEST_CONFIG_PYROSCOPE_KEY:
+    required: false
+    description: The pyroscope key to use
+  DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT:
+    required: false
+    description: The pyroscope environment to use
+  DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED:
+    required: false
+    description: Is pyroscope enabled   
 
 runs:
   using: composite
@@ -187,27 +224,44 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
-    - name: Decode secrets override, mask them and set them as env vars
-      if: inputs.test_secrets_override_base64 != ''
-      shell: bash
-      run: go run ${{ github.action_path }}/mask_values_in_dot_env.go ${{ inputs.test_secrets_override_base64 }}
-
     # Run the tests
     - name: Run Tests
       shell: bash
       env:
-        CHAINLINK_IMAGE: ${{ inputs.cl_repo }}
-        CHAINLINK_VERSION: ${{ inputs.cl_image_tag }}
+        CHAINLINK_IMAGE: ${{ inputs.cl_repo }} # TODO: to remove
+        CHAINLINK_VERSION: ${{ inputs.cl_image_tag }} # TODO: to remove
         CHAINLINK_ENV_USER: ${{ github.actor }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
         GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
         GO_COVERAGE_DEST_DIR: ${{ inputs.go_coverage_dest_dir }}
+        # Set the default secrets for tests    
+        TEST_CONFIG_CHAINLINK_IMAGE: ${{ inputs.DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE }}
+        TEST_CONFIG_LOKI_TENANT_ID: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_TENANT_ID }}
+        TEST_CONFIG_LOKI_ENDPOINT: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_ENDPOINT }}
+        TEST_CONFIG_LOKI_BASIC_AUTH: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH }}
+        TEST_CONFIG_LOKI_BEARER_TOKEN: ${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN }}
+        TEST_CONFIG_GRAFANA_BASE_URL: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL }}
+        TEST_CONFIG_GRAFANA_DASHBOARD_URL: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL }}
+        TEST_CONFIG_GRAFANA_BEARER_TOKEN: ${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN }}
+        TEST_CONFIG_PYROSCOPE_SERVER_URL: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL }}
+        TEST_CONFIG_PYROSCOPE_KEY: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_KEY }}
+        TEST_CONFIG_PYROSCOPE_ENVIRONMENT: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT }}
+        TEST_CONFIG_PYROSCOPE_ENABLED: ${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED }}
+
       run: |
         PATH=$PATH:$(go env GOPATH)/bin
         export PATH
         export TEST_TRIGGERED_BY=${{ inputs.triggered_by }}-${{ github.event.pull_request.number || github.run_id }}
         # Handle bots as users
         export CHAINLINK_ENV_USER=${CHAINLINK_ENV_USER//"[bot]"/-bot}
+
+        # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
+        if [[ "${{ inputs.test_secrets_override_base64 }}" != "" ]]; then
+          go run ${{ github.action_path }}/mask_values_in_dot_env.go "${{ inputs.test_secrets_override_base64 }}"
+        else 
+          echo "No custom secrets provided in 'test_secrets_override_base64'"
+        fi
+
         ${{ inputs.test_command_to_run }}
 
     - name: Publish Artifacts
