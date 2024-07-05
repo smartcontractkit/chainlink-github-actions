@@ -127,40 +127,40 @@ inputs:
     description: Do not use a go cache
     default: "false"
   # Default secrets used for tests
-  DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE:
+  DEFAULT_CHAINLINK_IMAGE:
     required: false
     description: The chainlink image to use
-  DEFAULT_TEST_CONFIG_LOKI_TENANT_ID:
+  DEFAULT_LOKI_TENANT_ID:
     required: false
     description: The loki tenant id to use    
-  DEFAULT_TEST_CONFIG_LOKI_ENDPOINT:
+  DEFAULT_LOKI_ENDPOINT:
     required: false
     description: The loki endpoint to use
-  DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH:
+  DEFAULT_LOKI_BASIC_AUTH:
     required: false
     description: The loki basic auth to use
-  DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN:
+  DEFAULT_LOKI_BEARER_TOKEN:
     required: false
     description: The loki bearer token to use
-  DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL:
+  DEFAULT_GRAFANA_BASE_URL:
     required: false
     description: The grafana base url to use 
-  DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL:
+  DEFAULT_GRAFANA_DASHBOARD_URL:
     required: false
     description: The grafana dashboard url to use  
-  DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN:
+  DEFAULT_GRAFANA_BEARER_TOKEN:
     required: false
     description: The grafana bearer token to use  
-  DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL:
+  DEFAULT_PYROSCOPE_SERVER_URL:
     required: false
     description: The pyroscope server url to use
-  DEFAULT_TEST_CONFIG_PYROSCOPE_KEY:
+  DEFAULT_PYROSCOPE_KEY:
     required: false
     description: The pyroscope key to use
-  DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT:
+  DEFAULT_PYROSCOPE_ENVIRONMENT:
     required: false
     description: The pyroscope environment to use
-  DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED:
+  DEFAULT_PYROSCOPE_ENABLED:
     required: false
     description: Is pyroscope enabled   
 
@@ -230,18 +230,18 @@ runs:
     - name: Set default test secrets
       shell: bash
       run: |
-        echo "TEST_CONFIG_CHAINLINK_IMAGE=${{ inputs.DEFAULT_TEST_CONFIG_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_LOKI_TENANT_ID=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_TENANT_ID }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_LOKI_ENDPOINT=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_ENDPOINT }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_TEST_CONFIG_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_GRAFANA_BASE_URL=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_TEST_CONFIG_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_PYROSCOPE_KEY=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_KEY }}" >> $GITHUB_ENV    
-        echo "TEST_CONFIG_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
-        echo "TEST_CONFIG_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_TEST_CONFIG_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
+        echo "CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+        echo "LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
+        echo "LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
+        echo "LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
+        echo "LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
+        echo "GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
+        echo "GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
+        echo "GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
+        echo "PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
+        echo "PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV    
+        echo "PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
+        echo "PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
 
       # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
     - name: Set test secrets overrides

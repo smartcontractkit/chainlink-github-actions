@@ -16,7 +16,8 @@ func main() {
 
 	decodedBytes, err := base64.StdEncoding.DecodeString(os.Args[1])
 	if err != nil {
-		fmt.Println("Error:", err)
+		fmt.Fprintln(os.Stderr, "Could not decode provided base64 string")
+		os.Exit(1)
 	}
 
 	envVars := parseEnvVars(string(decodedBytes))
