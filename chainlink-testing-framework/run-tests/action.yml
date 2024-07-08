@@ -247,7 +247,7 @@ runs:
     - name: Set test secrets overrides
       if: inputs.test_secrets_override_base64 != ''
       shell: bash
-      run: go run ${{ github.action_path }}/mask_values_in_dot_env.go "${{ inputs.test_secrets_override_base64 }}"
+      run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
     - name: Set test config overrides
       if: inputs.test_config_override_base64 != ''

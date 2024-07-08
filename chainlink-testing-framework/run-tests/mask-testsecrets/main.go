@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run script.go <base64_dot_env_string>")
+		fmt.Println("Usage: go run main.go <base64_dot_env_string>")
 		return
 	}
 
@@ -32,16 +32,28 @@ func parseEnvVars(envStr string) map[string]string {
 	envVars := make(map[string]string)
 	lines := strings.Split(envStr, "\n")
 	for _, line := range lines {
+		line = strings.TrimSpace(line) // Ensure trimming at this stage
+		if strings.HasPrefix(line, "export ") {
+			line = strings.TrimSpace(strings.TrimPrefix(line, "export"))
+		}
 		parts := strings.SplitN(line, "=", 2)
 		if len(parts) == 2 {
-			key := parts[0]
-			value := strings.TrimSpace(parts[1]) // Trim spaces from the value
-			value = removeDoubleQuotes(value)
-			value = removeSingleQuotes(value)
+			key := strings.TrimSpace(parts[0])
+			value := strings.TrimSpace(parts[1])
+			value = removeSurroundingQuotes(value)
 			envVars[key] = value
 		}
 	}
 	return envVars
+}
+
+func removeSurroundingQuotes(s string) string {
+	if len(s) >= 2 {
+		if (s[0] == '"' && s[len(s)-1] == '"') || (s[0] == '\'' && s[len(s)-1] == '\'') {
+			return s[1 : len(s)-1]
+		}
+	}
+	return s
 }
 
 func mustAddToGithubEnv(key, value string) {
