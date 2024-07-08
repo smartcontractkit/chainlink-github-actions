@@ -25,6 +25,8 @@ func main() {
 	for key, value := range envVars {
 		mustMaskSecret(key, value)
 		mustAddToGithubEnv(key, value)
+		// Use TEST_ prefix for remote runner
+		mustAddToGithubEnv(fmt.Sprintf("TEST_%s", key), value)
 	}
 }
 
@@ -77,20 +79,4 @@ func mustMaskSecret(description string, secret string) {
 			os.Exit(1)
 		}
 	}
-}
-
-// removeDoubleQuotes checks if a string is enclosed in double quotes and removes them.
-func removeDoubleQuotes(value string) string {
-	if len(value) >= 2 && strings.HasPrefix(value, "\"") && strings.HasSuffix(value, "\"") {
-		return value[1 : len(value)-1]
-	}
-	return value
-}
-
-// removeSingleQuotes checks if a string is enclosed in single quotes and removes them.
-func removeSingleQuotes(value string) string {
-	if len(value) >= 2 && strings.HasPrefix(value, "'") && strings.HasSuffix(value, "'") {
-		return value[1 : len(value)-1]
-	}
-	return value
 }
