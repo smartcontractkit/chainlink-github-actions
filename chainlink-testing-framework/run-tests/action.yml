@@ -230,55 +230,41 @@ runs:
     - name: Set default test secrets
       shell: bash
       run: |
-        # Set default test secrets. Use TEST_ prefix to pass env vars in remote runner tests
-
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
-          echo "TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
-          echo "LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
-          echo "TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
+          echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_ENDPOINT }}" ]; then
-          echo "LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
-          echo "TEST_LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
+          echo "E2E_TEST_LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" ]; then
-          echo "LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
-          echo "TEST_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
+          echo "E2E_TEST_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" ]; then
-          echo "LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
-          echo "TEST_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
+          echo "E2E_TEST_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" ]; then
-          echo "GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
-          echo "TEST_GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
+          echo "E2E_TEST_GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" ]; then
-          echo "GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
-          echo "TEST_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
+          echo "E2E_TEST_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" ]; then
-          echo "GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
-          echo "TEST_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
+          echo "E2E_TEST_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" ]; then
-          echo "PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
-          echo "TEST_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
+          echo "E2E_TEST_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_PYROSCOPE_KEY }}" ]; then
-          echo "PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV
-          echo "TEST_PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV
+          echo "E2E_TEST_PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" ]; then
-          echo "PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
-          echo "TEST_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
+          echo "E2E_TEST_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" ]; then
-          echo "PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
-          echo "TEST_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
+          echo "E2E_TEST_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
         fi
 
       # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets

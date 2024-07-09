@@ -25,8 +25,6 @@ func main() {
 	for key, value := range envVars {
 		mustMaskSecret(key, value)
 		mustAddToGithubEnv(key, value)
-		// Use TEST_ prefix for remote runner
-		mustAddToGithubEnv(fmt.Sprintf("TEST_%s", key), value)
 	}
 }
 
