@@ -16,6 +16,12 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  test_config_override_base64:
+    required: false
+    description: The base64-encoded test config override
+  test_secrets_override_base64:
+    required: false
+    description: The base64-encoded .env file with key=value secrets to override default secrets
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -120,6 +126,43 @@ inputs:
     required: false
     description: Do not use a go cache
     default: "false"
+  # Default secrets used for tests
+  DEFAULT_CHAINLINK_IMAGE:
+    required: false
+    description: The chainlink image to use
+  DEFAULT_LOKI_TENANT_ID:
+    required: false
+    description: The loki tenant id to use    
+  DEFAULT_LOKI_ENDPOINT:
+    required: false
+    description: The loki endpoint to use
+  DEFAULT_LOKI_BASIC_AUTH:
+    required: false
+    description: The loki basic auth to use
+  DEFAULT_LOKI_BEARER_TOKEN:
+    required: false
+    description: The loki bearer token to use
+  DEFAULT_GRAFANA_BASE_URL:
+    required: false
+    description: The grafana base url to use 
+  DEFAULT_GRAFANA_DASHBOARD_URL:
+    required: false
+    description: The grafana dashboard url to use  
+  DEFAULT_GRAFANA_BEARER_TOKEN:
+    required: false
+    description: The grafana bearer token to use  
+  DEFAULT_PYROSCOPE_SERVER_URL:
+    required: false
+    description: The pyroscope server url to use
+  DEFAULT_PYROSCOPE_KEY:
+    required: false
+    description: The pyroscope key to use
+  DEFAULT_PYROSCOPE_ENVIRONMENT:
+    required: false
+    description: The pyroscope environment to use
+  DEFAULT_PYROSCOPE_ENABLED:
+    required: false
+    description: Is pyroscope enabled   
 
 runs:
   using: composite
@@ -184,12 +227,63 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
+    - name: Set default test secrets
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
+          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
+          echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_LOKI_ENDPOINT }}" ]; then
+          echo "E2E_TEST_LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" ]; then
+          echo "E2E_TEST_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" ]; then
+          echo "E2E_TEST_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" ]; then
+          echo "E2E_TEST_GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" ]; then
+          echo "E2E_TEST_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" ]; then
+          echo "E2E_TEST_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" ]; then
+          echo "E2E_TEST_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_KEY }}" ]; then
+          echo "E2E_TEST_PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" ]; then
+          echo "E2E_TEST_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" ]; then
+          echo "E2E_TEST_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
+        fi
+
+      # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
+    - name: Set test secrets overrides
+      if: inputs.test_secrets_override_base64 != ''
+      shell: bash
+      run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
+
+    - name: Set test config overrides
+      if: inputs.test_config_override_base64 != ''
+      shell: bash
+      run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
+
     # Run the tests
     - name: Run Tests
       shell: bash
       env:
-        CHAINLINK_IMAGE: ${{ inputs.cl_repo }}
-        CHAINLINK_VERSION: ${{ inputs.cl_image_tag }}
+        CHAINLINK_IMAGE: ${{ inputs.cl_repo }} # TODO: to remove
+        CHAINLINK_VERSION: ${{ inputs.cl_image_tag }} # TODO: to remove
         CHAINLINK_ENV_USER: ${{ github.actor }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
         GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
