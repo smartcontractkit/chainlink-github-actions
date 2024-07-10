@@ -231,7 +231,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_IMAGE=$(go run ${{ github.action_path }}/resolve-env-vars/main.go '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
           echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
