@@ -22,14 +22,6 @@ inputs:
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
-  cl_repo:
-    required: false
-    description: The Chainlink ecr repository to use
-    default: public.ecr.aws/z0b1w9r9/chainlink
-  cl_image_tag:
-    required: false
-    description: The chainlink image to use
-    default: develop
   build_gauntlet_command:
     required: false
     description: How to build gauntlet if necessary
@@ -297,8 +289,6 @@ runs:
     - name: Run Tests
       shell: bash
       env:
-        CHAINLINK_IMAGE: ${{ inputs.cl_repo }} # TODO: to remove
-        CHAINLINK_VERSION: ${{ inputs.cl_image_tag }} # TODO: to remove
         CHAINLINK_ENV_USER: ${{ github.actor }}
         CGO_ENABLED: ${{ inputs.CGO_ENABLED }}
         GO_COVERAGE_SRC_DIR: ${{ inputs.go_coverage_src_dir }}
