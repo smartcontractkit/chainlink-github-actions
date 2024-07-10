@@ -33,6 +33,9 @@ func parseEnvVars(envStr string) map[string]string {
 	lines := strings.Split(envStr, "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line) // Ensure trimming at this stage
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue // Skip empty lines and comments
+		}
 		if strings.HasPrefix(line, "export ") {
 			line = strings.TrimSpace(strings.TrimPrefix(line, "export"))
 		}
