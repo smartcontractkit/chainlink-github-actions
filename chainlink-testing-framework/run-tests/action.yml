@@ -230,7 +230,7 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
-    - name: Checkout chainlink-testing-framework to access citool
+    - name: Checkout chainlink-testing-framework to use citool
       uses: actions/checkout@v3
       with:
         repository: 'smartcontractkit/chainlink-testing-framework'
