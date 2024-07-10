@@ -16,9 +16,6 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
-  test_config_override_base64:
-    required: false
-    description: The base64-encoded test config override
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
@@ -279,11 +276,6 @@ runs:
       if: inputs.test_secrets_override_base64 != ''
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
-
-    - name: Set test config overrides
-      if: inputs.test_config_override_base64 != ''
-      shell: bash
-      run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
 
     # Run the tests
     - name: Run Tests
