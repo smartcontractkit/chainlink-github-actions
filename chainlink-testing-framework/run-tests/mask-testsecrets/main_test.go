@@ -27,6 +27,17 @@ func TestParseEnvVars(t *testing.T) {
 			envStr:   "KEY=\"some value\"\nANOTHER_KEY='another value'",
 			expected: map[string]string{"KEY": "some value", "ANOTHER_KEY": "another value"},
 		},
+		{
+			name: "With Comments",
+			envStr: `
+# This is a comment
+export VAR1="Value1"
+#VAR2='Value2'
+VAR3=Value3
+# export VAR4="Value4"
+`,
+			expected: map[string]string{"VAR1": "Value1", "VAR3": "Value3"},
+		},
 	}
 
 	for _, tt := range tests {
