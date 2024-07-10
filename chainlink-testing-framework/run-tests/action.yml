@@ -230,14 +230,23 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
+    - name: Checkout chainlink-testing-framework to access citool
+      uses: actions/checkout@v3
+      with:
+        repository: 'smartcontractkit/chainlink-testing-framework'
+        ref: 818e45a055b7e9ebd5775f6b8eaabb38e400d1d4
+        path: 'chainlink-testing-framework'
+
     - name: Set default test secrets
       shell: bash
       run: |
+        cd chainlink-testing-framework/tools/citool/
+
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_IMAGE=$(go run ${{ github.action_path }}/resolve-env-vars/main.go '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_IMAGE=$(go run main.go envresolve '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=$(go run ${{ github.action_path }}/resolve-env-vars/main.go '${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}')" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=$(go run main.go envresolve '${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
           echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
