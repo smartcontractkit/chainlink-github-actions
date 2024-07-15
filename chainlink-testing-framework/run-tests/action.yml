@@ -22,6 +22,9 @@ inputs:
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
+  test_type:
+    required: false
+    description: The type of test to run. Used by some tests to select test configuration  
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -229,6 +232,13 @@ runs:
     - name: Set Up gotestloghelper
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
+
+    - name: Set default enironment variables
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.test_type }}" ]; then
+          echo "TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
+        fi
 
     - name: Set default test secrets
       shell: bash
