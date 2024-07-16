@@ -25,6 +25,9 @@ inputs:
   test_type:
     required: false
     description: The type of test to run. Used by some tests to select test configuration  
+  test_suite: 
+    required: false
+    description: The test suite to run. Used by k8s remote runner tests
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -239,6 +242,10 @@ runs:
         if [ -n "${{ inputs.test_type }}" ]; then
           echo "TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
           echo "TEST_TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.test_suite }}" ]; then
+          echo "TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
+          echo "TEST_TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
         fi
 
     - name: Set default test secrets
