@@ -238,6 +238,7 @@ runs:
       run: |
         if [ -n "${{ inputs.test_type }}" ]; then
           echo "TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
+          echo "TEST_TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
         fi
 
     - name: Set default test secrets
