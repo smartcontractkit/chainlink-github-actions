@@ -248,14 +248,18 @@ runs:
           echo "TEST_TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
         fi
 
+    - name: Install envresolve tool
+      shell: bash
+      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@e7d83b97f9c1aa6c94c133f0b21d578fd0075560
+
     - name: Set default test secrets
       shell: bash
       run: |
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
           echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
