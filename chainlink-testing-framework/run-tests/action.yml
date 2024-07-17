@@ -22,6 +22,12 @@ inputs:
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
+  test_type:
+    required: false
+    description: The type of test to run. Used by some tests to select test configuration  
+  test_suite: 
+    required: false
+    description: The test suite to run. Used by k8s remote runner tests
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -230,14 +236,30 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/gotestloghelper@v1.1.1
 
+    - name: Set default enironment variables
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.test_type }}" ]; then
+          echo "TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
+          echo "TEST_TEST_TYPE=${{ inputs.test_type }}" >> $GITHUB_ENV
+        fi
+        if [ -n "${{ inputs.test_suite }}" ]; then
+          echo "TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
+          echo "TEST_TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
+        fi
+
+    - name: Install envresolve tool
+      shell: bash
+      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@v1.32.6
+
     - name: Set default test secrets
       shell: bash
       run: |
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}" >> $GITHUB_ENV
+          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}')" >> $GITHUB_ENV
         fi
         if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
           echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
