@@ -250,7 +250,7 @@ runs:
 
     - name: Install envresolve tool
       shell: bash
-      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@e7d83b97f9c1aa6c94c133f0b21d578fd0075560
+      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@v1.32.6
 
     - name: Set default test secrets
       shell: bash
