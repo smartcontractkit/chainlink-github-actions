@@ -16,12 +16,39 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
-  test_config_override_base64:
-    required: false
-    description: The base64-encoded test config override
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
+  test_config_override_base64:
+    required: false
+    description: The base64-encoded test config override
+  test_config_selected_networks:
+    required: false
+    description: The selected networks to set in TestConfig when test_config_override_base64 not provided    
+  test_config_chainlink_version:
+    required: false
+    description: The chainlink version to set in TestConfig when test_config_override_base64 not provided 
+  test_config_chainlink_postgres_version:
+    required: false
+    description: The chainlink postgres version to set in TestConfig when test_config_override_base64 not provided
+  test_config_chainlink_upgrade_version:
+    required: false
+    description: The chainlink upgrade version to set in TestConfig when test_config_override_base64 not provided
+  test_config_logging_run_id:
+    required: false
+    description: The logging run id to set in TestConfig when test_config_override_base64 not provided
+  test_config_test_log_collect:
+    required: false
+    description: The logging test log collect to set in TestConfig when test_config_override_base64 not provided
+  test_config_private_ethereum_network_execution_layer:
+    required: false
+    description: The private ethereum network execution layer to set in TestConfig when test_config_override_base64 not provided
+  test_config_private_ethereum_network_custom_docker_image:
+    required: false
+    description: The private ethereum network custom docker image to set in TestConfig when test_config_override_base64 not provided
+  test_config_logstream_log_targets:
+    required: false
+    description: The logstream log targets to set in TestConfig when test_config_override_base64 not provided
   test_type:
     required: false
     description: The type of test to run. Used by some tests to select test configuration  
@@ -301,7 +328,55 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
-    - name: Set test config overrides
+    - name: Create default test config override
+      if: inputs.test_config_override_base64 == ''
+      shell: bash
+      run: |
+        cd integration-tests/citool/
+
+        create_args=()
+        if [ -n "${{ inputs.test_config_chainlink_version }}" ]; then
+          create_args+=(--chainlink-version="${{ inputs.test_config_chainlink_version }}")
+        fi
+        if [ -n "${{ inputs.test_config_chainlink_postgres_version }}" ]; then
+          create_args+=(--chainlink-postgres-version="${{ inputs.test_config_chainlink_postgres_version }}")
+        fi
+        if [ -n "${{ inputs.test_config_chainlink_upgrade_version }}" ]; then
+          create_args+=(--chainlink-upgrade-version="${{ inputs.test_config_chainlink_upgrade_version }}")
+        fi
+        if [ -n "${{ inputs.test_config_logging_run_id }}" ]; then
+          create_args+=(--logging-run-id="${{ inputs.test_config_logging_run_id }}")
+        fi
+        if [ -n "${{ inputs.test_config_test_log_collect }}" ]; then
+          create_args+=(--logging-test-log-collect="${{ inputs.test_config_test_log_collect }}")
+        fi
+        if [ -n "${{ inputs.test_config_private_ethereum_network_execution_layer }}" ]; then
+          create_args+=(--private-ethereum-network-execution-layer="${{ inputs.test_config_private_ethereum_network_execution_layer }}")
+        fi
+        if [ -n "${{ inputs.test_config_private_ethereum_network_custom_docker_image }}" ]; then
+          create_args+=(--private-ethereum-network-custom-docker-image="${{ inputs.test_config_private_ethereum_network_custom_docker_image }}")
+        fi
+        
+        # # Split the log targets input by comma and add to the command line arguments
+        IFS=',' read -ra ADDR <<< "${{ inputs.test_config_logstream_log_targets }}"
+        for i in "${ADDR[@]}"; do
+          create_args+=(--logging-log-targets="$i")
+        done
+
+        # Split selected networks input by comma and add to the command line arguments
+        IFS=',' read -ra ADDR <<< "${{ inputs.test_config_selected_networks }}"
+        for i in "${ADDR[@]}"; do
+          create_args+=(--selected-networks="$i")
+        done
+
+        config_override=$(go run main.go test-config create "${create_args[@]}")
+
+        BASE64_CONFIG_OVERRIDE=$(echo "$config_override" | base64 -w 0)
+        echo ::add-mask::$BASE64_CONFIG_OVERRIDE
+        echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV        
+    
+    # Override the default test config if a custom one is provided
+    - name: Use test config override
       if: inputs.test_config_override_base64 != ''
       shell: bash
       run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
