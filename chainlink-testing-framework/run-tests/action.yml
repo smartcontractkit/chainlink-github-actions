@@ -16,15 +16,15 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  test_secrets_override_base64:
+    required: false
+    description: The base64-encoded .env file with key=value secrets to override default secrets
   test_config_override_base64:
     required: false
     description: The base64-encoded test config override
   test_config_selected_networks:
     required: false
     description: The selected networks to set in TestConfig when test_config_override_base64 not provided    
-  test_secrets_override_base64:
-    required: false
-    description: The base64-encoded .env file with key=value secrets to override default secrets
   test_config_chainlink_version:
     required: false
     description: The chainlink version to set in TestConfig when test_config_override_base64 not provided 
