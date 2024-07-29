@@ -5,6 +5,10 @@ inputs:
     required: false
     description: Location of where error logs are written
     default: ./integration-tests/smoke/logs
+  dot_graphs_location:
+    required: false
+    description: Location of where dot graphs are written
+    default: ./integration-tests/smoke/dot_graphs
   artifacts_name:
     required: false
     description: Name of the artifact to upload
@@ -401,10 +405,12 @@ runs:
 
     - name: Publish Artifacts
       if: failure()
-      uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+      uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
       with:
         name: ${{ inputs.artifacts_name }}
-        path: ${{ inputs.artifacts_location }}
+        path: |
+          ${{ inputs.artifacts_location }}
+          ${{ inputs.dot_graphs_location }}
 
     - name: cleanup
       if: always()
