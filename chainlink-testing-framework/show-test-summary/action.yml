@@ -17,19 +17,23 @@ runs:
           cleanTestDir=${inputDir%/}
           directory="$cleanTestDir/.test_summary"
           echo "Looking for test summary in: $directory"
-          files=("$directory"/*)
           if [ -d "$directory" ]; then
+            files=("$directory"/*)
             echo "Test summary folder found in $inputDir"
-            if [ ${#files[@]} -gt 0 ]; then
+            if [ ${#files[@]} -eq 1 ]; then
               first_file="${files[0]}"
-              echo "Name of the first test summary file: $(basename "$first_file")"
-              echo "### Failed Test Execution Logs Dashboard (over VPN):" >> $GITHUB_STEP_SUMMARY
+              echo "::debug::Name of the first test summary file: $(basename "$first_file")"              
+              echo "### Test Execution Logs Dashboard (over VPN):" >> $GITHUB_STEP_SUMMARY
               cat "$first_file" | jq -r 'if .loki then (.loki[] | if .value != "" then "* [\(.test_name)](\(.value))" else "No URL found for \(.test_name)" end) else "No Grafana URLs found" end' >> $GITHUB_STEP_SUMMARY
-              if [ ${#files[@]} -gt 1 ]; then
-                echo "Found more than one test summary file in $inputDir. This is incorrect, there should be only one file"
+              graphs_available=$(cat "$first_file" | jq -r 'if .dot_graphs then "true" else "false" end')
+              if [[ "$graphs_available" == "true" ]]; then
+                echo "### DOT graphs of on-chain transactions might be available" >> $GITHUB_STEP_SUMMARY
+                echo "Please download test artifacts and check for presence of 'dot_graphs' folder, as graphs might help you understand why test failed" >> $GITHUB_STEP_SUMMARY
               fi
+            elif [ ${#files[@]} -gt 1 ]; then
+              echo "::error::Found more than one test summary file in $inputDir. This is incorrect, there should be only one file"
             else
-              echo "Test summary directory in $inputDir is empty. This should not happen"
+              echo "::error::Test summary directory in $inputDir is empty. This should not happen"
             fi
           else
             echo "No test summary folder found in $inputDir. If no test failed or log collection wasn't explicitly requested this is correct. Exiting"
