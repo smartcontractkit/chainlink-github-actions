@@ -328,12 +328,18 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
+    - name: Checkout chainlink-testing-framework to use citool
+      uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+      with:
+        repository: smartcontractkit/chainlink-testing-framework
+        ref: main
+        fetch-depth: 0
+        path: ctf
+
     - name: Create default test config override
       if: inputs.test_config_override_base64 == ''
       shell: bash
       run: |
-        cd integration-tests/citool/
-
         create_args=()
         if [ -n "${{ inputs.test_config_chainlink_version }}" ]; then
           create_args+=(--chainlink-version="${{ inputs.test_config_chainlink_version }}")
@@ -368,6 +374,8 @@ runs:
         for i in "${ADDR[@]}"; do
           create_args+=(--selected-networks="$i")
         done
+
+        cd ctf/tools/citool/
 
         config_override=$(go run main.go test-config create "${create_args[@]}")
 
