@@ -328,9 +328,13 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
-    - name: Install citool to create test config
-      shell: bash
-      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/citool # Use latest because it cannot be installed with version number https://groups.google.com/g/golang-nuts/c/igwFOH-fWqI?pli=1
+    - name: Checkout chainlink-testing-framework to use citool
+      uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+      with:
+        repository: smartcontractkit/chainlink-testing-framework
+        ref: main
+        fetch-depth: 0
+        path: ctf
 
     - name: Create default test config override
       if: inputs.test_config_override_base64 == ''
@@ -371,7 +375,9 @@ runs:
           create_args+=(--selected-networks="$i")
         done
 
-        config_override=$(citool test-config create "${create_args[@]}")
+        cd ctf/tools/citool/
+
+        config_override=$(go run main.go test-config create "${create_args[@]}")
 
         BASE64_CONFIG_OVERRIDE=$(echo "$config_override" | base64 -w 0)
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
