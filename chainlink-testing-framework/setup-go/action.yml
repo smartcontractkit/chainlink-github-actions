@@ -20,9 +20,9 @@ inputs:
     required: false
     description: Cache go builds
     default: "true"
-  cache_key_id:
-    required: true
-    description: Cache go vendors unique id
+  cache_version: 
+    description: Set this to cache bust
+    default: "1"    
   no_cache:
     required: false
     description: Do not use a go cache
@@ -59,9 +59,9 @@ runs:
           ${{ steps.go-cache-dir.outputs.gomodcache }}
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-gomod-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+          ${{ runner.os }}-gomod-${{ inputs.cache_version }}-
 
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
       if: ${{ inputs.cache_builds == 'true' }}
@@ -71,10 +71,10 @@ runs:
           ~/.cache/go-build
           ${{ steps.go-cache-dir.outputs.gobuildcache }}
         # The lifetime of go build outputs is pretty short, so we make our primary cache key be the branch name
-        key: ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-gobuild-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-${{ hashFiles(inputs.go_mod_path) }}-
-          ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-
+          ${{ runner.os }}-gobuild-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}-
+          ${{ runner.os }}-gobuild-${{ inputs.cache_version }}-
 
     - name: Restore Go Modules
       if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
@@ -82,11 +82,12 @@ runs:
       id: restore-cache-packages
       with:
         path: |
+          ${{ steps.go-cache-dir.outputs.gomodcache }}
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-gomod-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+          ${{ runner.os }}-gomod-${{ inputs.cache_version }}-
 
     - name: Tidy and check files
       if: ${{ inputs.should_tidy == 'true' }}
