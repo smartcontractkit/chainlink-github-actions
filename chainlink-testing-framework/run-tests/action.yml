@@ -203,6 +203,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Check out Code
+      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
