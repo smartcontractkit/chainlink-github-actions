@@ -1,10 +1,6 @@
 name: setup-go
 description: Common golang setup
 inputs:
-  test_download_vendor_packages_command:
-    required: false
-    description: The command to download the go modules
-    default: make download
   go_version:
     required: false
     description: Go version to install
@@ -94,7 +90,3 @@ runs:
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/go-mod-tidy@v2.3.6
       with:
         go_mod_path: ${{ inputs.go_mod_path }}
-
-    - name: Download Go Vendor Packages
-      shell: bash
-      run: ${{ inputs.test_download_vendor_packages_command }}
