@@ -203,13 +203,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Check out Code
-      uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
-
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
-      uses: ./chainlink-testing-framework/setup-run-tests-environment
+      uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/setup-run-tests-environment@339a3ac3dc60864a037fb9132f072c7ddcfc2e9f # v2.3.30
       with:
         test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
         go_version: ${{ inputs.go_version }}
