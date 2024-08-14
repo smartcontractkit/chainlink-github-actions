@@ -15,7 +15,7 @@ inputs:
   cache_builds:
     required: false
     description: Cache go builds
-    default: "true"
+    default: "false"
   cache_version: 
     description: Set this to cache bust
     default: "1"    
@@ -51,21 +51,16 @@ runs:
       uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: cache-packages
       with:
-        path: |
-          ${{ steps.go-cache-dir.outputs.gomodcache }}
-          ~/go/pkg/mod
-          ~/go/bin
+        path: ${{ steps.go-cache-dir.outputs.gomodcache }}
         key: ${{ runner.os }}-gomod-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
           ${{ runner.os }}-gomod-${{ inputs.cache_version }}-
 
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-      if: ${{ inputs.cache_builds == 'true' }}
-      name: Cache Go Build Outputs
+      if: inputs.cache_restore_only == 'false' && inputs.cache_builds == 'true'
+      name: Cache Go Builds
       with:
-        path: |
-          ~/.cache/go-build
-          ${{ steps.go-cache-dir.outputs.gobuildcache }}
+        path: ${{ steps.go-cache-dir.outputs.gobuildcache }}
         # The lifetime of go build outputs is pretty short, so we make our primary cache key be the branch name
         key: ${{ runner.os }}-gobuild-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
@@ -79,8 +74,6 @@ runs:
       with:
         path: |
           ${{ steps.go-cache-dir.outputs.gomodcache }}
-          ~/go/pkg/mod
-          ~/go/bin
         key: ${{ runner.os }}-gomod-${{ inputs.cache_version }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
           ${{ runner.os }}-gomod-${{ inputs.cache_version }}-
