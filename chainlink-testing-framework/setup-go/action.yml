@@ -16,6 +16,10 @@ inputs:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
     default: "false"
+  cache_builds:
+    required: false
+    description: Cache go builds
+    default: "true"
   cache_key_id:
     required: true
     description: Cache go vendors unique id
@@ -39,29 +43,48 @@ runs:
         check-latest: true
         cache: false
 
-    - name: Cache Vendor Packages
+    - name: Set go cache keys
+      shell: bash
+      id: go-cache-dir
+      run: |
+        echo "gomodcache=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+        echo "gobuildcache=$(go env GOCACHE)" >> $GITHUB_OUTPUT        
+
+    - name: Cache Go Modules
       if: inputs.cache_restore_only == 'false' && inputs.no_cache == 'false'
       uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: cache-packages
       with:
         path: |
-          ~/.cache/go-build
+          ${{ steps.go-cache-dir.outputs.gomodcache }}
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
-    - name: Restore Cache Vendor Packages
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+      if: ${{ inputs.cache_builds == 'true' }}
+      name: Cache Go Build Outputs
+      with:
+        path: |
+          ~/.cache/go-build
+          ${{ steps.go-cache-dir.outputs.gobuildcache }}
+        # The lifetime of go build outputs is pretty short, so we make our primary cache key be the branch name
+        key: ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-${{ hashFiles(inputs.go_mod_path) }}
+        restore-keys: |
+          ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-${{ hashFiles(inputs.go_mod_path) }}-
+          ${{ runner.os }}-gobuild-${{ inputs.cache-version }}-
+
+    - name: Restore Go Modules
       if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
       uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: restore-cache-packages
       with:
         path: |
-          ~/.cache/go-build
           ~/go/pkg/mod
           ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache_key_id }}-
 
