@@ -203,6 +203,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Checkout chainlink-testing-framework to use citool
+      uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+      with:
+        repository: smartcontractkit/chainlink-testing-framework
+        ref: main
+        fetch-depth: 0
+        path: ctf
+
     # Setup Tools and libraries
     - name: Setup environment
       if: inputs.run_setup == 'true'
@@ -327,14 +335,6 @@ runs:
       if: inputs.test_secrets_override_base64 != ''
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
-
-    - name: Checkout chainlink-testing-framework to use citool
-      uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
-      with:
-        repository: smartcontractkit/chainlink-testing-framework
-        ref: main
-        fetch-depth: 0
-        path: ctf
 
     - name: Create default test config override
       if: inputs.test_config_override_base64 == ''
