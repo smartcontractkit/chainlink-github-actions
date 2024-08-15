@@ -69,6 +69,7 @@ runs:
         cache_key_id: ${{ inputs.cache_key_id }}
         should_tidy: ${{ inputs.should_tidy }}
         no_cache: ${{ inputs.no_cache }}
+        test_download_vendor_packages_command: ${{ inputs.test_download_vendor_packages_command }}
 
     # Setup AWS cred and K8s context
     - name: Configure AWS Credentials

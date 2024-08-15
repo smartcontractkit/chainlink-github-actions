@@ -30,6 +30,10 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  test_download_vendor_packages_command:
+    required: false
+    description: The command to download the go modules
+    default: make download    
 
 runs:
   using: composite
@@ -85,3 +89,7 @@ runs:
       uses: smartcontractkit/chainlink-github-actions/chainlink-testing-framework/go-mod-tidy@v2.3.6
       with:
         go_mod_path: ${{ inputs.go_mod_path }}
+
+    - name: Run go mod download
+      shell: bash
+      run: ${{ inputs.test_download_vendor_packages_command }}
