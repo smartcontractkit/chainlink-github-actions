@@ -19,9 +19,6 @@ inputs:
   cache_key_id:
     required: true
     description: Cache key id
-  cache_version: 
-    description: Set this to cache bust
-    default: "1"    
   no_cache:
     required: false
     description: Do not use a go cache
@@ -59,9 +56,9 @@ runs:
       id: cache-packages
       with:
         path: ${{ steps.go-cache-dir.outputs.gomodcache }}
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gomod-
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-
 
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
       if: inputs.cache_restore_only == 'false' && inputs.cache_builds == 'true'
@@ -69,9 +66,9 @@ runs:
       with:
         path: ${{ steps.go-cache-dir.outputs.gobuildcache }}
         # The lifetime of go build outputs is pretty short, so we make our primary cache key be the branch name
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gobuild-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gobuild-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gobuild-
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gobuild-
 
     - name: Restore Go Modules
       if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
@@ -80,9 +77,9 @@ runs:
       with:
         path: |
           ${{ steps.go-cache-dir.outputs.gomodcache }}
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ inputs.cache_version }}-gomod-
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-
 
     - name: Tidy and check files
       if: ${{ inputs.should_tidy == 'true' }}
