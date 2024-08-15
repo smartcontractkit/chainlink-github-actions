@@ -30,7 +30,6 @@ inputs:
   test_download_vendor_packages_command:
     required: false
     description: The command to download the go modules
-    default: make download    
 
 runs:
   using: composite
@@ -88,5 +87,6 @@ runs:
         go_mod_path: ${{ inputs.go_mod_path }}
 
     - name: Run go mod download
+      if: inputs.test_download_vendor_packages_command
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
