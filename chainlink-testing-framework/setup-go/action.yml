@@ -1,10 +1,6 @@
 name: setup-go
 description: Common golang setup
 inputs:
-  test_download_vendor_packages_command:
-    required: false
-    description: The command to download the go modules
-    default: make download
   go_version:
     required: false
     description: Go version to install
@@ -16,9 +12,13 @@ inputs:
     required: false
     description: Only restore the cache, set to true if you want to restore and save on cache hit miss
     default: "false"
+  cache_builds:
+    required: false
+    description: Cache go builds
+    default: "false"
   cache_key_id:
     required: true
-    description: Cache go vendors unique id
+    description: Cache key id
   no_cache:
     required: false
     description: Do not use a go cache
@@ -27,6 +27,9 @@ inputs:
     required: false
     description: Should we check go mod tidy
     default: "true"
+  test_download_vendor_packages_command:
+    required: false
+    description: The command to download the go modules
 
 runs:
   using: composite
@@ -39,31 +42,43 @@ runs:
         check-latest: true
         cache: false
 
-    - name: Cache Vendor Packages
+    - name: Set go cache keys
+      shell: bash
+      id: go-cache-dir
+      run: |
+        echo "gomodcache=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+        echo "gobuildcache=$(go env GOCACHE)" >> $GITHUB_OUTPUT        
+
+    - name: Cache Go Modules
       if: inputs.cache_restore_only == 'false' && inputs.no_cache == 'false'
       uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: cache-packages
       with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+        path: ${{ steps.go-cache-dir.outputs.gomodcache }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-
 
-    - name: Restore Cache Vendor Packages
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+      if: inputs.cache_restore_only == 'false' && inputs.cache_builds == 'true'
+      name: Cache Go Builds
+      with:
+        path: ${{ steps.go-cache-dir.outputs.gobuildcache }}
+        # The lifetime of go build outputs is pretty short, so we make our primary cache key be the branch name
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gobuild-${{ hashFiles(inputs.go_mod_path) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gobuild-
+
+    - name: Restore Go Modules
       if: inputs.cache_restore_only != 'false' && inputs.no_cache == 'false'
       uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
       id: restore-cache-packages
       with:
         path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-${{ hashFiles('**/go.sum') }}
+          ${{ steps.go-cache-dir.outputs.gomodcache }}
+        key: ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-${{ hashFiles(inputs.go_mod_path) }}
         restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache_key_id }}-
+          ${{ runner.os }}-${{ inputs.cache_key_id }}-gomod-
 
     - name: Tidy and check files
       if: ${{ inputs.should_tidy == 'true' }}
@@ -71,6 +86,7 @@ runs:
       with:
         go_mod_path: ${{ inputs.go_mod_path }}
 
-    - name: Download Go Vendor Packages
+    - name: Run go mod download
+      if: inputs.test_download_vendor_packages_command
       shell: bash
       run: ${{ inputs.test_download_vendor_packages_command }}
