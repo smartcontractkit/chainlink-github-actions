@@ -25,33 +25,6 @@ inputs:
   test_config_override_base64:
     required: false
     description: The base64-encoded test config override
-  test_config_selected_networks:
-    required: false
-    description: The selected networks to set in TestConfig when test_config_override_base64 not provided    
-  test_config_chainlink_version:
-    required: false
-    description: The chainlink version to set in TestConfig when test_config_override_base64 not provided 
-  test_config_chainlink_postgres_version:
-    required: false
-    description: The chainlink postgres version to set in TestConfig when test_config_override_base64 not provided
-  test_config_chainlink_upgrade_version:
-    required: false
-    description: The chainlink upgrade version to set in TestConfig when test_config_override_base64 not provided
-  test_config_logging_run_id:
-    required: false
-    description: The logging run id to set in TestConfig when test_config_override_base64 not provided
-  test_config_test_log_collect:
-    required: false
-    description: The logging test log collect to set in TestConfig when test_config_override_base64 not provided
-  test_config_private_ethereum_network_execution_layer:
-    required: false
-    description: The private ethereum network execution layer to set in TestConfig when test_config_override_base64 not provided
-  test_config_private_ethereum_network_custom_docker_image:
-    required: false
-    description: The private ethereum network custom docker image to set in TestConfig when test_config_override_base64 not provided
-  test_config_logstream_log_targets:
-    required: false
-    description: The logstream log targets to set in TestConfig when test_config_override_base64 not provided
   test_type:
     required: false
     description: The type of test to run. Used by some tests to select test configuration  
@@ -162,47 +135,7 @@ inputs:
     required: false
     description: Do not use a go cache
     default: "false"
-  # Default secrets used for tests
-  DEFAULT_CHAINLINK_IMAGE:
-    required: false
-    description: The chainlink image to use
-  DEFAULT_CHAINLINK_UPGRADE_IMAGE:
-    required: false
-    description: The chainlink image to use for upgrade tests    
-  DEFAULT_LOKI_TENANT_ID:
-    required: false
-    description: The loki tenant id to use    
-  DEFAULT_LOKI_ENDPOINT:
-    required: false
-    description: The loki endpoint to use
-  DEFAULT_LOKI_BASIC_AUTH:
-    required: false
-    description: The loki basic auth to use
-  DEFAULT_LOKI_BEARER_TOKEN:
-    required: false
-    description: The loki bearer token to use
-  DEFAULT_GRAFANA_BASE_URL:
-    required: false
-    description: The grafana base url to use 
-  DEFAULT_GRAFANA_DASHBOARD_URL:
-    required: false
-    description: The grafana dashboard url to use  
-  DEFAULT_GRAFANA_BEARER_TOKEN:
-    required: false
-    description: The grafana bearer token to use  
-  DEFAULT_PYROSCOPE_SERVER_URL:
-    required: false
-    description: The pyroscope server url to use
-  DEFAULT_PYROSCOPE_KEY:
-    required: false
-    description: The pyroscope key to use
-  DEFAULT_PYROSCOPE_ENVIRONMENT:
-    required: false
-    description: The pyroscope environment to use
-  DEFAULT_PYROSCOPE_ENABLED:
-    required: false
-    description: Is pyroscope enabled   
-
+ 
 runs:
   using: composite
   steps:
@@ -290,49 +223,6 @@ runs:
       shell: bash
       run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@v1.0.0
 
-    - name: Set default test secrets
-      shell: bash
-      run: |
-        if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_IMAGE }}')" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_CHAINLINK_IMAGE }}" ]; then
-          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=$(envresolve '${{ inputs.DEFAULT_CHAINLINK_UPGRADE_IMAGE }}')" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_LOKI_TENANT_ID }}" ]; then
-          echo "E2E_TEST_LOKI_TENANT_ID=${{ inputs.DEFAULT_LOKI_TENANT_ID }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_LOKI_ENDPOINT }}" ]; then
-          echo "E2E_TEST_LOKI_ENDPOINT=${{ inputs.DEFAULT_LOKI_ENDPOINT }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" ]; then
-          echo "E2E_TEST_LOKI_BASIC_AUTH=${{ inputs.DEFAULT_LOKI_BASIC_AUTH }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" ]; then
-          echo "E2E_TEST_LOKI_BEARER_TOKEN=${{ inputs.DEFAULT_LOKI_BEARER_TOKEN }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" ]; then
-          echo "E2E_TEST_GRAFANA_BASE_URL=${{ inputs.DEFAULT_GRAFANA_BASE_URL }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" ]; then
-          echo "E2E_TEST_GRAFANA_DASHBOARD_URL=${{ inputs.DEFAULT_GRAFANA_DASHBOARD_URL }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" ]; then
-          echo "E2E_TEST_GRAFANA_BEARER_TOKEN=${{ inputs.DEFAULT_GRAFANA_BEARER_TOKEN }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" ]; then
-          echo "E2E_TEST_PYROSCOPE_SERVER_URL=${{ inputs.DEFAULT_PYROSCOPE_SERVER_URL }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_KEY }}" ]; then
-          echo "E2E_TEST_PYROSCOPE_KEY=${{ inputs.DEFAULT_PYROSCOPE_KEY }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" ]; then
-          echo "E2E_TEST_PYROSCOPE_ENVIRONMENT=${{ inputs.DEFAULT_PYROSCOPE_ENVIRONMENT }}" >> $GITHUB_ENV
-        fi
-        if [ -n "${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" ]; then
-          echo "E2E_TEST_PYROSCOPE_ENABLED=${{ inputs.DEFAULT_PYROSCOPE_ENABLED }}" >> $GITHUB_ENV
-        fi
-
       # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
     - name: Set test secrets overrides
       if: inputs.test_secrets_override_base64 != ''
@@ -349,31 +239,6 @@ runs:
       if: inputs.test_config_override_base64 != ''
       shell: bash
       run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
-
-    - name: Set test config values from env
-      shell: bash
-      run: |
-        if [ -n "${{ inputs.test_config_selected_networks }}" ]; then
-          echo "E2E_TEST_SELECTED_NETWORK=${{ inputs.test_config_selected_networks }}" >> $GITHUB_ENV
-        fi      
-        if [ -n "${{ inputs.test_config_chainlink_version }}" ]; then
-          echo "E2E_TEST_CHAINLINK_VERSION=$(envresolve '${{ inputs.test_config_chainlink_version }}')" >> $GITHUB_ENV
-        fi              
-        if [ -n "${{ inputs.test_config_chainlink_upgrade_version }}" ]; then
-          echo "E2E_TEST_CHAINLINK_UPGRADE_VERSION=$(envresolve '${{ inputs.test_config_chainlink_upgrade_version }}')" >> $GITHUB_ENV
-        fi        
-        if [ -n "${{ inputs.test_config_chainlink_postgres_version }}" ]; then
-          echo "E2E_TEST_CHAINLINK_POSTGRES_VERSION=$(envresolve '${{ inputs.test_config_chainlink_postgres_version }}')" >> $GITHUB_ENV
-        fi                    
-        if [ -n "${{ inputs.test_config_logging_run_id }}" ]; then
-          echo "E2E_TEST_LOGGING_RUN_ID=${{ inputs.test_config_logging_run_id }}" >> $GITHUB_ENV
-        fi      
-        if [ -n "${{ inputs.test_config_logstream_log_targets }}" ]; then
-          echo "E2E_TEST_LOG_STREAM_LOG_TARGETS=${{ inputs.test_config_logstream_log_targets }}" >> $GITHUB_ENV
-        fi      
-        if [ -n "${{ inputs.test_config_test_log_collect }}" ]; then
-          echo "E2E_TEST_LOG_COLLECT=${{ inputs.test_config_test_log_collect }}" >> $GITHUB_ENV
-        fi              
 
     # Run the tests
     - name: Run Tests
