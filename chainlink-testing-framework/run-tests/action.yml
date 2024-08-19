@@ -339,53 +339,6 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
-    - name: Create default test config override
-      if: inputs.test_config_override_base64 == ''
-      shell: bash
-      run: |
-        create_args=()
-        if [ -n "${{ inputs.test_config_chainlink_version }}" ]; then
-          create_args+=(--chainlink-version="${{ inputs.test_config_chainlink_version }}")
-        fi
-        if [ -n "${{ inputs.test_config_chainlink_postgres_version }}" ]; then
-          create_args+=(--chainlink-postgres-version="${{ inputs.test_config_chainlink_postgres_version }}")
-        fi
-        if [ -n "${{ inputs.test_config_chainlink_upgrade_version }}" ]; then
-          create_args+=(--chainlink-upgrade-version="${{ inputs.test_config_chainlink_upgrade_version }}")
-        fi
-        if [ -n "${{ inputs.test_config_logging_run_id }}" ]; then
-          create_args+=(--logging-run-id="${{ inputs.test_config_logging_run_id }}")
-        fi
-        if [ -n "${{ inputs.test_config_test_log_collect }}" ]; then
-          create_args+=(--logging-test-log-collect="${{ inputs.test_config_test_log_collect }}")
-        fi
-        if [ -n "${{ inputs.test_config_private_ethereum_network_execution_layer }}" ]; then
-          create_args+=(--private-ethereum-network-execution-layer="${{ inputs.test_config_private_ethereum_network_execution_layer }}")
-        fi
-        if [ -n "${{ inputs.test_config_private_ethereum_network_custom_docker_image }}" ]; then
-          create_args+=(--private-ethereum-network-custom-docker-image="${{ inputs.test_config_private_ethereum_network_custom_docker_image }}")
-        fi
-        
-        # # Split the log targets input by comma and add to the command line arguments
-        IFS=',' read -ra ADDR <<< "${{ inputs.test_config_logstream_log_targets }}"
-        for i in "${ADDR[@]}"; do
-          create_args+=(--logging-log-targets="$i")
-        done
-
-        # Split selected networks input by comma and add to the command line arguments
-        IFS=',' read -ra ADDR <<< "${{ inputs.test_config_selected_networks }}"
-        for i in "${ADDR[@]}"; do
-          create_args+=(--selected-networks="$i")
-        done
-
-        cd ctf/tools/citool/
-
-        config_override=$(go run main.go test-config create "${create_args[@]}")
-
-        BASE64_CONFIG_OVERRIDE=$(echo "$config_override" | base64 -w 0)
-        echo ::add-mask::$BASE64_CONFIG_OVERRIDE
-        echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV        
-    
     - name: Set test config override from config file
       if: inputs.test_config_override_path != ''
       shell: bash
@@ -396,6 +349,31 @@ runs:
       if: inputs.test_config_override_base64 != ''
       shell: bash
       run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
+
+    - name: Set test config values from env
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.test_config_selected_networks }}" ]; then
+          echo "E2E_TEST_SELECTED_NETWORK=${{ inputs.test_config_selected_networks }}" >> $GITHUB_ENV
+        fi      
+        if [ -n "${{ inputs.test_config_chainlink_version }}" ]; then
+          echo "E2E_TEST_CHAINLINK_VERSION=$(envresolve '${{ inputs.test_config_chainlink_version }}')" >> $GITHUB_ENV
+        fi              
+        if [ -n "${{ inputs.test_config_chainlink_upgrade_version }}" ]; then
+          echo "E2E_TEST_CHAINLINK_UPGRADE_VERSION=$(envresolve '${{ inputs.test_config_chainlink_upgrade_version }}')" >> $GITHUB_ENV
+        fi        
+        if [ -n "${{ inputs.test_config_chainlink_postgres_version }}" ]; then
+          echo "E2E_TEST_CHAINLINK_POSTGRES_VERSION=$(envresolve '${{ inputs.test_config_chainlink_postgres_version }}')" >> $GITHUB_ENV
+        fi                    
+        if [ -n "${{ inputs.test_config_logging_run_id }}" ]; then
+          echo "E2E_TEST_LOGGING_RUN_ID=${{ inputs.test_config_logging_run_id }}" >> $GITHUB_ENV
+        fi      
+        if [ -n "${{ inputs.test_config_logstream_log_targets }}" ]; then
+          echo "E2E_TEST_LOG_STREAM_LOG_TARGETS=${{ inputs.test_config_logstream_log_targets }}" >> $GITHUB_ENV
+        fi      
+        if [ -n "${{ inputs.test_config_test_log_collect }}" ]; then
+          echo "E2E_TEST_LOG_COLLECT=${{ inputs.test_config_test_log_collect }}" >> $GITHUB_ENV
+        fi              
 
     # Run the tests
     - name: Run Tests
