@@ -19,6 +19,9 @@ inputs:
   test_secrets_override_base64:
     required: false
     description: The base64-encoded .env file with key=value secrets to override default secrets
+  test_config_override_path:
+    required: false
+    description: The path to the test config file used to override the default test config  
   test_config_override_base64:
     required: false
     description: The base64-encoded test config override
@@ -383,6 +386,11 @@ runs:
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
         echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV        
     
+    - name: Set test config override from config file
+      if: inputs.test_config_override_path != ''
+      shell: bash
+      run: echo "BASE64_CONFIG_OVERRIDE=$(base64 -w 0 -i ${{ inputs.test_config_override_path }})" >> $GITHUB_ENV
+
     # Override the default test config if a custom one is provided
     - name: Use test config override
       if: inputs.test_config_override_base64 != ''
