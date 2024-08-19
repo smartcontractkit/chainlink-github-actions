@@ -219,9 +219,6 @@ runs:
           echo "TEST_TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
         fi
 
-    - name: Install envresolve tool
-      shell: bash
-      run: go install github.com/smartcontractkit/chainlink-testing-framework/tools/envresolve@v1.0.0
 
       # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
     - name: Set test secrets overrides
