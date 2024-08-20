@@ -221,13 +221,19 @@ runs:
     - name: Set test config override from config file
       if: inputs.test_config_override_path != ''
       shell: bash
-      run: echo "BASE64_CONFIG_OVERRIDE=$(base64 -w 0 -i ${{ inputs.test_config_override_path }})" >> $GITHUB_ENV
+      run: |
+        BASE64_CONFIG_OVERRIDE=$(base64 -w 0 -i ${{ inputs.test_config_override_path }})
+        echo ::add-mask::$BASE64_CONFIG_OVERRIDE
+        echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
 
     # Override the default test config if a custom one is provided
     - name: Use test config override
       if: inputs.test_config_override_base64 != ''
       shell: bash
-      run: echo "BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}" >> $GITHUB_ENV
+      run: |
+        BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}
+        echo ::add-mask::$BASE64_CONFIG_OVERRIDE
+        echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
 
     # Run the tests
     - name: Run Tests
