@@ -16,9 +16,12 @@ inputs:
     required: false
     description: The command to download the go modules
     default: make download
+  test_secrets_defaults_base64:
+    required: false
+    description: The base64-encoded .env file with key=value with secrets to use as defaults
   test_secrets_override_base64:
     required: false
-    description: The base64-encoded .env file with key=value secrets to override default secrets
+    description: The base64-encoded .env file with key=value with secrets to override defaults
   test_config_override_path:
     required: false
     description: The path to the test config file used to override the default test config  
@@ -211,9 +214,14 @@ runs:
           echo "TEST_TEST_SUITE=${{ inputs.test_suite }}" >> $GITHUB_ENV
         fi
 
-
-      # If custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
-    - name: Set test secrets overrides
+    # If default and/or custom secrets provided, decode them, mask them and set them as env vars to override the default secrets
+    - name: Set default test secrets from dotenv file
+      if: inputs.test_secrets_defaults_base64 != ''
+      shell: bash
+      run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_defaults_base64 }}"
+    
+    # Custom secrets override the default secrets
+    - name: Set custom test secrets from dotenv file
       if: inputs.test_secrets_override_base64 != ''
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
