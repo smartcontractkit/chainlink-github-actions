@@ -5,8 +5,18 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 )
+
+type DotenvParseError struct {
+	Line int // Line where the error occurred
+}
+
+// Error implements the error interface for DotenvParseError.
+func (e *DotenvParseError) Error() string {
+	return fmt.Sprintf("could not parse dotenv due to invalid KEY=\"VALUE\" in line: %d. Only KEY=VALUE or KEY=\"VALUE\" are supported. To include special characters such as an apostrophe in the VALUE, enclose the VALUE in double quotes (e.g., KEY=\"'VALUE'\")", e.Line)
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -20,7 +30,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	envVars := parseEnvVars(string(decodedBytes))
+	envVars, err := parseEnvVars(string(decodedBytes))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	for key, value := range envVars {
 		mustMaskSecret(key, value)
@@ -28,26 +42,38 @@ func main() {
 	}
 }
 
-func parseEnvVars(envStr string) map[string]string {
+func parseEnvVars(envStr string) (map[string]string, error) {
 	envVars := make(map[string]string)
+	// Regular expression to match configurations in the form of KEY=VALUE or KEY="VALUE".
+	// To include special characters such as an apostrophe in the VALUE, enclose the VALUE in double quotes (e.g., KEY="'VALUE'").
+	// Restrictions:
+	// - KEY must not be enclosed in any type of quotes.
+	// - VALUE can be unquoted or enclosed in double quotes, but not single quotes.
+	re := regexp.MustCompile(`^[^" '=]+=".*"$|^[^" '=]+=[^" ']+$`)
+
 	lines := strings.Split(envStr, "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line) // Ensure trimming at this stage
+	for i, line := range lines {
+		line = strings.TrimSpace(line) // Trim space from start and end
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue // Skip empty lines and comments
 		}
 		if strings.HasPrefix(line, "export ") {
 			line = strings.TrimSpace(strings.TrimPrefix(line, "export"))
 		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			value := strings.TrimSpace(parts[1])
-			value = removeSurroundingQuotes(value)
-			envVars[key] = value
+
+		// Validate the line with regex before processing
+		if re.MatchString(line) {
+			parts := strings.SplitN(line, "=", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				value := removeSurroundingQuotes(strings.TrimSpace(parts[1]))
+				envVars[key] = value
+			}
+		} else {
+			return nil, &DotenvParseError{Line: i + 1}
 		}
 	}
-	return envVars
+	return envVars, nil
 }
 
 func removeSurroundingQuotes(s string) string {
