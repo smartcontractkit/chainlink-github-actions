@@ -14,9 +14,11 @@ func TestParseEnvVars(t *testing.T) {
 		err      error
 	}{
 		{
-			name:     "Simple Key-Value",
-			envStr:   "KEY=VALUE\nANOTHER_KEY=VALUE",
-			expected: map[string]string{"KEY": "VALUE", "ANOTHER_KEY": "VALUE"},
+			name: "Simple Key-Value",
+			envStr: `KEY=VALUE
+ANOTHER_KEY=VALUE2
+KEY3="VALUE1 VALUE2"`,
+			expected: map[string]string{"KEY": "VALUE", "ANOTHER_KEY": "VALUE2", "KEY3": "VALUE1 VALUE2"},
 		},
 		{
 			name:     "Export Prefix",
@@ -65,6 +67,19 @@ ANOTHER_KEY='VALUE'
 			envStr: `KEY="VALUE"
 'ANOTHER_KEY'=VALUE`,
 			err: &DotenvParseError{Line: 2},
+		},
+		{
+			name: "Value with Spaces",
+			envStr: `KEY="VALUE"
+KEY2=VALUE 2`,
+			err: &DotenvParseError{Line: 2},
+		},
+		{
+			name: "Empty Line",
+			envStr: `KEY="VALUE"
+
+KEY2=VALUE2`,
+			expected: map[string]string{"KEY": "VALUE", "KEY2": "VALUE2"},
 		},
 	}
 
