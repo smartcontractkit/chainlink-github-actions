@@ -7,6 +7,10 @@ inputs:
   file:
     required: true
     description: The path to the dockerfile to build
+  context:
+    required: false
+    default: "."
+    description: Docker build context
   build-args:
     required: false
     description: Comma separated build-args for the docker build to pass through, example KEY1=VAL1,KEY2=VAL2,...
@@ -42,7 +46,7 @@ runs:
       uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
       id: build-image
       with:
-        context: .
+        context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         build-args: ${{ inputs.build-args }}
         tags: ${{ inputs.tags }}
