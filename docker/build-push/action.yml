@@ -11,10 +11,6 @@ inputs:
     required: false
     default: "."
     description: Docker build context
-  working-directory:
-    required: false
-    default: "."
-    description: Action working directory
   build-args:
     required: false
     description: Comma separated build-args for the docker build to pass through, example KEY1=VAL1,KEY2=VAL2,...
@@ -49,7 +45,6 @@ runs:
     - name: Build and Push
       uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
       id: build-image
-      working-directory: ${{ inputs.working-directory }}
       with:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
