@@ -255,6 +255,10 @@ runs:
       shell: bash
       run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"        
 
+    - name: Display E2E_TEST_CHAINLINK_IMAGE_2
+      shell: bash
+      run: echo "E2E_TEST_CHAINLINK_IMAGE_2=${{ env.E2E_TEST_CHAINLINK_IMAGE_2 }}"   
+
     # Run the tests
     - name: Run Tests
       shell: bash
