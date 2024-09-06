@@ -99,7 +99,7 @@ func addToGithubEnv(key, value string) error {
 	// Open the GitHub environment file in append mode
 	file, err := os.OpenFile(githubEnvPath, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		return fmt.Errorf("error opening GITHUB_ENV file: %w", err)
+		return fmt.Errorf("error opening GITHUB_ENV file")
 	}
 	defer file.Close()
 
@@ -108,7 +108,7 @@ func addToGithubEnv(key, value string) error {
 
 	// Write the environment variable and its value to the GITHUB_ENV file
 	if _, err := file.WriteString(line); err != nil {
-		return fmt.Errorf("error writing to GITHUB_ENV file: %w", err)
+		return fmt.Errorf("error writing to GITHUB_ENV file")
 	}
 
 	return nil
