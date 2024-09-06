@@ -36,7 +36,10 @@ inputs:
     description: The test suite to run. Used by k8s remote runner tests
   default_e2e_test_chainlink_image:
     required: false
-    description: The default chainlink image to use if not set
+    description: The default chainlink image to use if override not set
+  default_e2e_test_chainlink_upgrade_image:
+    required: false
+    description: The default chainlink image to use for upgrade tests if override not set  
   cl_repo:
     required: false
     description: The Chainlink ecr repository to use
@@ -229,10 +232,15 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
-    - name: Set default chainlink image
-      if: env.E2E_TEST_CHAINLINK_IMAGE == ''
+    - name: Set default E2E_TEST_* env vars if they are not set already
       shell: bash
-      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.default_e2e_test_chainlink_image }}" >> $GITHUB_ENV
+      run: |
+        if [[ -z "${{ env.E2E_TEST_CHAINLINK_IMAGE }}" ]]; then
+          echo "E2E_TEST_CHAINLINK_IMAGE=${{ inputs.default_e2e_test_chainlink_image }}" >> $GITHUB_ENV
+        fi
+        if [[ -z "${{ env.E2E_TEST_CHAINLINK_UPGRADE_IMAGE }}" ]]; then
+          echo "E2E_TEST_CHAINLINK_UPGRADE_IMAGE=${{ inputs.default_e2e_test_chainlink_upgrade_image }}" >> $GITHUB_ENV
+        fi      
 
     - name: Set test config override from config file
       if: inputs.test_config_override_path != ''
