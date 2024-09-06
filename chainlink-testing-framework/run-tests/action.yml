@@ -250,10 +250,6 @@ runs:
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
         echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
 
-    - name: Display E2E_TEST_CHAINLINK_IMAGE
-      shell: bash
-      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"        
-
     # Override the default test config if a custom one is provided
     - name: Use test config override
       if: inputs.test_config_override_base64 != ''
@@ -262,14 +258,6 @@ runs:
         BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
         echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
-
-    - name: Display E2E_TEST_CHAINLINK_IMAGE
-      shell: bash
-      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"        
-
-    - name: Display E2E_TEST_CHAINLINK_IMAGE_2
-      shell: bash
-      run: echo "E2E_TEST_CHAINLINK_IMAGE_2=${{ env.E2E_TEST_CHAINLINK_IMAGE_2 }}"   
 
     # Run the tests
     - name: Run Tests
