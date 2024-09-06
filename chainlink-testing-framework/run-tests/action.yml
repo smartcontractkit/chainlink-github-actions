@@ -226,6 +226,10 @@ runs:
       shell: bash
       run: go run ${{ github.action_path }}/mask-testsecrets/main.go "${{ inputs.test_secrets_override_base64 }}"
 
+    - name: Display E2E_TEST_CHAINLINK_IMAGE
+      shell: bash
+      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"
+
     - name: Set test config override from config file
       if: inputs.test_config_override_path != ''
       shell: bash
@@ -233,6 +237,10 @@ runs:
         BASE64_CONFIG_OVERRIDE=$(base64 -w 0 -i ${{ inputs.test_config_override_path }})
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
         echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
+
+    - name: Display E2E_TEST_CHAINLINK_IMAGE
+      shell: bash
+      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"        
 
     # Override the default test config if a custom one is provided
     - name: Use test config override
@@ -242,6 +250,10 @@ runs:
         BASE64_CONFIG_OVERRIDE=${{ inputs.test_config_override_base64 }}
         echo ::add-mask::$BASE64_CONFIG_OVERRIDE
         echo "BASE64_CONFIG_OVERRIDE=$BASE64_CONFIG_OVERRIDE" >> $GITHUB_ENV 
+
+    - name: Display E2E_TEST_CHAINLINK_IMAGE
+      shell: bash
+      run: echo "E2E_TEST_CHAINLINK_IMAGE=${{ env.E2E_TEST_CHAINLINK_IMAGE }}"        
 
     # Run the tests
     - name: Run Tests

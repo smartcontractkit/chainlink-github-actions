@@ -38,7 +38,11 @@ func main() {
 
 	for key, value := range envVars {
 		mustMaskSecret(key, value)
-		mustAddToGithubEnv(key, value)
+		err := addToGithubEnv(key, value)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to add environment variable %s to GITHUB_ENV: %v\n", key, err)
+			os.Exit(1)
+		}
 	}
 }
 
@@ -85,14 +89,29 @@ func removeSurroundingQuotes(s string) string {
 	return s
 }
 
-func mustAddToGithubEnv(key, value string) {
-	command := fmt.Sprintf("echo \"%s=%s\" >> $GITHUB_ENV", key, value)
-	cmd := exec.Command("bash", "-c", command)
-	err := cmd.Run()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to add '%s' to GITHUB_ENV", key)
-		os.Exit(1)
+func addToGithubEnv(key, value string) error {
+	// Get the path to the GitHub environment file from the system's environment variables
+	githubEnvPath := os.Getenv("GITHUB_ENV")
+	if githubEnvPath == "" {
+		return fmt.Errorf("GITHUB_ENV path is not set")
 	}
+
+	// Open the GitHub environment file in append mode
+	file, err := os.OpenFile(githubEnvPath, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("error opening GITHUB_ENV file: %w", err)
+	}
+	defer file.Close()
+
+	// Construct the line to be added to the GITHUB_ENV file
+	line := fmt.Sprintf("%s=%s\n", key, value)
+
+	// Write the environment variable and its value to the GITHUB_ENV file
+	if _, err := file.WriteString(line); err != nil {
+		return fmt.Errorf("error writing to GITHUB_ENV file: %w", err)
+	}
+
+	return nil
 }
 
 func mustMaskSecret(description string, secret string) {
