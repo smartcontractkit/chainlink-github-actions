@@ -134,7 +134,7 @@ jobs:
 
       # required for code coverage report generation
       - name: Setup LCOV
-        if: ${{ inputs.skip_code_coverage == 'true' }}
+        if: ${{ inputs.skip_code_coverage != 'true' }}
         uses: hrishikesh-kadam/setup-lcov@f5da1b26b0dcf5d893077a3c4f29cf78079c841d # v1.0.0
 
       - name: Run Forge build for product contracts
@@ -147,21 +147,21 @@ jobs:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Run coverage for product contracts
-        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         working-directory:  ${{ inputs.contracts_directory }}
         run: forge coverage --report lcov --report-file code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Prune lcov report
-        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
           ./scripts/lcov_prune  ${{ inputs.product }} ./code-coverage/lcov.info ./code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
-        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
@@ -201,6 +201,12 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.head_ref }}
 
+      - name: Checkout the repo
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+        with:
+          ref: e352dae76d1fa030250f85b5a8a1cb6ead863308
+          path: ./reusable-workflow
+
       - name: Setup NodeJS
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
@@ -239,11 +245,11 @@ jobs:
             echo "::debug::contracts directory isn't the root directory, but ${{ inputs.contracts_directory }}."
             echo "::debug::it's probable that remappings.txt is stored there. Copying it to root folder"
           
-            ./solidity/scripts/modify_remappings.sh "${{ inputs.contracts_directory }}" "${{ inputs.contracts_directory }}/remappings.txt"          
+            ./reusable-workflow/solidity/scripts/modify_remappings.sh "${{ inputs.contracts_directory }}" "${{ inputs.contracts_directory }}/remappings.txt"          
             mv remappings_modified.txt remappings.txt
           fi
 
-          ./solidity/scripts/generate_uml.sh "${{ inputs.contracts_directory }}" "contracts/uml-diagrams" "$contract_list"
+          ./reusable-workflow/solidity/scripts/generate_uml.sh "${{ inputs.contracts_directory }}" "contracts/uml-diagrams" "$contract_list"
 
       - name: Generate Slither Markdown reports
         run: |
@@ -257,7 +263,7 @@ jobs:
 
           # solc-remaps might cause trouble here!
           echo "::debug::Processing contracts: $contract_list"
-          ./solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" contracts/configs/slither/.slither.config-artifacts.json "${{ inputs.contracts_directory }}" "$contract_list" "contracts/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
+          ./reusable-workflow/solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" contracts/configs/slither/.slither.config-artifacts.json "${{ inputs.contracts_directory }}" "$contract_list" "contracts/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
 
       - name: Upload UMLs and Slither reports
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
@@ -331,11 +337,11 @@ jobs:
           contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Setup Jira
-        working-directory: ./jira/scripts
+        working-directory: ./reusable-workflow/jira/scripts
         run: pnpm i
 
       - name: Create Traceability
-        working-directory: ./jira/scripts
+        working-directory: ./reusable-workflow/jira/scripts
         run: |
           pnpm issue:traceability
         env:
