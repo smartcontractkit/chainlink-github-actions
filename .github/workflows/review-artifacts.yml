@@ -345,13 +345,11 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup Jira
-        working-directory: ./reusable-workflow/jira
-        run: pnpm i
+        run: pnpm --prefix=./reusable-workflow/jira i
 
       - name: Create Traceability
-        working-directory: ./reusable-workflow/jira
         run: |
-          pnpm issue:traceability
+          pnpm --prefix=./reusable-workflow/jira issue:traceability
         env:
           CHANGESET_FILES: ${{ inputs.changeset_files }}
           CHAINLINK_PRODUCT: ${{ inputs.product }}
