@@ -72,7 +72,10 @@ export function parseIssueNumberFrom(
 
 export async function extractJiraIssueNumbersFrom(filePaths: string[]) {
   const issueNumbers: string[] = [];
-  const gitTopLevel = await getGitTopLevel();
+  let gitTopLevel = process.env.GIT_TOP_LEVEL_DIR;
+  if (!gitTopLevel) {
+    gitTopLevel = await getGitTopLevel();
+  }
 
   for (const path of filePaths) {
     const fullPath = join(gitTopLevel, path);
