@@ -140,13 +140,13 @@ jobs:
         run: |
           forge --version
           forge build
-        working-directory: ${{ inputs.foundry_directory }}
+        working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Run coverage for product contracts
         if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
-        working-directory:  ${{ inputs.foundry_directory }}
+        working-directory:  ${{ inputs.contracts_directory }}
         run: forge coverage --report lcov --report-file code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
@@ -154,20 +154,20 @@ jobs:
       - name: Prune lcov report
         if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
         shell: bash
-        working-directory: ${{ inputs.foundry_directory }}
+        working-directory: ${{ inputs.contracts_directory }}
         run: |
           ./scripts/lcov_prune  ${{ inputs.product }} ./code-coverage/lcov.info ./code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
         if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
         shell: bash
-        working-directory: ${{ inputs.foundry_directory }}
+        working-directory: ${{ inputs.contracts_directory }}
         run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.product_changes == 'true' }}
         run: forge doc --build -o docs
-        working-directory: ${{ inputs.foundry_directory }}
+        working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
