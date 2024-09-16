@@ -119,6 +119,8 @@ jobs:
 
       - name: Setup NodeJS
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        with:
+          contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Create directories
         shell: bash
@@ -201,6 +203,8 @@ jobs:
 
       - name: Setup NodeJS
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        with:
+          contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
@@ -323,6 +327,8 @@ jobs:
 
       - name: Setup NodeJS
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        with:
+          contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Setup Jira
         working-directory: ./jira/scripts
