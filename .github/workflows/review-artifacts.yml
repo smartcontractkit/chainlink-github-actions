@@ -40,8 +40,8 @@ on:
         type: string
         required: false
       skip_code_coverage:
-        description: 'whether code coverage report should be generated'
-        type: boolean
+        description: 'true or false, indicating whether code coverage report should be generated'
+        type: string
         required: true
       default_solc_version:
         description: 'solc version to install be default'
@@ -132,7 +132,7 @@ jobs:
 
       # required for code coverage report generation
       - name: Setup LCOV
-        if: ${{ inputs.skip_code_coverage == true }}
+        if: ${{ inputs.skip_code_coverage == 'true' }}
         uses: hrishikesh-kadam/setup-lcov@f5da1b26b0dcf5d893077a3c4f29cf78079c841d # v1.0.0
 
       - name: Run Forge build for product contracts
@@ -145,21 +145,21 @@ jobs:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Run coverage for product contracts
-        if: ${{ inputs.skip_code_coverage == true && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
         working-directory:  ${{ inputs.foundry_directory }}
         run: forge coverage --report lcov --report-file code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Prune lcov report
-        if: ${{ inputs.skip_code_coverage == true && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.foundry_directory }}
         run: |
           ./scripts/lcov_prune  ${{ inputs.product }} ./code-coverage/lcov.info ./code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
-        if: ${{ inputs.skip_code_coverage == true && inputs.product_changes == 'true' }}
+        if: ${{ inputs.skip_code_coverage == 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.foundry_directory }}
         run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
