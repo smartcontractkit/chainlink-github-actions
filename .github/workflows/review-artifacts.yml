@@ -337,7 +337,7 @@ jobs:
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
-      - name: Checkout the repo
+      - name: Checkout this repo
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
@@ -345,11 +345,11 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup Jira
-        working-directory: ./reusable-workflow/jira/scripts
+        working-directory: ./reusable-workflow/jira
         run: pnpm i
 
       - name: Create Traceability
-        working-directory: ./reusable-workflow/jira/scripts
+        working-directory: ./reusable-workflow/jira
         run: |
           pnpm issue:traceability
         env:
