@@ -3,15 +3,16 @@ on:
   workflow_call:
     inputs:
       product:
-        type: string
         description: 'product for which to generate artifacts; should be the same as Foundry profile'
+        type: string
         required: true
       commit_to_use:
-        type: string
         description: 'commit SHA to use for artifact generation; if empty HEAD will be used'
+        type: string
         required: false
       base_ref:
         description: 'commit or tag to use as base reference, when looking for modified Solidity files'
+        type: string
         required: true
       product_changes:
         description: 'true or false, indicates whether there were any changes in the product contracts, designed to work with dorny/paths-filter'
@@ -41,7 +42,7 @@ on:
       skip_code_coverage:
         description: 'whether code coverage report should be generated'
         type: boolean
-        require: true
+        required: true
       default_solc_version:
         description: 'solc version to install be default'
         type: string
@@ -222,7 +223,7 @@ jobs:
           to_use: ${{ inputs.default_solc_version }}
 
       - name: Install Slither
-        uses: ./solidity/setup-slither
+        uses: ./solidity/setup-slither/
 
       - name: Generate UML
         shell: bash
