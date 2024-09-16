@@ -296,7 +296,6 @@ jobs:
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           ref: ${{ env.head_ref }}
-          path: target_repo
 
       - name: Download all artifacts
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
@@ -336,7 +335,7 @@ jobs:
       - name: Setup NodeJS
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
-          contracts_dir: target_repo/${{ inputs.contracts_directory }}
+          contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Checkout this repo
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
@@ -347,9 +346,7 @@ jobs:
 
       - name: Setup git top level directory
         id: find-git-top-level-dir
-        working-directory: target_repo
         run: echo "top_level_dir=$(pwd)" >> $GITHUB_OUTPUT
-
 
       - name: Setup Jira
         run: pnpm --prefix=./reusable-workflow/jira i
