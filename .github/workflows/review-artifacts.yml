@@ -118,7 +118,7 @@ jobs:
           ref: ${{ env.head_ref }}
 
       - name: Setup NodeJS
-        uses: ./solidity/setup-nodejs
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
 
       - name: Create directories
         shell: bash
@@ -200,7 +200,7 @@ jobs:
           ref: ${{ env.head_ref }}
 
       - name: Setup NodeJS
-        uses: ./solidity/setup-nodejs
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
@@ -217,13 +217,13 @@ jobs:
           python-version: '3.8'
 
       - name: Install solc-select and solc
-        uses: ./solidity/setup-solc-select
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-solc-select@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           to_install: ${{ inputs.default_solc_version }}
           to_use: ${{ inputs.default_solc_version }}
 
       - name: Install Slither
-        uses: ./solidity/setup-slither/
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-slither@e352dae76d1fa030250f85b5a8a1cb6ead863308
 
       - name: Generate UML
         shell: bash
@@ -267,7 +267,7 @@ jobs:
           retention-days: 7
 
       - name: Validate if all Slither run for all contracts
-        uses: ./solidity/validate-solidity-artifacts
+        uses: smartcontractkit/chainlink-github-actions/solidity/validate-solidity-artifacts@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           validate_slither_reports: 'true'
           validate_uml_diagrams: 'true'
@@ -322,7 +322,7 @@ jobs:
           echo "artifact-url=$artifact_url" >> $GITHUB_OUTPUT
 
       - name: Setup NodeJS
-        uses: ./solidity/setup-nodejs
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
 
       - name: Setup Jira
         working-directory: ./jira/scripts
