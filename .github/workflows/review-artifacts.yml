@@ -146,11 +146,28 @@ jobs:
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
+      # Unfortunately, if working-directory for Foundry is not root folder, we need to adjust the output directory and directory from which we upload artifacts
+      - name: Transform output path
+        id: transform-output-path
+        shell: bash
+        run: |
+          if [[ -n "${{ inputs.contracts_directory }}" && ("${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != ".") ]]; then
+            # set it to current directory, because effectively it will be set to "${{ inputs.contracts_directory }}", which will be the working directory for all Foundry commands
+            echo "artifact_output_dir=."
+            echo "artifact_upload_dir=${{ inputs.contracts_directory }}"
+          else
+            echo "artifact_output_dir=${{ env.artifacts_dir }}"
+            echo "artifact_upload_dir=${{ env.artifacts_dir }}"
+          fi
+          echo "::debug::Will output artifacts to dir: ${{ steps.transform-output-path.outputs.artifact_output_dir }}"
+          echo "::debug::Will upload artifacts from dir: ${{ steps.transform-output-path.outputs.artifact_upload_dir }}"
+
       - name: Create code coverage directory
         if: ${{ inputs.skip_code_coverage != 'true' }}
         shell: bash
+        working-directory: "${{ inputs.contracts_directory }}"
         run: |
-          mkdir -p ${{ env.artifacts_dir }}/code-coverage
+          mkdir -p ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
@@ -174,7 +191,7 @@ jobs:
       - name: Run coverage for product contracts
         if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         working-directory:  ${{ inputs.contracts_directory }}
-        run: forge coverage --report lcov --report-file ${{ env.artifacts_dir }}/code-coverage/lcov.info
+        run: forge coverage --report lcov --report-file ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
@@ -183,18 +200,17 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
-          ./scripts/lcov_prune  ${{ inputs.product }} ${{ env.artifacts_dir }}/code-coverage/lcov.info ${{ env.artifacts_dir }}/code-coverage/lcov.info.pruned
+          ./scripts/lcov_prune  ${{ inputs.product }} ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage/lcov.info ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
         if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
-        run: genhtml ${{ env.artifacts_dir }}/code-coverage/lcov.info.pruned --branch-coverage --output-directory ${{ env.artifacts_dir }}/code-coverage
+        run: genhtml ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage/lcov.info.pruned --branch-coverage --output-directory ${{ steps.transform-output-path.outputs.artifact_output_dir }}/code-coverage
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.product_changes == 'true' }}
-        # TODO review this... in chainlink this might create it in ./contracts/contracts/docs due to working-directory
-        run: forge doc --build -o ${{ env.artifacts_dir }}/docs
+        run: forge doc --build -o ${{ steps.transform-output-path.outputs.artifact_output_dir }}/docs
         working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
@@ -207,11 +223,9 @@ jobs:
         with:
           name: tmp-${{ inputs.product }}-artifacts
           path: |
-            # not ideal, but it saves us adding custom logic
-            ${{ inputs.contracts_directory }}/${{ env.artifacts_dir }}/docs 
-            ${{ env.artifacts_dir }}/docs
-            ${{ env.artifacts_dir }}/code-coverage/lcov-.info
-            ${{ env.artifacts_dir }}/code-coverage
+            ${{ steps.transform-output-path.outputs.artifact_upload_dir }}/docs
+            ${{ steps.transform-output-path.outputs.artifact_upload_dir }}code-coverage/lcov-.info
+            ${{ steps.transform-output-path.outputs.artifact_upload_dir }}/code-coverage
           retention-days: 7
 
   # Generates UML diagrams and Slither reports for modified contracts
