@@ -341,7 +341,7 @@ jobs:
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
-          ref: e352dae76d1fa030250f85b5a8a1cb6ead863308
+          ref: d4f881b42765927f0b979e9c2a480f9a726441fc
           path: ./reusable-workflow
 
       - name: Setup git top level directory

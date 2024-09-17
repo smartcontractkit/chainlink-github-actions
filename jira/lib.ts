@@ -74,8 +74,10 @@ export async function extractJiraIssueNumbersFrom(filePaths: string[]) {
   const issueNumbers: string[] = [];
   let gitTopLevel = process.env.GIT_TOP_LEVEL_DIR;
   if (!gitTopLevel) {
+    core.info('git top level env var was empty')
     gitTopLevel = await getGitTopLevel();
   }
+  core.info('top level: ' + gitTopLevel)
 
   for (const path of filePaths) {
     const fullPath = join(gitTopLevel, path);
