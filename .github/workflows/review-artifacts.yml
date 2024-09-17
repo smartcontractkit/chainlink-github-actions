@@ -261,7 +261,7 @@ jobs:
           contract_list="${{ inputs.product_files }}"
 
           # modify remappings so that solc can find dependencies
-          if [[ -n "${{ inputs.contracts_directory }}" && "${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != "/" ]]; then
+          if [[ -n "${{ inputs.contracts_directory }}" && ("${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != ".") ]]; then
             echo "::debug::contracts directory isn't the root directory, but ${{ inputs.contracts_directory }}."
             echo "::debug::it's probable that remappings.txt is stored there. Copying it to root folder"
           
@@ -276,7 +276,7 @@ jobs:
           contract_list="${{ inputs.product_files }}"
 
           # without it Slither sometimes fails to use remappings correctly          
-          if [[ -n "${{ inputs.contracts_directory }}" && "${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != "/" ]]; then
+          if [[ -n "${{ inputs.contracts_directory }}" && ("${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != ".") ]]; then
             echo "::debug::contracts directory isn't the root directory, but in ${{ inputs.contracts_directory }}. Copying foundry.toml to root folder"          
             cp "${{ inputs.contracts_directory }}"/foundry.toml foundry.toml
           fi
