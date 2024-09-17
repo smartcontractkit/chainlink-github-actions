@@ -253,10 +253,10 @@ jobs:
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
-#      - name: Install Foundry
-#        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
-#        with:
-#          version: ${{ inputs.foundry_version }}
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
+        with:
+          version: ${{ inputs.foundry_version }}
 
       - name: Install Sol2uml
         if: ${{ inputs.generate_uml_diagrams == 'true' }}
