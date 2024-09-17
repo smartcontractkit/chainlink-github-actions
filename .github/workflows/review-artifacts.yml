@@ -186,7 +186,8 @@ jobs:
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.product_changes == 'true' }}
-        run: forge doc --build -o docs
+        # TODO review this... in chainlink this might create it in ./contracts/contracts/docs due to working-directory
+        run: forge doc --build -o contracts/docs
         working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
