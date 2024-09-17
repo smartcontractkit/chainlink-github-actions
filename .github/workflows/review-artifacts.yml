@@ -238,7 +238,7 @@ jobs:
 
       - name: Install Sol2uml
         run: |
-          pnpm i sol2uml --only=production
+          pnpm add -g sol2uml
 
       - name: Set up Python
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f #v5.1.1
