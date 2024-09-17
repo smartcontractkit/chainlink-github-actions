@@ -151,7 +151,7 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
-          mkdir -p ${{ inputs.contracts_directory }}/code-coverage
+          mkdir -p code-coverage
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
