@@ -48,6 +48,7 @@ on:
         type: string
         required: false
         default: '0.8.19'
+    secrets: inherit
 
 env:
   FOUNDRY_PROFILE: ci

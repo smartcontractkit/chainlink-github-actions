@@ -26,6 +26,12 @@ export function generateIssueLabel(
 }
 
 export async function getGitTopLevel(): Promise<string> {
+  const gitTopLevelEnv = process.env.GIT_TOP_LEVEL_DIR;
+  if (gitTopLevelEnv) {
+    core.debug(`GIT_TOP_LEVEL_DIR env var was set tu ${gitTopLevelEnv}. Will use it.`)
+    return gitTopLevelEnv
+  }
+
   const execPromise = promisify(exec);
   try {
     const { stdout, stderr } = await execPromise(
@@ -72,12 +78,7 @@ export function parseIssueNumberFrom(
 
 export async function extractJiraIssueNumbersFrom(filePaths: string[]) {
   const issueNumbers: string[] = [];
-  let gitTopLevel = process.env.GIT_TOP_LEVEL_DIR;
-  if (!gitTopLevel) {
-    core.info('git top level env var was empty')
-    gitTopLevel = await getGitTopLevel();
-  }
-  core.info('top level: ' + gitTopLevel)
+  const gitTopLevel = await getGitTopLevel();
 
   for (const path of filePaths) {
     const fullPath = join(gitTopLevel, path);
