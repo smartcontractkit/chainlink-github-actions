@@ -153,11 +153,11 @@ jobs:
         run: |
           if [[ -n "${{ inputs.contracts_directory }}" && ("${{ inputs.contracts_directory }}" != "./" && "${{ inputs.contracts_directory }}" != ".") ]]; then
             # set it to current directory, because effectively it will be set to "${{ inputs.contracts_directory }}", which will be the working directory for all Foundry commands
-            echo "artifact_output_dir=."
-            echo "artifact_upload_dir=${{ inputs.contracts_directory }}"
+            echo "artifact_output_dir=." >> $GITHUB_OUTPUT
+            echo "artifact_upload_dir=${{ inputs.contracts_directory }}" >> $GITHUB_OUTPUT
           else
-            echo "artifact_output_dir=${{ env.artifacts_dir }}"
-            echo "artifact_upload_dir=${{ env.artifacts_dir }}"
+            echo "artifact_output_dir=${{ env.artifacts_dir }}" >> $GITHUB_OUTPUT
+            echo "artifact_upload_dir=${{ env.artifacts_dir }}" >> $GITHUB_OUTPUT
           fi
           echo "::debug::Will output artifacts to dir: ${{ steps.transform-output-path.outputs.artifact_output_dir }}"
           echo "::debug::Will upload artifacts from dir: ${{ steps.transform-output-path.outputs.artifact_upload_dir }}"
