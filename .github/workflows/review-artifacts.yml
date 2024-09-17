@@ -72,6 +72,7 @@ env:
   # Unfortunately, we can't use the "default" field in the inputs section, because it does not have
   # access to the workflow context
   head_ref:  ${{ inputs.commit_to_use || github.sha }}
+  artifacts_dir: review_artifacts
 
 jobs:
   gather-basic-info:
@@ -84,34 +85,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create directories
+      - name: Create artifact directory
         shell: bash
         run: |
-          mkdir -p contracts
+          mkdir -p ${{ env.artifacts_dir }}
 
       - name: Copy modified changesets
         if: ${{ inputs.changeset_changes == 'true' }}
         run: |
-          mkdir -p contracts/changesets
+          mkdir -p ${{ env.artifacts_dir }}/changesets
           files="${{ inputs.changeset_files }}"
           IFS=","
           for changeset in $files; do
             echo "::debug:: Copying $changeset"
-            cp $changeset contracts/changesets
+            cp $changeset ${{ env.artifacts_dir }}/changesets
           done
 
       - name: Generate basic info and modified contracts list
         shell: bash
         run: |
-          echo "Product: ${{ inputs.product }}" > contracts/commit_sha_base_ref.txt
-          echo "Commit SHA used to generate artifacts: ${{ env.head_ref }}" >> contracts/commit_sha_base_ref.txt
-          echo "Base reference SHA used to find modified contracts: ${{ inputs.base_ref }}" >> contracts/commit_sha_base_ref.txt
+          echo "Product: ${{ inputs.product }}" > ${{ env.artifacts_dir }}/commit_sha_base_ref.txt
+          echo "Commit SHA used to generate artifacts: ${{ env.head_ref }}" >> ${{ env.artifacts_dir }}/commit_sha_base_ref.txt
+          echo "Base reference SHA used to find modified contracts: ${{ inputs.base_ref }}" >> ${{ env.artifacts_dir }}/commit_sha_base_ref.txt
 
           IFS=',' read -r -a modified_files <<< "${{ inputs.product_files }}"
-          echo "# Modified contracts:" > contracts/modified_contracts.md
+          echo "# Modified contracts:" > ${{ env.artifacts_dir }}/modified_contracts.md
           for file in "${modified_files[@]}"; do
-            echo " - [$file](${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/$file)" >> contracts/modified_contracts.md
-            echo "$file" >> contracts/modified_contracts.txt
+            echo " - [$file](${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/$file)" >> ${{ env.artifacts_dir }}/modified_contracts.md
+            echo "$file" >> ${{ env.artifacts_dir }}/modified_contracts.txt
           done
 
       - name: Upload basic info and modified contracts list
@@ -121,10 +122,10 @@ jobs:
         with:
           name: tmp-basic-info
           path: |
-            contracts/modified_contracts.md
-            contracts/modified_contracts.txt
-            contracts/commit_sha_base_ref.txt
-            contracts/changesets
+            ${{ env.artifacts_dir }}/modified_contracts.md
+            ${{ env.artifacts_dir }}/modified_contracts.txt
+            ${{ env.artifacts_dir }}/commit_sha_base_ref.txt
+            ${{ env.artifacts_dir }}/changesets
           retention-days: 7
 
   # some of the artifacts can only be generated on product level, and we cannot scope them to single contracts
@@ -145,10 +146,11 @@ jobs:
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
-      - name: Create directories
+      - name: Create code coverage directory
+        if: ${{ inputs.skip_code_coverage != 'true' }}
         shell: bash
         run: |
-          mkdir -p contracts/code-coverage
+          mkdir -p ${{ env.artifacts_dir }}/code-coverage
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
@@ -172,7 +174,7 @@ jobs:
       - name: Run coverage for product contracts
         if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         working-directory:  ${{ inputs.contracts_directory }}
-        run: forge coverage --report lcov --report-file code-coverage/lcov.info
+        run: forge coverage --report lcov --report-file ${{ env.artifacts_dir }}/code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
@@ -181,18 +183,18 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
-          ./scripts/lcov_prune  ${{ inputs.product }} ./code-coverage/lcov.info ./code-coverage/lcov.info.pruned
+          ./scripts/lcov_prune  ${{ inputs.product }} ${{ env.artifacts_dir }}/code-coverage/lcov.info ${{ env.artifacts_dir }}/code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
         if: ${{ inputs.skip_code_coverage != 'true' && inputs.product_changes == 'true' }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
-        run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
+        run: genhtml ${{ env.artifacts_dir }}/code-coverage/lcov.info.pruned --branch-coverage --output-directory ${{ env.artifacts_dir }}/code-coverage
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.product_changes == 'true' }}
         # TODO review this... in chainlink this might create it in ./contracts/contracts/docs due to working-directory
-        run: forge doc --build -o contracts/docs
+        run: forge doc --build -o ${{ env.artifacts_dir }}/docs
         working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
@@ -205,9 +207,9 @@ jobs:
         with:
           name: tmp-${{ inputs.product }}-artifacts
           path: |
-            contracts/docs
-            contracts/code-coverage/lcov-.info
-            contracts/code-coverage
+            ${{ env.artifacts_dir }}/docs
+            ${{ env.artifacts_dir }}/code-coverage/lcov-.info
+            ${{ env.artifacts_dir }}/code-coverage
           retention-days: 7
 
   # Generates UML diagrams and Slither reports for modified contracts
@@ -279,7 +281,7 @@ jobs:
             mv remappings_modified.txt remappings.txt
           fi
 
-          ./reusable-workflow/solidity/scripts/generate_uml.sh "${{ inputs.contracts_directory }}" "contracts/uml-diagrams" "$contract_list"
+          ./reusable-workflow/solidity/scripts/generate_uml.sh "${{ inputs.contracts_directory }}" "${{ env.artifacts_dir }}/uml-diagrams" "$contract_list"
 
       - name: Generate Slither Markdown reports
         run: |
@@ -293,7 +295,7 @@ jobs:
 
           # solc-remaps might cause trouble here!
           echo "::debug::Processing contracts: $contract_list"
-          ./reusable-workflow/solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" "${{ inputs.slither_config_file_path }}" "${{ inputs.contracts_directory }}" "$contract_list" "contracts/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
+          ./reusable-workflow/solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" "${{ inputs.slither_config_file_path }}" "${{ inputs.contracts_directory }}" "$contract_list" "${{ env.artifacts_dir }}/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
 
       - name: Upload UMLs and Slither reports
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
@@ -302,8 +304,8 @@ jobs:
         with:
           name: tmp-contracts-artifacts
           path: |
-            contracts/uml-diagrams
-            contracts/slither-reports
+            ${{ env.artifacts_dir }}/uml-diagrams
+            ${{ env.artifacts_dir }}/slither-reports
           retention-days: 7
 
       - name: Validate if all Slither run for all contracts
@@ -311,8 +313,8 @@ jobs:
         with:
           validate_slither_reports: 'true'
           validate_uml_diagrams: 'true'
-          slither_reports_path: 'contracts/slither-reports'
-          uml_diagrams_path: 'contracts/uml-diagrams'
+          slither_reports_path: "${{ env.artifacts_dir }}/slither-reports"
+          uml_diagrams_path: "${{ env.artifacts_dir }}/uml-diagrams"
           sol_files: ${{ inputs.product_files }}
 
   gather-all-artifacts:
