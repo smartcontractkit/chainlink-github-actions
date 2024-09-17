@@ -11,7 +11,7 @@ on:
         type: string
         required: false
       base_ref:
-        description: 'commit or tag to use as base reference, when looking for modified Solidity files'
+        description: 'commit or tag to use as base reference, when looking for modified Solidity files. In case of a new repository use zero-hash commit 4b825dc642cb6eb9a060e54bf8d69288fbee4904 to select all files'
         type: string
         required: true
       product_changes:
@@ -78,6 +78,11 @@ jobs:
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           fetch-depth: 0
+
+      - name: Create directories
+        shell: bash
+        run: |
+          mkdir -p contracts
 
       - name: Copy modified changesets
         if: ${{ inputs.changeset_changes == 'true' }}
