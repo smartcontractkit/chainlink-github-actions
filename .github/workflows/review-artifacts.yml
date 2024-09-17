@@ -47,9 +47,13 @@ on:
         description: 'solc version to install be default'
         type: string
         required: false
-        default: '0.8.19'
+        default: '0.8.24'
       jira_host:
         description: 'Jira host'
+        type: string
+        required: true
+      slither_config_file_path:
+        description: 'path to the slither config file'
         type: string
         required: true
     secrets:
@@ -273,7 +277,7 @@ jobs:
 
           # solc-remaps might cause trouble here!
           echo "::debug::Processing contracts: $contract_list"
-          ./reusable-workflow/solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" contracts/configs/slither/.slither.config-artifacts.json "${{ inputs.contracts_directory }}" "$contract_list" "contracts/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
+          ./reusable-workflow/solidity/scripts/generate_slither_report.sh "${{ github.server_url }}/${{ github.repository }}/blob/${{ env.head_ref }}/" "${{ inputs.slither_config_file_path }}" "${{ inputs.contracts_directory }}" "$contract_list" "contracts/slither-reports" "--solc-remaps @=${{ inputs.contracts_directory }}/node_modules/@"
 
       - name: Upload UMLs and Slither reports
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
