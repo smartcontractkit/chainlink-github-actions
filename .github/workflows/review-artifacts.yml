@@ -210,7 +210,7 @@ jobs:
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.product_changes == 'true' }}
-        run: forge doc --build -o ${{ steps.transform-output-path.outputs.artifact_output_dir }}/docs
+        run: forge doc --build -o docs
         working-directory: ${{ inputs.contracts_directory }}
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
@@ -224,7 +224,7 @@ jobs:
           name: tmp-${{ inputs.product }}-artifacts
           path: |
             ${{ steps.transform-output-path.outputs.artifact_upload_dir }}/docs
-            ${{ steps.transform-output-path.outputs.artifact_upload_dir }}code-coverage/lcov-.info
+            ${{ steps.transform-output-path.outputs.artifact_upload_dir }}/code-coverage/lcov-.info
             ${{ steps.transform-output-path.outputs.artifact_upload_dir }}/code-coverage
           retention-days: 7
 
