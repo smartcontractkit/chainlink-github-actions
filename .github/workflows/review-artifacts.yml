@@ -207,6 +207,8 @@ jobs:
         with:
           name: tmp-${{ inputs.product }}-artifacts
           path: |
+            # not ideal, but it saves us adding custom logic
+            ${{ inputs.contracts_directory }}/${{ env.artifacts_dir }}/docs 
             ${{ env.artifacts_dir }}/docs
             ${{ env.artifacts_dir }}/code-coverage/lcov-.info
             ${{ env.artifacts_dir }}/code-coverage
