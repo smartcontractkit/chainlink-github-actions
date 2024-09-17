@@ -48,7 +48,15 @@ on:
         type: string
         required: false
         default: '0.8.19'
-    secrets: inherit
+      jira_host:
+        description: 'Jira host'
+        type: string
+        required: true
+    secrets:
+      jira_username:
+        required: true
+      jira_api_token:
+        required: true
 
 env:
   FOUNDRY_PROFILE: ci
@@ -363,9 +371,9 @@ jobs:
           ARTIFACT_URL: ${{ steps.gather-all-artifacts.outputs.artifact-url }}
           GIT_TOP_LEVEL_DIR: ${{ steps.find-git-top-level-dir.outputs.top_level_dir }}
 
-          JIRA_HOST: ${{ vars.JIRA_HOST }}
-          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_HOST: ${{ inputs.jira_host }}
+          JIRA_USERNAME: ${{ secrets.jira_username }}
+          JIRA_API_TOKEN: ${{ secrets.jira_api_token }}
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
