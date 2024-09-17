@@ -56,6 +56,11 @@ on:
         description: 'path to the slither config file'
         type: string
         required: true
+      install_semver:
+        description: 'true or false, indicating whether to install semver'
+        type: string
+        required: false
+        default: 'false'
     secrets:
       jira_username:
         required: true
@@ -254,6 +259,11 @@ jobs:
 
       - name: Install Slither
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-slither@e352dae76d1fa030250f85b5a8a1cb6ead863308
+
+      - name: Install semver
+        if: ${{ inputs.install_semver == 'true' }}
+        run: |
+          pnpm add -g semver
 
       - name: Generate UML
         shell: bash
