@@ -339,7 +339,7 @@ jobs:
 
   gather-all-artifacts:
     name: Gather all artifacts
-    if: ${{ inputs.product_changes == 'true' }}
+    if: ${{ always() && inputs.product_changes == 'true' }}
     runs-on: ubuntu-latest
     needs: [coverage-and-book, uml-static-analysis, gather-basic-info]
     steps:
