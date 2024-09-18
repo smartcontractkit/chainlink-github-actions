@@ -347,34 +347,33 @@ jobs:
 
   gather-all-artifacts:
     name: Gather all artifacts
-    if: ${{ always() && inputs.product_changes == 'true' && needs.*.result != 'failure' }}
+    if: ${{ always() && inputs.product_changes == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: [coverage-and-book, uml-static-analysis, gather-basic-info]
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
-        with:
-          ref: ${{ env.head_ref }}
-
       - name: Download all artifacts
+        if: ${{ needs.*.result != 'failure' }}
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
           path: review_artifacts
           merge-multiple: true
 
       - name: Upload all artifacts as single package
+        if: ${{ needs.*.result != 'failure' }}
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           name: review-artifacts-${{ inputs.product }}-${{ inputs.base_ref }}-${{ env.head_ref }}
           path: review_artifacts
 
       - name: Remove temporary artifacts
+        if: ${{ needs.*.result != 'failure' }}
         uses: geekyeggo/delete-artifact@24928e75e6e6590170563b8ddae9fac674508aa1 # v5.0
         with:
           name: tmp-*
 
       - name: Print Artifact URL in job summary
+        if: ${{ needs.*.result != 'failure' }}
         id: gather-all-artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -393,13 +392,13 @@ jobs:
           echo "artifact-url=$artifact_url" >> $GITHUB_OUTPUT
 
       - name: Setup NodeJS
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ needs.*.result != 'failure' && inputs.link_with_jira == 'true' }}
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Checkout this repo
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ needs.*.result != 'failure' && inputs.link_with_jira == 'true' }}
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
@@ -407,16 +406,16 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup git top level directory
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ needs.*.result != 'failure' && inputs.link_with_jira == 'true' }}
         id: find-git-top-level-dir
         run: echo "top_level_dir=$(pwd)" >> $GITHUB_OUTPUT
 
       - name: Setup Jira
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ needs.*.result != 'failure' && inputs.link_with_jira == 'true' }}
         run: pnpm --prefix=./reusable-workflow/jira i
 
       - name: Create Traceability
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ needs.*.result != 'failure' && inputs.link_with_jira == 'true' }}
         run: |
           pnpm --prefix=./reusable-workflow/jira issue:traceability
         env:
