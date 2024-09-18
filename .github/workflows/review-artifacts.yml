@@ -40,29 +40,29 @@ on:
         type: string
         required: false
       generate_code_coverage:
-        description: 'true or false, indicating whether to generate code coverage report; default: true'
-        type: string
-        default: 'true'
+        description: 'generate code coverage report?'
+        type: boolean
+        default: true
         required: false
       generate_forge_book:
-        description: 'true or false, indicating whether to generate documentation as Forge book; default: true'
-        type: string
-        default: 'true'
+        description: 'generate documentation as Forge book?'
+        type: boolean
+        default: true
         required: false
       generate_uml_diagrams:
-        description: 'true or false, indicating whether to generate UML diagrams; default: true'
-        type: string
-        default: 'true'
+        description: 'generate UML class diagrams?'
+        type: boolean
+        default: true
         required: false
       generate_slither_reports:
-        description: 'true or false, indicating whether to generate Slither reports; default: true'
-        type: string
-        default: 'true'
+        description: 'generate Slither reports?'
+        type: boolean
+        default: true
         required: false
       link_with_jira:
-        description: 'true or false, indicating whether to link generated artifacts with Jira issues'
-        type: string
-        default: 'true'
+        description: 'link generated artifacts with Jira issues?'
+        type: boolean
+        default: true
         required: true
       jira_host:
         description: 'Jira host'
@@ -153,7 +153,7 @@ jobs:
   # some of the artifacts can only be generated on product level, and we cannot scope them to single contracts
   # some product-level modifications might also require shared contracts changes, so if these happened we need to generate artifacts for shared contracts as well
   coverage-and-book:
-    if: ${{ inputs.product_changes == 'true' && (inputs.generate_code_coverage == 'true' || inputs.generate_forge_book == 'true') }}
+    if: ${{ inputs.product_changes == 'true' && (inputs.generate_code_coverage == true || inputs.generate_forge_book == true) }}
     name: Generate Docs and Code Coverage reports
     runs-on: ubuntu-22.04
     timeout-minutes: 30
@@ -170,7 +170,7 @@ jobs:
           contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Create code coverage directory
-        if: ${{ inputs.generate_code_coverage == 'true' }}
+        if: ${{ inputs.generate_code_coverage == true }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
@@ -183,7 +183,7 @@ jobs:
 
       # required for code coverage report generation
       - name: Setup LCOV
-        if: ${{ inputs.generate_code_coverage == 'true' }}
+        if: ${{ inputs.generate_code_coverage == true }}
         uses: hrishikesh-kadam/setup-lcov@f5da1b26b0dcf5d893077a3c4f29cf78079c841d # v1.0.0
 
       - name: Run Forge build for product contracts
@@ -195,27 +195,27 @@ jobs:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Run coverage for product contracts
-        if: ${{ inputs.generate_code_coverage == 'true' }}
+        if: ${{ inputs.generate_code_coverage == true }}
         working-directory:  ${{ inputs.contracts_directory }}
         run: forge coverage --report lcov --report-file code-coverage/lcov.info
         env:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Prune lcov report
-        if: ${{ inputs.generate_code_coverage == 'true' }}
+        if: ${{ inputs.generate_code_coverage == true }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
           ./scripts/lcov_prune  ${{ inputs.product }} code-coverage/lcov.info code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
-        if: ${{ inputs.generate_code_coverage == 'true' }}
+        if: ${{ inputs.generate_code_coverage == true }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
 
       - name: Run Forge doc for product contracts
-        if: ${{ inputs.generate_forge_book == 'true' }}
+        if: ${{ inputs.generate_forge_book == true }}
         run: forge doc --build -o forge_book
         working-directory: ${{ inputs.contracts_directory }}
         env:
@@ -235,7 +235,7 @@ jobs:
 
   # Generates UML diagrams and Slither reports for modified contracts
   uml-static-analysis:
-    if: ${{ inputs.product_changes == 'true' && ( inputs.generate_uml_diagrams == 'true' || inputs.generate_slither_reports == 'true') }}
+    if: ${{ inputs.product_changes == 'true' && ( inputs.generate_uml_diagrams == true || inputs.generate_slither_reports == true) }}
     name: Generate UML and Slither reports for modified contracts
     runs-on: ubuntu-22.04
     timeout-minutes: 30
@@ -267,34 +267,34 @@ jobs:
           version: ${{ inputs.foundry_version }}
 
       - name: Install Sol2uml
-        if: ${{ inputs.generate_uml_diagrams == 'true' }}
+        if: ${{ inputs.generate_uml_diagrams == true }}
         run: |
           pnpm add -g sol2uml
 
       - name: Set up Python
-        if: ${{ inputs.generate_slither_reports == 'true' }}
+        if: ${{ inputs.generate_slither_reports == true }}
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f #v5.1.1
         with:
           python-version: '3.8'
 
       - name: Install solc-select and solc
-        if: ${{ inputs.generate_slither_reports == 'true' }}
+        if: ${{ inputs.generate_slither_reports == true }}
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-solc-select@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           to_install: ${{ inputs.default_solc_version }}
           to_use: ${{ inputs.default_solc_version }}
 
       - name: Install Slither
-        if: ${{ inputs.generate_slither_reports == 'true' }}
+        if: ${{ inputs.generate_slither_reports == true }}
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-slither@e352dae76d1fa030250f85b5a8a1cb6ead863308
 
       - name: Install semver
-        if: ${{ inputs.generate_slither_reports == 'true' && inputs.install_semver == 'true' }}
+        if: ${{ inputs.generate_slither_reports == true && inputs.install_semver == true }}
         run: |
           pnpm add -g semver
 
       - name: Generate UML
-        if: ${{ inputs.generate_uml_diagrams == 'true' }}
+        if: ${{ inputs.generate_uml_diagrams == true }}
         shell: bash
         run: |
           contract_list="${{ inputs.product_files }}"
@@ -311,7 +311,7 @@ jobs:
           ./reusable-workflow/solidity/scripts/generate_uml.sh "${{ inputs.contracts_directory }}" "${{ env.artifacts_dir }}/uml-diagrams" "$contract_list"
 
       - name: Generate Slither Markdown reports
-        if: ${{ inputs.generate_slither_reports == 'true' }}
+        if: ${{ inputs.generate_slither_reports == true }}
         run: |
           contract_list="${{ inputs.product_files }}"
 
@@ -388,13 +388,13 @@ jobs:
           echo "artifact-url=$artifact_url" >> $GITHUB_OUTPUT
 
       - name: Setup NodeJS
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ inputs.link_with_jira == true }}
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Checkout this repo
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ inputs.link_with_jira == true }}
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
@@ -402,18 +402,18 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup git top level directory
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ inputs.link_with_jira == true }}
         id: find-git-top-level-dir
         run: echo "top_level_dir=$(pwd)" >> $GITHUB_OUTPUT
 
       - name: Setup Jira
-        if: ${{ inputs.link_with_jira == 'true' }}
-        run: pnpm --prefix=./reusable-workflow/jira i
+        if: ${{ inputs.link_with_jira == true }}
+        run: pnpm --prefix=./reusable-workflow/jira/scripts i
 
       - name: Create Traceability
-        if: ${{ inputs.link_with_jira == 'true' }}
+        if: ${{ inputs.link_with_jira == true }}
         run: |
-          pnpm --prefix=./reusable-workflow/jira issue:traceability
+          pnpm --prefix=./reusable-workflow/jira/scripts issue:traceability
         env:
           CHANGESET_FILES: ${{ inputs.changeset_files }}
           CHAINLINK_PRODUCT: ${{ inputs.product }}
