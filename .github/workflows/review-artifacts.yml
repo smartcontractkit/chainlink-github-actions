@@ -59,6 +59,11 @@ on:
         type: string
         default: 'true'
         required: false
+      link_with_jira:
+        description: 'true or false, indicating whether to link generated artifacts with Jira issues'
+        type: string
+        default: 'true'
+        required: true
       default_solc_version:
         description: 'solc version to install and use as default. defaults to 0.8.24'
         type: string
@@ -384,11 +389,13 @@ jobs:
           echo "artifact-url=$artifact_url" >> $GITHUB_OUTPUT
 
       - name: Setup NodeJS
+        if: ${{ inputs.link_with_jira == 'true' }}
         uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Checkout this repo
+        if: ${{ inputs.link_with_jira == 'true' }}
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
@@ -396,13 +403,16 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup git top level directory
+        if: ${{ inputs.link_with_jira == 'true' }}
         id: find-git-top-level-dir
         run: echo "top_level_dir=$(pwd)" >> $GITHUB_OUTPUT
 
       - name: Setup Jira
+        if: ${{ inputs.link_with_jira == 'true' }}
         run: pnpm --prefix=./reusable-workflow/jira i
 
       - name: Create Traceability
+        if: ${{ inputs.link_with_jira == 'true' }}
         run: |
           pnpm --prefix=./reusable-workflow/jira issue:traceability
         env:
