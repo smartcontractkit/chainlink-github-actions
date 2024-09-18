@@ -67,7 +67,7 @@ on:
       jira_host:
         description: 'Jira host'
         type: string
-        required: true
+        required: false
       default_solc_version:
         description: 'solc version to install and use as default. defaults to 0.8.24'
         type: string
@@ -78,15 +78,15 @@ on:
         type: string
         required: true
       install_semver:
-        description: 'true or false, indicating whether to install semver'
-        type: string
+        description: 'install semver?'
+        type: boolean
         required: false
-        default: 'false'
+        default: true
     secrets:
       jira_username:
-        required: true
+        required: false
       jira_api_token:
-        required: true
+        required: false
 
 env:
   FOUNDRY_PROFILE: ci
@@ -253,7 +253,7 @@ jobs:
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
-          ref: e352dae76d1fa030250f85b5a8a1cb6ead863308
+          ref: 620887a48b07505059239131549cdc3161f396ff
           path: ./reusable-workflow
 
       - name: Setup NodeJS
