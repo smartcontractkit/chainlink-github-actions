@@ -165,7 +165,7 @@ jobs:
           ref: ${{ env.head_ref }}
 
       - name: Setup NodeJS
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
@@ -257,7 +257,7 @@ jobs:
           path: ./reusable-workflow
 
       - name: Setup NodeJS
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
@@ -279,14 +279,14 @@ jobs:
 
       - name: Install solc-select and solc
         if: ${{ inputs.generate_slither_reports == true }}
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-solc-select@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-solc-select@620887a48b07505059239131549cdc3161f396ff
         with:
           to_install: ${{ inputs.default_solc_version }}
           to_use: ${{ inputs.default_solc_version }}
 
       - name: Install Slither
         if: ${{ inputs.generate_slither_reports == true }}
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-slither@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-slither@620887a48b07505059239131549cdc3161f396ff
 
       - name: Install semver
         if: ${{ inputs.generate_slither_reports == true && inputs.install_semver == true }}
@@ -337,7 +337,7 @@ jobs:
           retention-days: 7
 
       - name: Validate if all Slither run for all contracts
-        uses: smartcontractkit/chainlink-github-actions/solidity/validate-solidity-artifacts@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/validate-solidity-artifacts@620887a48b07505059239131549cdc3161f396ff
         with:
           validate_slither_reports: ${{ inputs.generate_slither_reports }}
           validate_uml_diagrams: ${{ inputs.generate_uml_diagrams }}
@@ -389,7 +389,7 @@ jobs:
 
       - name: Setup NodeJS
         if: ${{ inputs.link_with_jira == true }}
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@e352dae76d1fa030250f85b5a8a1cb6ead863308
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
