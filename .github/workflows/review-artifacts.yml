@@ -398,12 +398,12 @@ jobs:
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           repository: smartcontractkit/chainlink-github-actions
-          ref: d4f881b42765927f0b979e9c2a480f9a726441fc
-          path: ./reusable-workflow
+          ref: 3dcd41c6cfdd9adc3478ed096bebf30c7fa0b504
+          path: ./chainlink-github-actions
 
       - name: Setup NodeJS
         if: ${{ inputs.link_with_jira == true }}
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@3dcd41c6cfdd9adc3478ed096bebf30c7fa0b504
         with:
           contracts_dir: ${{ inputs.contracts_directory }}
 
@@ -414,12 +414,12 @@ jobs:
 
       - name: Setup Jira
         if: ${{ inputs.link_with_jira == true }}
-        run: pnpm --prefix=./reusable-workflow/jira/scripts i
+        run: pnpm --prefix=./chainlink-github-actions/jira/scripts i
 
       - name: Create Traceability
         if: ${{ inputs.link_with_jira == true }}
         run: |
-          pnpm --prefix=./reusable-workflow/jira/scripts issue:traceability
+          pnpm --prefix=./chainlink-github-actions/jira/scripts issue:traceability
         env:
           CHANGESET_FILES: ${{ inputs.changeset_files }}
           CHAINLINK_PRODUCT: ${{ inputs.product }}
