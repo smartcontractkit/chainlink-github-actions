@@ -82,6 +82,11 @@ on:
         type: boolean
         required: false
         default: true
+      lcov_prune_script_path:
+        description: 'path to the lcov_prune script (used to prune lcov report from files that we are not interested in); path should be relative to contracts_directory'
+        type: string
+        required: false
+        default: ''
     secrets:
       jira_username:
         required: false
@@ -202,17 +207,23 @@ jobs:
           FOUNDRY_PROFILE: ${{ inputs.product }}
 
       - name: Prune lcov report
-        if: ${{ inputs.generate_code_coverage == true }}
+        if: ${{ inputs.generate_code_coverage == true && inputs.lcov_prune_script_path != '' }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
         run: |
-          ./scripts/lcov_prune  ${{ inputs.product }} code-coverage/lcov.info code-coverage/lcov.info.pruned
+          ${{ inputs.lcov_prune_script_path }}  ${{ inputs.product }} code-coverage/lcov.info code-coverage/lcov.info.pruned
 
       - name: Generate Code Coverage HTML report for product contracts
         if: ${{ inputs.generate_code_coverage == true }}
         shell: bash
         working-directory: ${{ inputs.contracts_directory }}
-        run: genhtml code-coverage/lcov.info.pruned --branch-coverage --output-directory code-coverage
+        run: |
+          lcov_file="code-coverage/lcov.info"
+          if [[ -f "code-coverage/lcov.info.pruned" ]]; then
+            lcov_file="code-coverage/lcov.info.pruned"
+          fi
+          echo "::debug::Using $lcov_file for code coverage report generation"
+          genhtml "$lcov_file" --branch-coverage --output-directory code-coverage
 
       - name: Run Forge doc for product contracts
         if: ${{ inputs.generate_forge_book == true }}
