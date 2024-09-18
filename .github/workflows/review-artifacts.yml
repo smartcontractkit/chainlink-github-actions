@@ -387,12 +387,6 @@ jobs:
           echo "[Artifact URL]($artifact_url)" >> $GITHUB_STEP_SUMMARY
           echo "artifact-url=$artifact_url" >> $GITHUB_OUTPUT
 
-      - name: Setup NodeJS
-        if: ${{ inputs.link_with_jira == true }}
-        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
-        with:
-          contracts_dir: ${{ inputs.contracts_directory }}
-
       - name: Checkout caller repository
         if: ${{ inputs.link_with_jira == true }}
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
@@ -406,6 +400,12 @@ jobs:
           repository: smartcontractkit/chainlink-github-actions
           ref: d4f881b42765927f0b979e9c2a480f9a726441fc
           path: ./reusable-workflow
+
+      - name: Setup NodeJS
+        if: ${{ inputs.link_with_jira == true }}
+        uses: smartcontractkit/chainlink-github-actions/solidity/setup-nodejs@620887a48b07505059239131549cdc3161f396ff
+        with:
+          contracts_dir: ${{ inputs.contracts_directory }}
 
       - name: Setup git top level directory
         if: ${{ inputs.link_with_jira == true }}
