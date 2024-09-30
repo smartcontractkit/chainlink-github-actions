@@ -1,6 +1,10 @@
 name: Build Docker Image and push to ECR
 description: Common docker image builder for building chainlink docker images
 inputs:
+  context:
+    required: false
+    default: "."
+    description: The context of the docker build
   tags:
     required: true
     description: The full docker tag list to use for the push to ecr, new line separated
@@ -42,7 +46,7 @@ runs:
       uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
       id: build-image
       with:
-        context: .
+        context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         build-args: ${{ inputs.build-args }}
         tags: ${{ inputs.tags }}
